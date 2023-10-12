@@ -18,3 +18,10 @@ Inspirowana SCP gra o eksploracji opuszczonej placówki, walce z potworami oraz 
 Jesteś zbiegiem w placówce badawczej, z której zniknął cały personel.
 Twoim zadaniem jest uciec z placówki, jednak nie będzie to proste ze względu na grasujące podmioty badawcze oraz pułapki.
 Czeka cię kilka osobnych poziomów z różnymi przeciwnikami i dopiero ostatni poziom zawiera wyjście. 
+
+# Klawiszologia:
+WSAD/strzałki sterowanie
+spacja strzelanie
+c potwierdzenie akcji na mapie (np. przetwarzanie)
+q e przesuwanie ekwipunku w lewo i w prawo
+t użycie przedmiotu
