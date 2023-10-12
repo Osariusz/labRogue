@@ -1,0 +1,20 @@
+**Gra rogue-like w opuszczonej placówce badawczej.**
+
+Inspirowana SCP gra o eksploracji opuszczonej placówki, walce z potworami oraz transmutacji przedmiotów
+
+# Mechaniki:
+- Losowo generowana placówka
+- System zdrowia i toksyczności o które trzeba dbać żeby przetrwać
+- Toskyczność zabiera zdrowie powyżej jakiegoś poziomu
+- Turowość
+- Kilka rodzajów broni (głównie palnej)
+- Potwory wzorowane na SCP i nie tylko
+- Przedmioty znajdowane w pokojach
+- Ulepszarki mogące przetwarzać przedmioty na inne przedmioty, których receptury mogą nieznacznie różnić się między grami (każdy przedmiot powinien w jakiś sposób dać się przetworzyć)
+- Permadeath
+- Grafika ASCII
+
+# Fabuła:
+Jesteś zbiegiem w placówce badawczej, z której zniknął cały personel.
+Twoim zadaniem jest uciec z placówki, jednak nie będzie to proste ze względu na grasujące podmioty badawcze oraz pułapki.
+Czeka cię kilka osobnych poziomów z różnymi przeciwnikami i dopiero ostatni poziom zawiera wyjście. 
