@@ -1,0 +1,38 @@
+LabRogue/target/
+LabRogue/!.mvn/wrapper/maven-wrapper.jar
+LabRogue/!**/src/main/**/target/
+LabRogue/!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+LabRogue/.idea/modules.xml
+LabRogue/.idea/jarRepositories.xml
+LabRogue/.idea/compiler.xml
+LabRogue/.idea/libraries/
+LabRogue/*.iws
+LabRogue/*.iml
+LabRogue/*.ipr
+
+### Eclipse ###
+LabRogue/.apt_generated
+LabRogue/.classpath
+LabRogue/.factorypath
+LabRogue/.project
+LabRogue/.settings
+LabRogue/.springBeans
+LabRogue/.sts4-cache
+
+### NetBeans ###
+LabRogue/nbproject/private/
+LabRogue/nbbuild/
+LabRogue/dist/
+LabRogue/nbdist/
+LabRogue/.nb-gradle/
+LabRogue/build/
+LabRogue/!**/src/main/**/build/
+LabRogue/!**/src/test/**/build/
+
+### VS Code ###
+LabRogue/.vscode/
+
+### Mac OS ###
+LabRogue/.DS_Store
