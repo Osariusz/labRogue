@@ -1,9 +1,5 @@
 package org.osariusz.Utils;
 
-import org.osariusz.GameElements.Wall;
-import org.osariusz.Items.Item;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class TypeUtils {

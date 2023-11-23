@@ -1,9 +1,10 @@
 package org.osariusz.Map;
 
 import org.osariusz.Actors.Actor;
-import org.osariusz.GameElements.Empty;
+import org.osariusz.MapElements.MapElement;
+import org.osariusz.MapElements.Tile;
 import org.osariusz.GameElements.GameElement;
-import org.osariusz.GameElements.Wall;
+import org.osariusz.MapElements.Wall;
 import org.osariusz.Items.Item;
 import org.osariusz.Utils.TypeUtils;
 
@@ -12,53 +13,52 @@ import java.util.List;
 
 public class Map {
 
-    List<List<GameElement>> map;
+    List<List<MapElement>> map;
 
     public Map(MapBuilder mapBuilder) {
         this.map = mapBuilder.map;
     }
 
-    public List<List<GameElement>> getMap() {
+    public List<List<MapElement>> getMap() {
         return map;
     }
 
     public List<Actor> getAllActors() {
-        List<Actor> items = new ArrayList<>();
+        List<Actor> actors = new ArrayList<>();
         for (int x = 0; x < map.size(); x++) {
             for (int y = 0; y < map.get(x).size(); y++) {
-                if (map.get(x).get(y) instanceof Actor) {
-                    items.add((Actor) map.get(x).get(y));
+                MapElement mapElement = map.get(x).get(y);
+                if (mapElement instanceof Tile && ((Tile) mapElement).hasActor()) {
+                    actors.add(((Tile) mapElement).getActor());
                 }
             }
         }
-        return items;
+        return actors;
     }
 
     public void placeActor(Actor actor, int x, int y) {
         if (canPlaceActor(actor, x, y)) {
-            map.get(x).set(y, actor);
+            Tile tile = (Tile) map.get(x).get(y);
+            tile.setActor(actor);
         }
     }
 
     public void removeActor(int x, int y) {
-        map.get(x).set(y, new Empty());
+        if (map.get(x).get(y) instanceof Tile tile) {
+            tile.removeActor();
+        }
     }
 
     public boolean canPlaceActor(Actor actor, int x, int y) {
-        List<Class<?>> exclusiveTypes = new ArrayList<>(List.of(Wall.class, Actor.class));
-        Object object = map.get(x).get(y);
-        if (TypeUtils.objectOfTypes(object, exclusiveTypes)) {
-            return false;
-        }
-        return true;
+        return map.get(x).get(y) instanceof Tile;
     }
 
     public List<Item> getAllItems() {
         List<Item> items = new ArrayList<>();
         for (int x = 0; x < map.size(); x++) {
             for (int y = 0; y < map.get(x).size(); y++) {
-                if (map.get(x).get(y) instanceof Item) {
-                    items.add((Item) map.get(x).get(y));
+                if (map.get(x).get(y) instanceof Tile tile) {
+                    items.addAll(tile.getItems());
                 }
             }
         }
@@ -67,12 +67,21 @@ public class Map {
 
     public void placeItem(Item item, int x, int y) {
         if (canPlaceItem(item, x, y)) {
-            map.get(x).set(y, item);
+            Tile tile = (Tile) map.get(x).get(y);
+            tile.addItem(item);
         }
     }
 
-    public void removeItem(int x, int y) {
-        map.get(x).set(y, new Empty());
+    public void removeAllItems(int x, int y) {
+        if (map.get(x).get(y) instanceof Tile tile) {
+            tile.removeAllItems();
+        }
+    }
+
+    public void removeItem(Item item, int x, int y) {
+        if (map.get(x).get(y) instanceof Tile tile) {
+            tile.removeItem(item);
+        }
     }
 
     public boolean canPlaceItem(Item item, int x, int y) {
@@ -91,7 +100,7 @@ public class Map {
 
         int enemyCount;
 
-        List<List<GameElement>> map;
+        List<List<MapElement>> map;
 
         public MapBuilder setWidth(int width) {
             this.width = width;
@@ -116,25 +125,25 @@ public class Map {
         public MapBuilder buildMap() {
             map = new ArrayList<>();
             for (int x = 0; x < width; x++) {
-                List<GameElement> column = new ArrayList<>();
-
+                List<MapElement> column = new ArrayList<>();
 
 
                 for (int y = 0; y < height; y++) {
-                    GameElement gameElement;
-                    if(x == 0 || x == width-1 || y == 0 || y == height-1) {
-                        gameElement = new Wall();
+                    MapElement mapElement;
+                    if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+                        mapElement = new Wall();
+                    } else if (x == width / 2 && y == width / 2) {
+                        Tile tile = new Tile();
+                        tile.setActor(new Actor());
+                        mapElement = tile;
+                    } else if (x % 25 == 2 && y % 13 == 1) {
+                        Tile tile = new Tile();
+                        tile.addItem(new Item());
+                        mapElement = tile;
+                    } else {
+                        mapElement = new Tile();
                     }
-                    else if(x == width/2 && y == width/2) {
-                        gameElement = new Actor();
-                    }
-                    else if(x%25 == 2 && y%13 == 1) {
-                        gameElement = new Item();
-                    }
-                    else {
-                        gameElement = new Empty();
-                    }
-                    column.add(gameElement);
+                    column.add(mapElement);
                 }
                 map.add(column);
             }
