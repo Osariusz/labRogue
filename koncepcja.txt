@@ -25,3 +25,6 @@ spacja strzelanie
 c potwierdzenie akcji na mapie (np. przetwarzanie)
 q e przesuwanie ekwipunku w lewo i w prawo
 t użycie przedmiotu
+
+# System walki:
+Na podstawie zasięgu każda postać wyszukuje odpowiednie cele, wybiera jeden i oddaje tyle ataków na ile pozwala broń. Każdy atak to losowanie 1-100 (odjąć zwinność atakowanego) i jeżeli wartość jest mniejsza lub równa celności broni to atak się udaje. (broń do walki w zwarciu działałaby tak samo ale miałaby blisko 100 celności, 1 zasięgu i 1 atak). Broń zmienia też siłę ataku.
