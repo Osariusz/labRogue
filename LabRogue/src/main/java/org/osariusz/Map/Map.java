@@ -134,7 +134,7 @@ public class Map {
                         mapElement = new Wall();
                     } else if (x == width / 2 && y == width / 2) {
                         Tile tile = new Tile();
-                        tile.setActor(new Actor());
+                        tile.setActor(new Actor(20));
                         mapElement = tile;
                     } else if (x % 25 == 2 && y % 13 == 1) {
                         Tile tile = new Tile();

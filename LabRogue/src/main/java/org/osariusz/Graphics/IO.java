@@ -37,7 +37,7 @@ public class IO {
         Scanner s = new Scanner(System.in);
         String c = s.nextLine();
         if(c.equals("w")) {
-            map.placeActor(new Actor(),10,10);
+            map.placeActor(new Actor(20),10,10);
         }
     }
 
