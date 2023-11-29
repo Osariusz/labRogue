@@ -2,10 +2,13 @@ package org.osariusz.Actors;
 
 import org.osariusz.GameElements.GameElement;
 import org.osariusz.Items.Weapon;
+import org.osariusz.Utils.FightReport;
 
 import java.util.Random;
 
 public class Actor extends GameElement {
+
+    private String name;
 
     private int hp;
 
@@ -36,14 +39,14 @@ public class Actor extends GameElement {
     }
 
     public int getShootThreshold() {
-        if(weapon == null) {
+        if (weapon == null) {
             return 50;
         }
         return weapon.getShootChance();
     }
 
     public int getWeaponDamage() {
-        if(weapon == null) {
+        if (weapon == null) {
             return 1;
         }
         return weapon.getDamage();
@@ -51,15 +54,30 @@ public class Actor extends GameElement {
 
     public void attackActor(Actor attacked) {
         Random random = new Random();
-        int randomNumber = random.nextInt(1,100);
-        if(randomNumber < getShootThreshold()) { //will be replaced
+        FightReport.FightReportBuilder fightReportBuilder = new FightReport.FightReportBuilder().setAttacker(this).setDefender(attacked);
+        int randomNumber = random.nextInt(1, 100);
+        fightReportBuilder.rolledShot(randomNumber);
+        if (randomNumber < getShootThreshold()) { //will be replaced
+            fightReportBuilder.setDamage(getWeaponDamage());
             attacked.dealDamage(getWeaponDamage());
         }
+        fightReportBuilder.build().showReport();
     }
+
 
     public Actor(int hp) {
         this.name = "Actor";
         this.symbol = 'A';
         this.hp = hp;
+    }
+
+    public Actor(String name, int hp) {
+        this(hp);
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 }
