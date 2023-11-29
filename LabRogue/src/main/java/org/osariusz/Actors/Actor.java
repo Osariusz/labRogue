@@ -32,14 +32,20 @@ public class Actor extends GameElement {
     }
 
     public boolean isAlive() {
-        return hp <= 0;
+        return hp > 0;
     }
 
     public int getShootThreshold() {
+        if(weapon == null) {
+            return 50;
+        }
         return weapon.getShootChance();
     }
 
     public int getWeaponDamage() {
+        if(weapon == null) {
+            return 1;
+        }
         return weapon.getDamage();
     }
 
