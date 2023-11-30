@@ -22,8 +22,11 @@ public class FightScenarios {
         }
     }
     public static int bothHumans() {
+        Weapon deadchatxd = new Weapon(10,100);
         Actor human1 = new Actor("Human1", 10);
+        human1.setWeapon(deadchatxd);
         Actor human2 = new Actor("Human2", 10);
+        human2.setWeapon(deadchatxd);
         while(human1.isAlive() && human2.isAlive()) {
             human1.attackActor(human2);
             if(human1.isAlive() && human2.isAlive()) {

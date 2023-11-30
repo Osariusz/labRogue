@@ -55,9 +55,9 @@ public class Actor extends GameElement {
     public void attackActor(Actor attacked) {
         Random random = new Random();
         FightReport.FightReportBuilder fightReportBuilder = new FightReport.FightReportBuilder().setAttacker(this).setDefender(attacked);
-        int randomNumber = random.nextInt(1, 100);
+        int randomNumber = random.nextInt(1, 101);
         fightReportBuilder.rolledShot(randomNumber);
-        if (randomNumber < getShootThreshold()) { //will be replaced
+        if (randomNumber <= getShootThreshold()) { //will be replaced
             fightReportBuilder.setDamage(getWeaponDamage());
             attacked.dealDamage(getWeaponDamage());
         }
