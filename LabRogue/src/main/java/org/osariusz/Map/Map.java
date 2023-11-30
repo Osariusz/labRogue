@@ -50,7 +50,10 @@ public class Map {
     }
 
     public boolean canPlaceActor(Actor actor, int x, int y) {
-        return map.get(x).get(y) instanceof Tile;
+        if(map.get(x).get(y) instanceof Tile tile) {
+            return tile.getActor() == null;
+        }
+        return false;
     }
 
     public List<Item> getAllItems() {
@@ -85,12 +88,10 @@ public class Map {
     }
 
     public boolean canPlaceItem(Item item, int x, int y) {
-        List<Class<?>> exclusiveTypes = new ArrayList<>(List.of(Wall.class, Item.class));
-        Object object = map.get(x).get(y);
-        if (TypeUtils.objectOfTypes(object, exclusiveTypes)) {
-            return false;
+        if (map.get(x).get(y) instanceof Tile tile) {
+            return tile.getItems().isEmpty();
         }
-        return true;
+        return false;
     }
 
     public static class MapBuilder {
