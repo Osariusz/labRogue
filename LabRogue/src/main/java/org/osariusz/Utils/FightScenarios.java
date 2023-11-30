@@ -21,4 +21,37 @@ public class FightScenarios {
             System.out.println("Anomaly won");
         }
     }
+    public static int bothHumans() {
+        Actor human1 = new Actor("Human1", 10);
+        Actor human2 = new Actor("Human2", 10);
+        while(human1.isAlive() && human2.isAlive()) {
+            human1.attackActor(human2);
+            if(human1.isAlive() && human2.isAlive()) {
+                human2.attackActor(human1);
+            }
+        }
+        if(human1.isAlive()) {
+            System.out.println("Human1 won");
+            return 1;
+        }
+        else {
+            System.out.println("Human2 won");
+            return 2;
+        }
+    }
+
+    public static void countHumanWins() {
+        int firstWins = 0;
+        int secondWins = 0;
+        for(int i = 0;i<5000;++i) {
+            int result = bothHumans();
+            if(result == 1) {
+                firstWins++;
+            }
+            else if(result == 2) {
+                secondWins++;
+            }
+        }
+        System.out.println("Human1 won "+firstWins+" times and Human2 won "+secondWins);
+    }
 }
