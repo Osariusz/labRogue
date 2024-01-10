@@ -50,7 +50,7 @@ public class Map {
     }
 
     public boolean canPlaceActor(Actor actor, int x, int y) {
-        if(map.get(x).get(y) instanceof Tile tile) {
+        if (map.get(x).get(y) instanceof Tile tile) {
             return tile.getActor() == null;
         }
         return false;

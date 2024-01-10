@@ -13,17 +13,21 @@ import java.util.Random;
 @SuperBuilder
 public abstract class Actor extends GameElement {
 
-    private String id;
+    @Builder.Default
+    private String id = "none";
 
     @Getter
-    private String name;
+    @Builder.Default
+    private String name = "No name";
 
     @Getter
-    private int hp;
+    @Builder.Default
+    private int hp = 10;
 
     @Setter
     @Getter
-    private Weapon weapon;
+    @Builder.Default
+    private Weapon weapon = Weapon.builder().damage(1).shootChance(50).build();
 
     public void dealDamage(int damage) {
         hp -= damage;
@@ -60,7 +64,7 @@ public abstract class Actor extends GameElement {
             fightReportBuilder.setDamage(getWeaponDamage());
             attacked.dealDamage(getWeaponDamage());
         }
-        fightReportBuilder.build().showReport();
+        //fightReportBuilder.build().showReport();
     }
 
     @Override
