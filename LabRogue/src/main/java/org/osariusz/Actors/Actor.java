@@ -5,9 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.osariusz.GameElements.GameElement;
+import org.osariusz.Items.Item;
 import org.osariusz.Items.Weapon;
 import org.osariusz.Utils.FightReport;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @SuperBuilder
@@ -24,10 +27,16 @@ public abstract class Actor extends GameElement {
     @Builder.Default
     private int hp = 10;
 
+    @Getter
+    @Builder.Default
+    private int agility = 10;
+
     @Setter
     @Getter
     @Builder.Default
-    private Weapon weapon = Weapon.builder().damage(1).shootChance(50).build();
+    private Weapon weapon = Weapon.builder().damage(1).shootChance(50).build(); //TODO: rewrite as an item in equipment
+
+    private Map<String, List<Item>> equipment;
 
     public void dealDamage(int damage) {
         hp -= damage;

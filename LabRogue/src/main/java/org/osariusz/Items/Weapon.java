@@ -11,16 +11,15 @@ public class Weapon extends Item {
     {
         super.name = "Weapon";
         super.symbol = 'w';
-        this.damage = 1;
-        this.shootChance = 50;
-        this.range = 1;
     }
 
+    @Builder.Default
+    int damage = 1;
 
-    int damage;
+    @Builder.Default
+    int shootChance = 50; //0-100
 
-    int shootChance; //0-100
-
-    int range;
+    @Builder.Default
+    int range = 1;
 
 }

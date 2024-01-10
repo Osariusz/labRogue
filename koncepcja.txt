@@ -35,3 +35,16 @@ Zarażony doktor (10 hp, 1 damage, 40% na trafienie, 2 zasięgu ze względu na p
 Uciekinier (10 hp, 1 damage, 50% na trafienie,statystyki jak człowiek)
 Statua (15 hp, 2 damage, 50% na trafienie, 2 zasięgu)
 Dinozaur (100 hp, 10 damage, 70% na trafienie, 5 zasięgu)
+
+# Cechy:
+Zwinność
+Zdrowie
+Toksyczność (tylko bohater)
+
+
+# Ekwipunek:
+Hełm
+Kombinezon
+Używalne anomalie (które jednocześnie są umiejętnościami)
+Broń
+Inne przedmioty w plecaku
