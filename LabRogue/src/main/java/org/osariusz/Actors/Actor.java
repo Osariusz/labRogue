@@ -29,7 +29,11 @@ public abstract class Actor extends GameElement {
 
     @Getter
     @Builder.Default
-    private int agility = 0;
+    private int agility = 20;
+
+    @Getter
+    @Builder.Default
+    private int movementSpeed = 1;
 
     @Setter
     @Getter
@@ -64,12 +68,23 @@ public abstract class Actor extends GameElement {
         return weapon.getDamage();
     }
 
+    public int getRealShootChance(Actor attacked) {
+        int result = getShootThreshold()-attacked.agility;
+        if(result > 100) {
+            return 100;
+        }
+        if(result < 1) {
+            return 1;
+        }
+        return result;
+    }
+
     public void attackActor(Actor attacked) {
         Random random = new Random();
         FightReport.FightReportBuilder fightReportBuilder = new FightReport.FightReportBuilder().setAttacker(this).setDefender(attacked);
-        int randomNumber = random.nextInt(1, 101);
+        int randomNumber = random.nextInt(1, 101);//TODO: subtract distance
         fightReportBuilder.rolledShot(randomNumber);
-        if (randomNumber <= getShootThreshold()) { //will be replaced
+        if (randomNumber <= getRealShootChance(attacked)) { //will be replaced
             fightReportBuilder.setDamage(getWeaponDamage());
             attacked.dealDamage(getWeaponDamage());
         }
