@@ -33,5 +33,5 @@ Na podstawie zasięgu każda postać wyszukuje odpowiednie cele, wybiera jeden i
 Szczur (2 hp, 1 damage, 10% na trafienie)
 Zarażony doktor (10 hp, 1 damage, 40% na trafienie, 2 zasięgu ze względu na plucie kwasem)
 Uciekinier (10 hp, 1 damage, 50% na trafienie,statystyki jak człowiek)
-Statua (20 hp, 2 damage, 60% na trafienie, 2 zasięgu)
+Statua (15 hp, 2 damage, 50% na trafienie, 2 zasięgu)
 Dinozaur (100 hp, 10 damage, 70% na trafienie, 5 zasięgu)
