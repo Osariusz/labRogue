@@ -64,20 +64,43 @@ public class Actor extends GameElement {
         fightReportBuilder.build().showReport();
     }
 
-
-    public Actor(int hp) {
-        this.name = "Actor";
-        this.symbol = 'A';
-        this.hp = hp;
-    }
-
-    public Actor(String name, int hp) {
-        this(hp);
-        this.name = name;
+    public Actor(ActorBuilder builder) {
+        this.name = builder.name;
+        this.symbol = builder.symbol;
+        this.hp = builder.hp;
+        this.weapon = builder.weapon;
     }
 
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public static class ActorBuilder {
+
+        int hp = 10;
+        String name = "Actor";
+        char symbol = 'A';
+        Weapon weapon = new Weapon(1,50);
+
+        public void setHp(int hp) {
+            this.hp = hp;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setSymbol(char symbol) {
+            this.symbol = symbol;
+        }
+
+        public void setWeapon(Weapon weapon) {
+            this.weapon = weapon;
+        }
+
+        public Actor build() {
+            return new Actor(this);
+        }
     }
 }

@@ -22,7 +22,7 @@ public class FightScenarios {
         }
     }
     public static int bothHumans() {
-        Weapon deadchatxd = new Weapon(10,100);
+        Weapon deadchatxd = new Weapon(1,50);
         Actor human1 = new Actor("Human1", 10);
         human1.setWeapon(deadchatxd);
         Actor human2 = new Actor("Human2", 10);
