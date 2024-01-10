@@ -1,13 +1,15 @@
 package org.osariusz.Utils;
 
 import org.osariusz.Actors.Actor;
+import org.osariusz.Actors.Monster;
+import org.osariusz.Actors.Player;
 import org.osariusz.Items.Weapon;
 
 public class FightScenarios {
     public static void humanFightingAnomaly() {
-        Actor anomaly = new Actor("Anomaly",100);
-        Actor human = new Actor("Human", 10);
-        human.setWeapon(new Weapon(50,5));
+        Monster anomaly =  Monster.builder().id("anomaly").name("Anomaly").hp(100).build();
+        Monster human = Monster.builder().id("human").name("Human").hp(10).build();
+        human.setWeapon(Weapon.builder().damage(50).shootChance(5).build());
         while (human.isAlive() && anomaly.isAlive()) {
             anomaly.attackActor(human);
             if(human.isAlive() && anomaly.isAlive()) {
@@ -22,10 +24,10 @@ public class FightScenarios {
         }
     }
     public static int bothHumans() {
-        Weapon deadchatxd = new Weapon(1,50);
-        Actor human1 = new Actor("Human1", 10);
+        Weapon deadchatxd = Weapon.builder().damage(1).shootChance(50).build();
+        Monster human1 = Monster.builder().id("human").name("Human1").hp(10).build();
         human1.setWeapon(deadchatxd);
-        Actor human2 = new Actor("Human2", 10);
+        Monster human2 = Monster.builder().id("human").name("Human2").hp(10).build();
         human2.setWeapon(deadchatxd);
         while(human1.isAlive() && human2.isAlive()) {
             human1.attackActor(human2);

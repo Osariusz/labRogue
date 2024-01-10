@@ -132,17 +132,17 @@ public class Map {
                 for (int y = 0; y < height; y++) {
                     MapElement mapElement;
                     if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-                        mapElement = new Wall();
+                        mapElement = Wall.builder().build();
                     } else if (x == width / 2 && y == width / 2) {
-                        Tile tile = new Tile();
-                        tile.setActor(new Actor(20));
+                        Tile tile = Tile.builder().build();
+                        //tile.setActor(new Actor(20));
                         mapElement = tile;
                     } else if (x % 25 == 2 && y % 13 == 1) {
-                        Tile tile = new Tile();
-                        tile.addItem(new Item());
+                        Tile tile = Tile.builder().build();
+                        tile.addItem(Item.builder().build());
                         mapElement = tile;
                     } else {
-                        mapElement = new Tile();
+                        mapElement = Tile.builder().build();
                     }
                     column.add(mapElement);
                 }

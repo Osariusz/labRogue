@@ -1,12 +1,13 @@
 package org.osariusz.GameElements;
 
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
+
+@SuperBuilder
+@Getter
 public abstract class GameElement {
     protected String name;
     protected char symbol;
-
-    public char getSymbol() {
-        return symbol;
-    }
 
     @Override
     public String toString() {

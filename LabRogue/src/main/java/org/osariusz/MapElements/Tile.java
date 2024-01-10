@@ -1,5 +1,8 @@
 package org.osariusz.MapElements;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.osariusz.Actors.Actor;
 import org.osariusz.GameElements.GameElement;
 import org.osariusz.Items.Item;
@@ -7,15 +10,17 @@ import org.osariusz.Items.Item;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuperBuilder
+@Getter
 public class Tile extends MapElement {
+    {
+        super.name = "Tile";
+        super.symbol = ' ';
+    }
 
+    @Setter
     private Actor actor;
     private List<Item> items = new ArrayList<>();
-
-    public Tile() {
-        this.name = "Tile";
-        this.symbol = ' ';
-    }
 
     public Actor getActor() {
         return actor;
@@ -27,10 +32,6 @@ public class Tile extends MapElement {
 
     public boolean hasActor() {
         return getActor() != null;
-    }
-
-    public void setActor(Actor actor) {
-        this.actor = actor;
     }
 
     public void addItem(Item item) {

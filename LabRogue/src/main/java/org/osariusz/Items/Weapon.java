@@ -1,24 +1,26 @@
 package org.osariusz.Items;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 import org.osariusz.Actors.Actor;
 
+@Getter
+@SuperBuilder
 public class Weapon extends Item {
+    {
+        super.name = "Weapon";
+        super.symbol = 'w';
+        this.damage = 1;
+        this.shootChance = 50;
+        this.range = 1;
+    }
+
 
     int damage;
-    int shootChance;
 
-    public int getDamage() {
-        return damage;
-    }
+    int shootChance; //0-100
 
-    public int getShootChance() {
-        return shootChance;
-    }
+    int range;
 
-    public Weapon(int damage, int shootChance) {
-        this.name = "Weapon";
-        this.symbol = 'w';
-        this.damage = damage;
-        this.shootChance = shootChance;
-    }
 }

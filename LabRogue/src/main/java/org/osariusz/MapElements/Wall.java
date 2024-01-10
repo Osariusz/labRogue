@@ -1,11 +1,13 @@
 package org.osariusz.MapElements;
 
+import lombok.experimental.SuperBuilder;
 import org.osariusz.GameElements.GameElement;
 
+@SuperBuilder
 public class Wall extends MapElement {
-
-    public Wall() {
-        this.name = "Wall";
-        this.symbol = '#';
+    {
+        super.name = "Wall";
+        super.symbol = '#';
     }
+
 }

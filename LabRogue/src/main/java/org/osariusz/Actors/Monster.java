@@ -1,11 +1,11 @@
 package org.osariusz.Actors;
 
-public class Monster extends Actor {
-    public Monster(int hp) {
-        super("Monster", hp);
-    }
+import lombok.Builder;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
-    public Monster(String name, int hp) {
-        super(name, hp);
-    }
+@Getter
+@SuperBuilder
+public class Monster extends Actor {
+    private int spawnChance;
 }
