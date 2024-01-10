@@ -29,7 +29,7 @@ public abstract class Actor extends GameElement {
 
     @Getter
     @Builder.Default
-    private int agility = 10;
+    private int agility = 0;
 
     @Setter
     @Getter
