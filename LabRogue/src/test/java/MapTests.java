@@ -9,22 +9,22 @@ public class MapTests {
 
     @Test
     public void testPlaceItem() {
-        Map map = new Map.MapBuilder().setWidth(10).setHeight(10).buildMap().build();
-        map.placeItem(new Item(),5,5);
+        Map map = Map.builder().width(10).height(10).build();
+        map.placeItem(Item.builder().build(),5,5);
         assert map.getMap().get(5).get(5) instanceof Tile;
         assert !((Tile) map.getMap().get(5).get(5)).getItems().isEmpty();
     }
 
     @Test
     public void testPlaceItemOnItem() {
-        Map map = new Map.MapBuilder().setWidth(10).setHeight(10).buildMap().build();
-        map.placeItem(new Item(),5,5);
-        assert !map.canPlaceItem(new Item(),5,5);
+        Map map = Map.builder().width(10).height(10).build();
+        map.placeItem(Item.builder().build(),5,5);
+        assert !map.canPlaceItem(Item.builder().build(),5,5);
     }
 
     @Test
     public void testPlaceActor() {
-        Map map = new Map.MapBuilder().setWidth(10).setHeight(10).buildMap().build();
+        Map map = Map.builder().width(10).height(10).build();
         map.placeActor(Monster.builder().build(),5, 5);
         assert map.getMap().get(5).get(5) instanceof Tile;
         Tile tile = (Tile)map.getMap().get(5).get(5);
@@ -33,7 +33,7 @@ public class MapTests {
 
     @Test
     public void testPlaceActorOnActor() {
-        Map map = new Map.MapBuilder().setWidth(10).setHeight(10).buildMap().build();
+        Map map = Map.builder().width(10).height(10).build();
         map.placeActor(Monster.builder().build(),5,5);
         assert !map.canPlaceActor(Monster.builder().build(),5,5);
     }

@@ -11,7 +11,7 @@ public class FightTests {
 
     @Test
     public void kill() {
-        Map map = new Map.MapBuilder().setWidth(4).setHeight(4).buildMap().build();
+        Map map = Map.builder().width(4).height(4).build().generateMap();
         Monster monster1 = (Monster) Monster.builder().hp(20).build();
         monster1.setWeapon(Weapon.builder().damage(1).shootChance(100).build());
         Monster monster2 = (Monster) Monster.builder().hp(1).build();
@@ -23,7 +23,7 @@ public class FightTests {
 
     @Test
     public void noWeaponAttack() {
-        Map map = new Map.MapBuilder().setWidth(4).setHeight(4).buildMap().build();
+        Map map = Map.builder().width(4).height(4).build();
         Monster actor1 = (Monster) Monster.builder().hp(20).build();
         Monster actor2 = (Monster) Monster.builder().hp(1).build();
         map.placeActor(actor1, 1, 1);

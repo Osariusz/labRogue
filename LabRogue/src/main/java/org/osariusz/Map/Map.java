@@ -1,5 +1,7 @@
 package org.osariusz.Map;
 
+import lombok.Builder;
+import lombok.Getter;
 import org.osariusz.Actors.Actor;
 import org.osariusz.MapElements.MapElement;
 import org.osariusz.MapElements.Tile;
@@ -11,16 +13,37 @@ import org.osariusz.Utils.TypeUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Builder
 public class Map {
 
     List<List<MapElement>> map;
 
-    public Map(MapBuilder mapBuilder) {
-        this.map = mapBuilder.map;
+    @Builder.Default
+    private int width = 100;
+    @Builder.Default
+    private int height = 100;
+
+    public static MapBuilder builder() {
+        return new GeneratorMapBuilder();
     }
 
-    public List<List<MapElement>> getMap() {
-        return map;
+    public MapElement getFeature(int x, int y) {
+        if(x == 0 || x == width-1 || y == 0 || y == height-1) {
+            return Wall.builder().build();
+        }
+        return Tile.builder().build();
+    }
+
+    public Map generateMap() {
+        map = new ArrayList<>();
+        for(int x = 0;x<width;++x) {
+            map.add(new ArrayList<>());
+            for(int y = 0;y<height;++y) {
+                map.get(x).add(getFeature(x,y));
+            }
+        }
+        return this;
     }
 
     public List<Actor> getAllActors() {
@@ -94,67 +117,15 @@ public class Map {
         return false;
     }
 
-    public static class MapBuilder {
-        int width;
-        int height;
-        int itemCount;
-
-        int enemyCount;
-
-        List<List<MapElement>> map;
-
-        public MapBuilder setWidth(int width) {
-            this.width = width;
-            return this;
+    public static class GeneratorMapBuilder extends MapBuilder {
+        GeneratorMapBuilder() {
+            super();
         }
 
-        public MapBuilder setHeight(int height) {
-            this.height = height;
-            return this;
-        }
-
-        public MapBuilder setItemCount(int itemCount) {
-            this.itemCount = itemCount;
-            return this;
-        }
-
-        public MapBuilder setEnemyCount(int enemyCount) {
-            this.enemyCount = enemyCount;
-            return this;
-        }
-
-        public MapBuilder buildMap() {
-            map = new ArrayList<>();
-            for (int x = 0; x < width; x++) {
-                List<MapElement> column = new ArrayList<>();
-
-
-                for (int y = 0; y < height; y++) {
-                    MapElement mapElement;
-                    if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-                        mapElement = Wall.builder().build();
-                    } else if (x == width / 2 && y == width / 2) {
-                        Tile tile = Tile.builder().build();
-                        //tile.setActor(new Actor(20));
-                        mapElement = tile;
-                    } else if (x % 25 == 2 && y % 13 == 1) {
-                        Tile tile = Tile.builder().build();
-                        tile.addItem(Item.builder().build());
-                        mapElement = tile;
-                    } else {
-                        mapElement = Tile.builder().build();
-                    }
-                    column.add(mapElement);
-                }
-                map.add(column);
-            }
-            return this;
-        }
-
-
-        public Map build() {
-            return new Map(this);
+        @Override public Map build() {
+            Map map = super.build();
+            map.generateMap();
+            return map;
         }
     }
-
 }
