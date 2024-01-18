@@ -1,5 +1,6 @@
 package org.osariusz.MapElements;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -20,6 +21,8 @@ public class Tile extends MapElement {
 
     @Setter
     private Actor actor;
+
+    @Builder.Default
     private List<Item> items = new ArrayList<>();
 
     public Actor getActor() {
