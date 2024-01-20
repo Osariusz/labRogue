@@ -11,7 +11,7 @@ public class FightTests {
 
     @Test
     public void kill() {
-        Map map = Map.builder().width(4).height(4).build().generateMap();
+        Map map = Map.builder().width(4).height(4).build();
         Monster monster1 = (Monster) Monster.builder().hp(20).build();
         monster1.setWeapon(Weapon.builder().damage(1).shootChance(100).build());
         Monster monster2 = (Monster) Monster.builder().hp(1).build();

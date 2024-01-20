@@ -5,10 +5,8 @@ import lombok.Getter;
 import org.osariusz.Actors.Actor;
 import org.osariusz.MapElements.MapElement;
 import org.osariusz.MapElements.Tile;
-import org.osariusz.GameElements.GameElement;
 import org.osariusz.MapElements.Wall;
 import org.osariusz.Items.Item;
-import org.osariusz.Utils.TypeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +27,10 @@ public class Map {
     }
 
     public MapElement getFeature(int x, int y) {
+        return map.get(y).get(x);
+    }
+
+    public MapElement generateFeature(int x, int y) {
         if(x == 0 || x == width-1 || y == 0 || y == height-1) {
             return Wall.builder().build();
         }
@@ -37,10 +39,10 @@ public class Map {
 
     public Map generateMap() {
         map = new ArrayList<>();
-        for(int x = 0;x<width;++x) {
+        for(int x = 0;x<height;++x) {
             map.add(new ArrayList<>());
-            for(int y = 0;y<height;++y) {
-                map.get(x).add(getFeature(x,y));
+            for(int y = 0;y<width;++y) {
+                map.get(x).add(generateFeature(x,y));
             }
         }
         return this;

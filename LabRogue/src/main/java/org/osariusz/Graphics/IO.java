@@ -8,9 +8,9 @@ import java.util.Scanner;
 
 public class IO {
     public void displayMap(Map map) {
-        for(int x = 0;x<map.getMap().size();x++) {
-            for(int y = 0;y<map.getMap().get(x).size();y++) {
-                System.out.print(map.getMap().get(x).get(y).getSymbol());
+        for(int y = 0;y<map.getHeight();y++) {
+            for(int x = 0;x<map.getWidth();x++) {
+                System.out.print(map.getFeature(x,y).getSymbol());
             }
             System.out.print("\n");
         }
