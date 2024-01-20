@@ -39,10 +39,10 @@ public class Map {
 
     public Map generateMap() {
         map = new ArrayList<>();
-        for(int x = 0;x<height;++x) {
+        for(int y = 0;y<height;++y) {
             map.add(new ArrayList<>());
-            for(int y = 0;y<width;++y) {
-                map.get(x).add(generateFeature(x,y));
+            for(int x = 0;x<width;++x) {
+                map.get(y).add(generateFeature(x,y));
             }
         }
         return this;
