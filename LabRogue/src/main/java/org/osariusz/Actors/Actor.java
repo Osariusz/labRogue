@@ -69,11 +69,11 @@ public abstract class Actor extends GameElement {
     }
 
     public int getRealShootChance(Actor attacked) {
-        int result = getShootThreshold()-attacked.agility;
-        if(result > 100) {
+        int result = getShootThreshold() - attacked.agility;
+        if (result > 100) {
             return 100;
         }
-        if(result < 1) {
+        if (result < 1) {
             return 1;
         }
         return result;

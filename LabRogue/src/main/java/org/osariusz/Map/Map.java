@@ -31,7 +31,7 @@ public class Map {
     }
 
     public MapElement generateFeature(int x, int y) {
-        if(x == 0 || x == width-1 || y == 0 || y == height-1) {
+        if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
             return Wall.builder().build();
         }
         return Tile.builder().build();
@@ -39,10 +39,10 @@ public class Map {
 
     public Map generateMap() {
         map = new ArrayList<>();
-        for(int y = 0;y<height;++y) {
+        for (int y = 0; y < height; ++y) {
             map.add(new ArrayList<>());
-            for(int x = 0;x<width;++x) {
-                map.get(y).add(generateFeature(x,y));
+            for (int x = 0; x < width; ++x) {
+                map.get(y).add(generateFeature(x, y));
             }
         }
         return this;
@@ -124,7 +124,8 @@ public class Map {
             super();
         }
 
-        @Override public Map build() {
+        @Override
+        public Map build() {
             Map map = super.build();
             map.generateMap();
             return map;

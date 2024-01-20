@@ -74,11 +74,11 @@ public class FightScenarios {
                 secondWins++;
             }
         }
-        System.out.println("Player won " + firstWins + " times and "+ enemyBuilder.build().toString() +" won " + secondWins);
+        System.out.println("Player won " + firstWins + " times and " + enemyBuilder.build().toString() + " won " + secondWins);
     }
 
     public static void testNewEnemies() {
-        for(Monster.MonsterBuilder<?, ?> monsterBuilder : monsters) {
+        for (Monster.MonsterBuilder<?, ?> monsterBuilder : monsters) {
             countPlayerWins(monsterBuilder);
         }
     }

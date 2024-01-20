@@ -54,16 +54,13 @@ public class Tile extends MapElement {
     }
 
     public char getSymbol() {
-        if(actor != null) {
+        if (actor != null) {
             return actor.getSymbol();
-        }
-        else if(items.size() == 1) {
+        } else if (items.size() == 1) {
             return items.get(0).getSymbol();
-        }
-        else if(items.size() > 1) {
+        } else if (items.size() > 1) {
             return 'I';
-        }
-        else {
+        } else {
             return symbol;
         }
     }
