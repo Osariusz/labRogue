@@ -16,7 +16,7 @@ import java.util.List;
 public class Tile extends MapElement {
     {
         super.name = "Tile";
-        super.symbol = 'G';
+        super.symbol = ' ';
     }
 
     @Setter
