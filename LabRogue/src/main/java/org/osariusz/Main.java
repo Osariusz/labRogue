@@ -8,7 +8,7 @@ import static org.osariusz.Utils.FightScenarios.*;
 public class Main {
     public static void main(String[] args) {
         //testNewEnemies();
-        Map map = Map.builder().width(100).height(20).build();
+        Map map = Map.builder().width(10).height(1).build();
         IO display = new IO();
         display.IOLoop(map);
     }
