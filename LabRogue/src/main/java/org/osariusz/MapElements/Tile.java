@@ -2,6 +2,7 @@ package org.osariusz.MapElements;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.osariusz.Actors.Actor;
@@ -11,23 +12,26 @@ import org.osariusz.Items.Item;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuperBuilder
 @Getter
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
 public class Tile extends MapElement {
-    {
+
+    @Override
+    protected void initializeDefaults() {
+        super.initializeDefaults();
         super.name = "Tile";
         super.symbol = ' ';
+        this.items = new ArrayList<>();
     }
 
+
+    @Getter
     @Setter
     private Actor actor;
 
-    @Builder.Default
-    private List<Item> items = new ArrayList<>();
-
-    public Actor getActor() {
-        return actor;
-    }
+    @Getter
+    private List<Item> items;
 
     public void removeActor() {
         actor = null;
@@ -43,10 +47,6 @@ public class Tile extends MapElement {
 
     public void removeItem(Item item) {
         items.remove(item);
-    }
-
-    public List<Item> getItems() {
-        return items;
     }
 
     public void removeAllItems() {

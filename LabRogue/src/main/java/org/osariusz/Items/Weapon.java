@@ -5,12 +5,20 @@ import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import org.osariusz.Actors.Actor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
-@SuperBuilder
-public class Weapon extends Item {
-    {
-        super.name = "Weapon";
+@SuperBuilder(toBuilder = true)
+public class Weapon extends Equipment {
+
+    @Override
+    protected void initializeDefaults() {
+        super.initializeDefaults();
+        super.id = "generic_weapon";
+        super.name = "Generic Weapon";
         super.symbol = 'w';
+        super.allowedSlots = new ArrayList<>(List.of(Actor.EquipmentSlots.WEAPON));
     }
 
     @Builder.Default

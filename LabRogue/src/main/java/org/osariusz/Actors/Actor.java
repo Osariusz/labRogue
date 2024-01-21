@@ -2,26 +2,20 @@ package org.osariusz.Actors;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.osariusz.GameElements.GameElement;
+import org.osariusz.Items.Equipment;
 import org.osariusz.Items.Item;
 import org.osariusz.Items.Weapon;
 import org.osariusz.Utils.FightReport;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
 public abstract class Actor extends GameElement {
-
-    @Builder.Default
-    private String id = "none";
-
-    @Getter
-    @Builder.Default
-    private String name = "No name";
 
     @Getter
     @Builder.Default
@@ -40,7 +34,25 @@ public abstract class Actor extends GameElement {
     @Builder.Default
     private Weapon weapon = Weapon.builder().damage(1).shootChance(50).build(); //TODO: rewrite as an item in equipment
 
-    private Map<String, List<Item>> equipment;
+    @Builder.Default
+    private Map<String, List<Equipment>> equipment = initialEquipment();
+
+    private List<Item> backpack;
+
+    public enum EquipmentSlots {
+        HELMET,
+        OUTFIT,
+        PASSIVE,
+        WEAPON
+    }
+
+    private static Map<String, List<Equipment>> initialEquipment() {
+        Map<String, List<Equipment>> newEquipment = new HashMap<>();
+        for(EquipmentSlots slot : EquipmentSlots.values()) {
+            newEquipment.put(slot.toString(), new ArrayList<>());
+        }
+        return newEquipment;
+    }
 
     public void dealDamage(int damage) {
         hp -= damage;
@@ -50,8 +62,25 @@ public abstract class Actor extends GameElement {
         hp += heal;
     }
 
+    public List<Equipment> getAllEquipment() {
+        List<Equipment> result = new ArrayList<>();
+        for(List<Equipment> layer : equipment.values()) {
+            result.addAll(layer);
+        }
+        return result;
+    }
+
+    public int getRealHP() {
+        int realHp = hp;
+        List<Equipment> equippedItems = getAllEquipment();
+        for(Equipment item : equippedItems) {
+            hp += item.getHpBonus();
+        }
+        return realHp;
+    }
+
     public boolean isAlive() {
-        return hp > 0;
+        return getRealHP() > 0;
     }
 
     public int getShootThreshold() {

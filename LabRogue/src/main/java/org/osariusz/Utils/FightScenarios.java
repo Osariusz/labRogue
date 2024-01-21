@@ -9,8 +9,8 @@ import static org.osariusz.Actors.ActorList.monsters;
 
 public class FightScenarios {
     public static void humanFightingAnomaly() {
-        Monster anomaly = Monster.builder().id("anomaly").name("Anomaly").hp(100).build();
-        Monster human = Monster.builder().id("human").name("Human").hp(10).build();
+        Monster anomaly = (Monster) Monster.builder().hp(100).id("anomaly").name("Anomaly").build();
+        Monster human = (Monster) Monster.builder().hp(10).id("human").name("Human").build();
         human.setWeapon(Weapon.builder().damage(50).shootChance(5).build());
         while (human.isAlive() && anomaly.isAlive()) {
             anomaly.attackActor(human);
@@ -27,9 +27,9 @@ public class FightScenarios {
 
     public static int bothHumans() {
         Weapon deadchatxd = Weapon.builder().damage(1).shootChance(50).build();
-        Monster human1 = Monster.builder().id("human").name("Human1").hp(10).build();
+        Monster human1 = (Monster) Monster.builder().hp(10).id("human").name("Human1").build();
         human1.setWeapon(deadchatxd);
-        Monster human2 = Monster.builder().id("human").name("Human2").hp(10).build();
+        Monster human2 = (Monster) Monster.builder().hp(10).id("human").name("Human2").build();
         human2.setWeapon(deadchatxd);
         while (human1.isAlive() && human2.isAlive()) {
             human1.attackActor(human2);
@@ -66,7 +66,7 @@ public class FightScenarios {
         int firstWins = 0;
         int secondWins = 0;
         for (int i = 0; i < 5000; ++i) {
-            Player player = Player.builder().id("human").name("Player").build();
+            Player player = (Player) Player.builder().id("human").name("Player").build();
             int result = testFight(player, enemyBuilder.build());
             if (result == 1) {
                 firstWins++;

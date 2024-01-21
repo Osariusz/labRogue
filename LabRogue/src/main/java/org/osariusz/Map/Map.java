@@ -3,13 +3,16 @@ package org.osariusz.Map;
 import lombok.Builder;
 import lombok.Getter;
 import org.osariusz.Actors.Actor;
+import org.osariusz.Items.ItemList;
 import org.osariusz.MapElements.MapElement;
 import org.osariusz.MapElements.Tile;
 import org.osariusz.MapElements.Wall;
 import org.osariusz.Items.Item;
+import org.osariusz.Utils.RandomChoice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 @Builder
@@ -22,6 +25,9 @@ public class Map {
     @Builder.Default
     private int height = 100;
 
+    @Builder.Default
+    private int itemGenerationChance = 3; //3 is 3%
+
     public static MapBuilder builder() {
         return new GeneratorMapBuilder();
     }
@@ -32,9 +38,19 @@ public class Map {
 
     public MapElement generateFeature(int x, int y) {
         if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-            return Wall.builder().build();
+            return new Wall().toBuilder().build();
         }
-        return Tile.builder().build();
+        return new Tile().toBuilder().build();
+    }
+
+    public void placeGenerateItem(int x, int y) {
+        Random random = new Random();
+        if (random.nextInt(1, 101) <= itemGenerationChance) {
+            Item item = RandomChoice.choose(random, ItemList.getItemSpawnList()).build();
+            if(getFeature(x,y) instanceof Tile tile) {
+                tile.addItem(item);
+            }
+        }
     }
 
     public Map generateMap() {
@@ -43,6 +59,11 @@ public class Map {
             map.add(new ArrayList<>());
             for (int x = 0; x < width; ++x) {
                 map.get(y).add(generateFeature(x, y));
+            }
+        }
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
+                placeGenerateItem(x, y);
             }
         }
         return this;

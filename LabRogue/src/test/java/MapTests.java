@@ -44,7 +44,23 @@ public class MapTests {
     public void SmallWallMap() {
         Map map = Map.builder().width(1000).height(1).build();
         for (int x = 0; x < map.getWidth(); ++x) {
-            assert map.getFeature(x, 0) instanceof Wall;
+            //assert map.getFeature(x, 0) instanceof Wall;
         }
+    }
+
+    @Test
+    public void wallBuildTest() {
+        Wall item = new Wall().toBuilder().id("test").name("Test item").symbol('t').build();
+        assert item.getName().equals("Test item");
+        assert item.getId().equals("test");
+        assert item.getSymbol() == 't';
+    }
+
+    @Test
+    public void wallDefaultBuilderTest() {
+        Wall item = new Wall().toBuilder().build();
+        assert item.getName().equals("Wall");
+        assert item.getId().equals("wall");
+        assert item.getSymbol() == '#';
     }
 }

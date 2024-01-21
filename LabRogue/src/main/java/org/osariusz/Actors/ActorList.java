@@ -1,18 +1,31 @@
 package org.osariusz.Actors;
 
+import org.osariusz.GameElements.GameElement;
 import org.osariusz.Items.Weapon;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ActorList {
     public static final List<Monster.MonsterBuilder<?, ?>> monsters = new ArrayList<>() {
         {
-            add(Monster.builder().spawnChance(80).id("rat").name("Szczur").hp(2).agility(60).weapon(Weapon.builder().damage(1).shootChance(10).build()));
-            add(Monster.builder().spawnChance(40).id("plague_doctor").name("Zarażony doktor").hp(10).weapon(Weapon.builder().damage(1).shootChance(40).range(2).build()));
-            add(Monster.builder().spawnChance(40).id("escaped").name("Uciekinier"));
-            add(Monster.builder().spawnChance(10).id("statue").name("Statua").hp(15).agility(0).weapon(Weapon.builder().damage(2).shootChance(50).range(2).build()));
-            add(Monster.builder().spawnChance(1).id("dinosaur").name("Dinozaur").hp(100).agility(-20).weapon(Weapon.builder().damage(10).shootChance(70).range(5).build()));
+            add(new Monster().toBuilder().spawnChance(80).hp(2).agility(60).weapon(Weapon.builder().damage(1).shootChance(10).build()).id("rat").name("Szczur"));
+            add(new Monster().toBuilder().spawnChance(40).hp(10).weapon(Weapon.builder().damage(1).shootChance(40).range(2).build()).id("plague_doctor").name("Zarażony doktor"));
+            add(new Monster().toBuilder().spawnChance(40).id("escaped").name("Uciekinier"));
+            add(new Monster().toBuilder().spawnChance(10).hp(15).agility(0).weapon(Weapon.builder().damage(2).shootChance(50).range(2).build()).id("statue").name("Statua"));
+            add(new Monster().toBuilder().spawnChance(1).hp(100).agility(-20).weapon(Weapon.builder().damage(10).shootChance(70).range(5).build()).id("dinosaur").name("Dinozaur"));
+        }
+
+        private void add(GameElement.GameElementBuilder<?, ?> name) { //automatically casting the builders to MonsterBuilder
+            monsters.add((Monster.MonsterBuilder<?, ?>) name);
         }
     };
+
+    public static List<Map.Entry<Integer, Monster.MonsterBuilder<?, ?>>> getMonsterSpawnList() {
+        List<Map.Entry<Integer, Monster.MonsterBuilder<?, ?>>> result = new ArrayList<>();
+        for(Monster.MonsterBuilder<?, ?> builder : monsters) {
+            Monster exampleMonster = builder.build();
+            result.add(new AbstractMap.SimpleEntry<>(exampleMonster.getSpawnChance(),builder));
+        }
+        return result;
+    }
 }
