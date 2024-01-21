@@ -16,9 +16,6 @@ public class ItemList {
             add(new PassiveEquipment().toBuilder().allowedSlots(new ArrayList<>(List.of(Actor.EquipmentSlots.PASSIVE))).hpBonus(2).id("a_500").name("A-500"));
         }
 
-        private void add(GameElement.GameElementBuilder<?, ?> name) { //automatically casting the builders to MonsterBuilder
-            items.add((Item.ItemBuilder<?, ?>) name);
-        }
     };
 
     public static List<Map.Entry<Integer, Item.ItemBuilder<?, ?>>> getItemSpawnList() {
