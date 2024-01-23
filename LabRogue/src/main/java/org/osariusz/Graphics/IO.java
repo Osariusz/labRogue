@@ -3,8 +3,10 @@ package org.osariusz.Graphics;
 import org.osariusz.Actors.Actor;
 import org.osariusz.Items.Item;
 import org.osariusz.Map.Map;
+import org.osariusz.Utils.Logging;
 
 import java.util.Scanner;
+import java.util.logging.Level;
 
 public class IO {
     public void displayMap(Map map) {
@@ -47,10 +49,20 @@ public class IO {
     }
 
     public void userInput(Map map) {
-        Scanner s = new Scanner(System.in);
-        String c = s.nextLine();
-        if (c.equals("w")) {
-
+        while(true) {
+            Scanner s = new Scanner(System.in);
+            String c = s.nextLine();
+            int xMovement = 0;
+            int yMovement = 0;
+            switch (c) {
+                case "w": yMovement = -1; break;
+                case "s": yMovement = 1; break;
+                case "a": xMovement = -1; break;
+                case "d": xMovement = 1; break;
+                default: System.out.println("Wrong input!"); continue;
+            }
+            map.moveActor(map.getPlayer(),xMovement,yMovement);
+            break;
         }
     }
 
