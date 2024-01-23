@@ -11,7 +11,7 @@ public class RandomChoice {
 
     public static <T> T choose(Random random, List<Map.Entry<Integer, T>> list) {
         if(list.isEmpty()) {
-            Logging.logger.log(Level.WARNING, "Empty list passed to ");
+            Logging.logger.log(Level.WARNING, "Empty list passed to RandomChoice");
         }
 
         int max = 0;
