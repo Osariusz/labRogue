@@ -14,7 +14,7 @@ public class ActorList {
             add(new Monster().toBuilder().spawnChance(10).hp(15).agility(0).weapon(Weapon.builder().damage(2).shootChance(50).range(2).build()).id("statue").name("Statua"));
             add(new Monster().toBuilder().spawnChance(1).hp(100).agility(-20).weapon(Weapon.builder().damage(10).shootChance(70).range(5).build()).id("dinosaur").name("Dinozaur"));
         }
-        
+
     };
 
     public static List<Map.Entry<Integer, Monster.MonsterBuilder<?, ?>>> getMonsterSpawnList() {

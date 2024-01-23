@@ -11,6 +11,7 @@ LabRogue/.idea/libraries/
 LabRogue/*.iws
 LabRogue/*.iml
 LabRogue/*.ipr
+LabRogue/out/
 
 ### Eclipse ###
 LabRogue/.apt_generated

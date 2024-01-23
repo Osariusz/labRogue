@@ -29,8 +29,21 @@ public class IO {
     }
 
     public void clearDisplay() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        try {
+            String operatingSystem = System.getProperty("os.name"); // Check the current operating system
+
+            if (operatingSystem.contains("Windows")) {
+                // Runtime.getRuntime().exec("cls");
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            }
+            else {
+                // Assuming Unix or Linux
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (final Exception e) {
+            System.out.println(e.toString());
+        }
     }
 
     public void userInput(Map map) {
@@ -44,8 +57,6 @@ public class IO {
     public void IOLoop(Map map) {
         while (true) {
             displayMap(map);
-            displayMapActors(map);
-            displayMapItems(map);
             userInput(map);
             clearDisplay();
         }
