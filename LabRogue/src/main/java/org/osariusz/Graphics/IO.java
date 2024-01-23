@@ -12,6 +12,14 @@ import java.util.Scanner;
 import java.util.logging.Level;
 
 public class IO {
+
+    String helpText = """
+            w s a d - move
+            e [slotNumber] [slotName] - equip item on slotNumber from backpack to slotName
+            de [slotNumber] [slotName] - deequip item on position slotNumber from slotName
+            f [wsad] - fire/attack on selected position 
+            """;
+
     public void displayMap(Map map) {
         for (int y = 0; y < map.getHeight(); y++) {
             for (int x = 0; x < map.getWidth(); x++) {
@@ -31,8 +39,12 @@ public class IO {
             }
         }
         System.out.println("Your backpack: ");
+        List<Item> backpack = player.getBackpack();
+        for(int i = 0;i<backpack.size();++i) {
+            System.out.println((i+1)+". "+backpack.get(i).toString());
+        }
         for (Item item : player.getBackpack()) {
-            System.out.println(item.toString());
+
         }
     }
 
@@ -69,26 +81,26 @@ public class IO {
         while (true) {
             Scanner s = new Scanner(System.in);
             String c = s.nextLine();
-            int xMovement = 0;
-            int yMovement = 0;
             switch (c) {
                 case "w":
-                    yMovement = -1;
+                    map.moveActor(map.getPlayer(), 0, -1);
                     break;
                 case "s":
-                    yMovement = 1;
+                    map.moveActor(map.getPlayer(), 0, 1);
                     break;
                 case "a":
-                    xMovement = -1;
+                    map.moveActor(map.getPlayer(), -1, 0);
                     break;
                 case "d":
-                    xMovement = 1;
+                    map.moveActor(map.getPlayer(), 1, 0);
                     break;
+                case "help":
+                    System.out.println(helpText);
+                    continue;
                 default:
                     System.out.println("Wrong input!");
                     continue;
             }
-            map.moveActor(map.getPlayer(), xMovement, yMovement);
             break;
         }
     }

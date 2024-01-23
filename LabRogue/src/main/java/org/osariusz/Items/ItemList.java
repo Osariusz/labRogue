@@ -14,6 +14,7 @@ public class ItemList {
         {
             add(new Item().toBuilder().id("rat_tail").name("Rat tail"));
             add(new PassiveEquipment().toBuilder().allowedSlots(new ArrayList<>(List.of(Actor.EquipmentSlots.PASSIVE))).hpBonus(2).id("a_500").name("A-500"));
+            add(new Equipment().toBuilder().hpBonus(1).agilityBonus(-1).hpBonus(2).allowedSlots(new ArrayList<>(List.of(Actor.EquipmentSlots.OUTFIT))).id("spacesuit").name("Space suit"));
         }
 
     };

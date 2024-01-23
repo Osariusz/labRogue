@@ -18,7 +18,7 @@ public class Equipment extends Item{
         super.initializeDefaults();
         super.id = "equipment";
         super.name = "Equipment";
-        super.symbol = 'i';
+        super.symbol = 'e';
         this.allowedSlots = new ArrayList<>();
     }
 
@@ -27,5 +27,31 @@ public class Equipment extends Item{
     protected int agilityBonus;
 
     protected List<Actor.EquipmentSlots> allowedSlots;
+
+    @Override
+    public String toString() {
+        String base = name;
+
+
+
+        boolean modifiers = false;
+        String modifiersString = "(";
+        if(hpBonus != 0) {
+            if(modifiers) {
+                modifiersString += ", ";
+            }
+            modifiers = true;
+            modifiersString += "hp: "+hpBonus;
+        }
+        if(agilityBonus != 0) {
+            if(modifiers) {
+                modifiersString += ", ";
+            }
+            modifiers = true;
+            modifiersString += "agility: "+agilityBonus;
+        }
+        modifiersString += ")";
+        return name + modifiersString;
+    }
 
 }
