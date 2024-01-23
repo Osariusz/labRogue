@@ -33,8 +33,10 @@ public abstract class Actor extends GameElement {
     @Getter
     protected Weapon weapon;
 
+    @Getter
     protected Map<String, List<Equipment>> equipment;
 
+    @Getter
     protected List<Item> backpack;
 
     @Getter
