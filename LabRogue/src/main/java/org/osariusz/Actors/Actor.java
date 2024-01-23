@@ -18,30 +18,28 @@ import java.util.*;
 public abstract class Actor extends GameElement {
 
     @Getter
-    @Builder.Default
-    private int hp = 10;
+    protected int hp;
 
     @Getter
-    @Builder.Default
-    private int agility = 20;
+    protected int agility;
 
     @Getter
-    @Builder.Default
-    private int movementSpeed = 1;
+    protected int movementSpeed;
+
+    @Getter
+    protected boolean canPickItems;
 
     @Setter
     @Getter
-    @Builder.Default
-    private Weapon weapon = Weapon.builder().damage(1).shootChance(50).build(); //TODO: rewrite as an item in equipment
+    protected Weapon weapon;
 
-    @Builder.Default
-    private Map<String, List<Equipment>> equipment = initialEquipment();
+    protected Map<String, List<Equipment>> equipment;
 
-    private List<Item> backpack;
+    protected List<Item> backpack;
 
     @Getter
     @Setter
-    private int x, y;
+    protected int x, y;
 
     @Override
     protected void initializeDefaults() {
@@ -49,6 +47,17 @@ public abstract class Actor extends GameElement {
         super.name = "Generic Actor";
         super.id = "generic_actor";
         super.symbol = 'A';
+        this.hp = 10;
+        this.agility = 20;
+        this.movementSpeed = 1;
+        this.canPickItems = false;
+        this.backpack = new ArrayList<>();
+        this.equipment = initialEquipment();
+        this.weapon = Weapon.builder().damage(1).shootChance(50).build(); //TODO: rewrite as an item in equipment
+    }
+
+    public void addToBackpack(List<Item> items) {
+        backpack.addAll(items);
     }
 
     public enum EquipmentSlots {

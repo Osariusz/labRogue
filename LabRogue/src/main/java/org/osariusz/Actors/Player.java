@@ -15,6 +15,7 @@ public class Player extends Actor {
         super.name = "Player";
         super.id = "player";
         super.symbol = '@';
+        super.canPickItems = true;
     }
 
     public void movePlayer(Map map, int xMovement, int yMovement) {

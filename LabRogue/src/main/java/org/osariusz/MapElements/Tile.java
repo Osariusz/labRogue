@@ -53,6 +53,15 @@ public class Tile extends MapElement {
         items = new ArrayList<>();
     }
 
+    public boolean hasItems() {
+        return !items.isEmpty();
+    }
+
+    public void transferItemsToActor(Actor actor) {
+        actor.addToBackpack(items);
+        items.clear();
+    }
+
     public char getSymbol() {
         if (actor != null) {
             return actor.getSymbol();

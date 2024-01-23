@@ -110,6 +110,10 @@ public class Map {
             tile.setActor(actor);
             actor.setX(x);
             actor.setY(y);
+
+            if(actor.isCanPickItems() && tile.hasItems()) {
+                tile.transferItemsToActor(actor);
+            }
         }
     }
 
