@@ -54,7 +54,7 @@ public class Map {
         Random random = new Random();
         if (random.nextInt(1, 101) <= itemGenerationChance) {
             Item item = RandomChoice.choose(random, ItemList.getItemSpawnList()).build();
-            if(getFeature(x,y) instanceof Tile tile) {
+            if (getFeature(x, y) instanceof Tile tile) {
                 placeItem(item, x, y);
             }
         }
@@ -73,7 +73,7 @@ public class Map {
                 placeGenerateItem(x, y);
             }
         }
-        placeActor(player,width/2,height/2);
+        placeActor(player, width / 2, height / 2);
         return this;
     }
 
@@ -91,16 +91,15 @@ public class Map {
     }
 
     public void moveActor(Actor actor, int xMovement, int yMovement) {
-        int x = actor.getX()+xMovement;
-        int y = actor.getY()+yMovement;
-        if(canPlaceActor(actor, x, y)) {
+        int x = actor.getX() + xMovement;
+        int y = actor.getY() + yMovement;
+        if (canPlaceActor(actor, x, y)) {
             removeActor(actor.getX(), actor.getY());
             actor.setX(x);
             actor.setY(y);
             placeActor(actor, x, y);
-        }
-        else {
-            Logging.logger.log(Level.WARNING, "Can't move "+actor.toString()+" to "+x+", "+y);
+        } else {
+            Logging.logger.log(Level.WARNING, "Can't move " + actor.toString() + " to " + x + ", " + y);
         }
     }
 
@@ -111,7 +110,7 @@ public class Map {
             actor.setX(x);
             actor.setY(y);
 
-            if(actor.isCanPickItems() && tile.hasItems()) {
+            if (actor.isCanPickItems() && tile.hasItems()) {
                 tile.transferItemsToActor(actor);
             }
         }

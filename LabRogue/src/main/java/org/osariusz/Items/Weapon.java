@@ -19,15 +19,15 @@ public class Weapon extends Equipment {
         super.name = "Generic Weapon";
         super.symbol = 'w';
         super.allowedSlots = new ArrayList<>(List.of(Actor.EquipmentSlots.WEAPON));
+        this.damage = 1;
+        this.shootChance = 50;
+        range = 1;
     }
 
-    @Builder.Default
-    int damage = 1;
+    int damage;
 
-    @Builder.Default
-    int shootChance = 50; //0-100
+    int shootChance; //0-100
 
-    @Builder.Default
-    int range = 1;
+    int range;
 
 }

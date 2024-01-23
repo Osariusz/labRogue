@@ -71,7 +71,7 @@ public abstract class Actor extends GameElement {
 
     private static Map<String, List<Equipment>> initialEquipment() {
         Map<String, List<Equipment>> newEquipment = new HashMap<>();
-        for(EquipmentSlots slot : EquipmentSlots.values()) {
+        for (EquipmentSlots slot : EquipmentSlots.values()) {
             newEquipment.put(slot.toString(), new ArrayList<>());
         }
         return newEquipment;
@@ -87,7 +87,7 @@ public abstract class Actor extends GameElement {
 
     public List<Equipment> getAllEquipment() {
         List<Equipment> result = new ArrayList<>();
-        for(List<Equipment> layer : equipment.values()) {
+        for (List<Equipment> layer : equipment.values()) {
             result.addAll(layer);
         }
         return result;
@@ -96,7 +96,7 @@ public abstract class Actor extends GameElement {
     public int getRealHP() {
         int realHp = hp;
         List<Equipment> equippedItems = getAllEquipment();
-        for(Equipment item : equippedItems) {
+        for (Equipment item : equippedItems) {
             hp += item.getHpBonus();
         }
         return realHp;
