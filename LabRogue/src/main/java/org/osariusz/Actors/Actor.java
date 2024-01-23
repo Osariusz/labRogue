@@ -39,6 +39,18 @@ public abstract class Actor extends GameElement {
 
     private List<Item> backpack;
 
+    @Getter
+    @Setter
+    private int x, y;
+
+    @Override
+    protected void initializeDefaults() {
+        super.initializeDefaults();
+        super.name = "Generic Actor";
+        super.id = "generic_actor";
+        super.symbol = 'A';
+    }
+
     public enum EquipmentSlots {
         HELMET,
         OUTFIT,

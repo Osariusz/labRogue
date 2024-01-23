@@ -3,16 +3,19 @@ package org.osariusz.Map;
 import lombok.Builder;
 import lombok.Getter;
 import org.osariusz.Actors.Actor;
+import org.osariusz.Actors.Player;
 import org.osariusz.Items.ItemList;
 import org.osariusz.MapElements.MapElement;
 import org.osariusz.MapElements.Tile;
 import org.osariusz.MapElements.Wall;
 import org.osariusz.Items.Item;
+import org.osariusz.Utils.Logging;
 import org.osariusz.Utils.RandomChoice;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
 @Getter
 @Builder
@@ -27,6 +30,10 @@ public class Map {
 
     @Builder.Default
     private int itemGenerationChance = 3; //3 is 3%
+
+    @Getter
+    @Builder.Default
+    private Player player = new Player().toBuilder().build();
 
     public static MapBuilder builder() {
         return new GeneratorMapBuilder();
@@ -48,7 +55,7 @@ public class Map {
         if (random.nextInt(1, 101) <= itemGenerationChance) {
             Item item = RandomChoice.choose(random, ItemList.getItemSpawnList()).build();
             if(getFeature(x,y) instanceof Tile tile) {
-                tile.addItem(item);
+                placeItem(item, x, y);
             }
         }
     }
@@ -66,6 +73,7 @@ public class Map {
                 placeGenerateItem(x, y);
             }
         }
+        placeActor(player,width/2,height/2);
         return this;
     }
 
@@ -73,7 +81,7 @@ public class Map {
         List<Actor> actors = new ArrayList<>();
         for (int x = 0; x < map.size(); x++) {
             for (int y = 0; y < map.get(x).size(); y++) {
-                MapElement mapElement = map.get(x).get(y);
+                MapElement mapElement = map.get(y).get(x);
                 if (mapElement instanceof Tile && ((Tile) mapElement).hasActor()) {
                     actors.add(((Tile) mapElement).getActor());
                 }
@@ -82,21 +90,37 @@ public class Map {
         return actors;
     }
 
+    public void moveActor(Actor actor, int xMovement, int yMovement) {
+        int x = actor.getX()+xMovement;
+        int y = actor.getY()+yMovement;
+        if(canPlaceActor(actor, x, y)) {
+            removeActor(actor.getX(), actor.getY());
+            actor.setX(x);
+            actor.setY(y);
+            placeActor(actor, x, y);
+        }
+        else {
+            Logging.logger.log(Level.WARNING, "Can't move "+actor.toString()+" to "+x+", "+y);
+        }
+    }
+
     public void placeActor(Actor actor, int x, int y) {
         if (canPlaceActor(actor, x, y)) {
-            Tile tile = (Tile) map.get(x).get(y);
+            Tile tile = (Tile) map.get(y).get(x);
             tile.setActor(actor);
+            actor.setX(x);
+            actor.setY(y);
         }
     }
 
     public void removeActor(int x, int y) {
-        if (map.get(x).get(y) instanceof Tile tile) {
+        if (map.get(y).get(x) instanceof Tile tile) {
             tile.removeActor();
         }
     }
 
     public boolean canPlaceActor(Actor actor, int x, int y) {
-        if (map.get(x).get(y) instanceof Tile tile) {
+        if (map.get(y).get(x) instanceof Tile tile) {
             return tile.getActor() == null;
         }
         return false;
@@ -106,7 +130,7 @@ public class Map {
         List<Item> items = new ArrayList<>();
         for (int x = 0; x < map.size(); x++) {
             for (int y = 0; y < map.get(x).size(); y++) {
-                if (map.get(x).get(y) instanceof Tile tile) {
+                if (map.get(y).get(x) instanceof Tile tile) {
                     items.addAll(tile.getItems());
                 }
             }
@@ -116,25 +140,25 @@ public class Map {
 
     public void placeItem(Item item, int x, int y) {
         if (canPlaceItem(item, x, y)) {
-            Tile tile = (Tile) map.get(x).get(y);
+            Tile tile = (Tile) map.get(y).get(x);
             tile.addItem(item);
         }
     }
 
     public void removeAllItems(int x, int y) {
-        if (map.get(x).get(y) instanceof Tile tile) {
+        if (map.get(y).get(x) instanceof Tile tile) {
             tile.removeAllItems();
         }
     }
 
     public void removeItem(Item item, int x, int y) {
-        if (map.get(x).get(y) instanceof Tile tile) {
+        if (map.get(y).get(x) instanceof Tile tile) {
             tile.removeItem(item);
         }
     }
 
     public boolean canPlaceItem(Item item, int x, int y) {
-        if (map.get(x).get(y) instanceof Tile tile) {
+        if (map.get(y).get(x) instanceof Tile tile) {
             return tile.getItems().isEmpty();
         }
         return false;
