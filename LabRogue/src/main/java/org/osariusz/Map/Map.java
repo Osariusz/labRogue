@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.osariusz.Actors.Actor;
 import org.osariusz.Actors.Player;
 import org.osariusz.Items.ItemList;
+import org.osariusz.Map.Rooms.Room;
 import org.osariusz.MapElements.MapElement;
 import org.osariusz.MapElements.Tile;
 import org.osariusz.MapElements.Wall;
@@ -44,10 +45,30 @@ public class Map {
     }
 
     public MapElement generateFeature(int x, int y) {
-        if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+        if (x == 0 || x == getWidth() - 1 || y == 0 || y == getHeight() - 1) {
             return new Wall().toBuilder().build();
         }
         return new Tile().toBuilder().build();
+    }
+
+    public void placeRoom(Room room, int startX, int startY) {
+        if(room.getWidth()+startX >= getWidth()) {
+            Logging.logger.log(Level.WARNING,"Can't generate room at "+startX+", "+startY+" because of width");
+            return;
+        }
+        if(room.getHeight()+startY >= getHeight()) {
+            Logging.logger.log(Level.WARNING,"Can't generate room at "+startX+", "+startY+" because of height");
+            return;
+        }
+
+        for(int roomX = 0;roomX< room.getWidth();++roomX) {
+            for(int roomY = 0;roomY< room.getHeight();++roomY) {
+                int mapX = roomX+startX;
+                int mapY = roomY+startY;
+
+                placeMapElement(room.getFeature(roomX,roomY), mapX, mapY);
+            }
+        }
     }
 
     public void placeGenerateItem(int x, int y) {
@@ -60,20 +81,24 @@ public class Map {
         }
     }
 
+    public void placeMapElement(MapElement mapElement, int x, int y) {
+        getMap().get(y).set(x, mapElement);
+    }
+
     public Map generateMap() {
         map = new ArrayList<>();
-        for (int y = 0; y < height; ++y) {
+        for (int y = 0; y < getHeight(); ++y) {
             map.add(new ArrayList<>());
-            for (int x = 0; x < width; ++x) {
+            for (int x = 0; x < getWidth(); ++x) {
                 map.get(y).add(generateFeature(x, y));
             }
         }
-        for (int y = 0; y < height; ++y) {
-            for (int x = 0; x < width; ++x) {
+        for (int y = 0; y < getHeight(); ++y) {
+            for (int x = 0; x < getWidth(); ++x) {
                 placeGenerateItem(x, y);
             }
         }
-        placeActor(player, width / 2, height / 2);
+        placeActor(getPlayer(), getWidth() / 2, getHeight() / 2);
         return this;
     }
 
