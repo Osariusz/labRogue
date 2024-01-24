@@ -110,6 +110,7 @@ public class IO {
             displayMap(map);
             displayPlayerEquipment(map.getPlayer());
             userInput(map);
+            map.actorsTurn();
             clearDisplay();
         }
 

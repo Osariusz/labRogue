@@ -3,6 +3,8 @@ package org.osariusz.Map;
 import lombok.Builder;
 import lombok.Getter;
 import org.osariusz.Actors.Actor;
+import org.osariusz.Actors.ActorList;
+import org.osariusz.Actors.Monster;
 import org.osariusz.Actors.Player;
 import org.osariusz.Items.ItemList;
 import org.osariusz.Map.Rooms.Room;
@@ -11,6 +13,7 @@ import org.osariusz.MapElements.Tile;
 import org.osariusz.MapElements.Wall;
 import org.osariusz.Items.Item;
 import org.osariusz.Utils.Logging;
+import org.osariusz.Utils.Point;
 import org.osariusz.Utils.RandomChoice;
 
 import java.util.ArrayList;
@@ -113,6 +116,19 @@ public class Map {
         getMap().get(y).set(x, mapElement);
     }
 
+    public Point getAnyFieldForActor(Actor actor) {
+        for(int y = 0;y<map.size();++y) {
+            for(int x = 0;x<map.size();++x) {
+                if(map.get(y).get(x) instanceof Tile tile) {
+                    if(canPlaceActor(actor,x,y)) {
+                        return new Point(x, y);
+                    }
+                }
+            }
+        }
+        return new Point(0,0);
+    }
+
     public Map generateMap() {
         map = new ArrayList<>();
         for (int y = 0; y < getHeight(); ++y) {
@@ -127,14 +143,19 @@ public class Map {
                 placeGenerateItem(x, y);
             }
         }
-        placeActor(getPlayer(), getWidth() / 2, getHeight() / 2);
+        Point emptySlot = getAnyFieldForActor(player);
+        placeActor(getPlayer(), emptySlot.getX(), emptySlot.getY());
+        Monster rat = ActorList.getMonster("rat").build();
+        Point emptySlot2 = getAnyFieldForActor(rat);
+        placeActor(rat,emptySlot2.getX(),emptySlot2.getY());
         return this;
     }
 
     public List<Actor> getAllActors() {
+        //TODO: list of actors
         List<Actor> actors = new ArrayList<>();
-        for (int x = 0; x < map.size(); x++) {
-            for (int y = 0; y < map.get(x).size(); y++) {
+        for (int x = 0; x < getWidth(); x++) {
+            for (int y = 0; y < getHeight(); y++) {
                 MapElement mapElement = map.get(y).get(x);
                 if (mapElement instanceof Tile && ((Tile) mapElement).hasActor()) {
                     actors.add(((Tile) mapElement).getActor());
@@ -142,6 +163,15 @@ public class Map {
             }
         }
         return actors;
+    }
+
+    public void actorsTurn() {
+        List<Actor> actors = getAllActors();
+        for(Actor actor : actors) {
+            if(actor instanceof Monster monster) {
+                monster.moveMonster(this);
+            }
+        }
     }
 
     public void moveActor(Actor actor, int xMovement, int yMovement) {

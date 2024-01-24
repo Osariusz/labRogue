@@ -2,8 +2,10 @@ package org.osariusz.Actors;
 
 import org.osariusz.GameElements.GameElement;
 import org.osariusz.Items.Weapon;
+import org.osariusz.Utils.Logging;
 
 import java.util.*;
+import java.util.logging.Level;
 
 public class ActorList {
     public static final List<Monster.MonsterBuilder<?, ?>> monsters = new ArrayList<>() {
@@ -24,5 +26,15 @@ public class ActorList {
             result.add(new AbstractMap.SimpleEntry<>(exampleMonster.getSpawnChance(),builder));
         }
         return result;
+    }
+
+    public static Monster.MonsterBuilder<?, ?> getMonster(String id) {
+        for(Monster.MonsterBuilder<?, ?> monsterBuilder : monsters) {
+            if(monsterBuilder.build().getId().equals(id)) {
+                return monsterBuilder;
+            }
+        }
+        Logging.logger.log(Level.WARNING,"No monster with id: "+id+" found!");
+        return null;
     }
 }
