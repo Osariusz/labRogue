@@ -45,10 +45,7 @@ public class Map {
     }
 
     public MapElement generateFeature(int x, int y) {
-        if (x == 0 || x == getWidth() - 1 || y == 0 || y == getHeight() - 1) {
-            return new Wall().toBuilder().build();
-        }
-        return new Tile().toBuilder().build();
+        return new Wall().toBuilder().build();
     }
 
     public void placeRoom(Room room, int startX, int startY) {
@@ -67,6 +64,37 @@ public class Map {
                 int mapY = roomY+startY;
 
                 placeMapElement(room.getFeature(roomX,roomY), mapX, mapY);
+            }
+        }
+    }
+
+    public boolean isSpaceTaken(List<Room> rooms, int x, int y) {
+        for(Room room : rooms) {
+            if(room.pointInside(x,y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkPath(List<Room> rooms, int x, int y) {
+        for(Room room : rooms) {
+            if(room.getClosestRoom(rooms).isRoomPathTo(room,x,y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void generateRooms() {
+        List<Room> rooms = new ArrayList<>();
+        for (int y = 0; y < getHeight(); ++y) {
+            for (int x = 0; x < getWidth(); ++x) {
+                Room room = new Room().toBuilder().startX(x).startY(y).build();
+                if(room.canPlace(rooms, this,x,y)) {
+                    placeRoom(room, x, y);
+                    rooms.add(room);
+                }
             }
         }
     }
@@ -93,6 +121,7 @@ public class Map {
                 map.get(y).add(generateFeature(x, y));
             }
         }
+        generateRooms();
         for (int y = 0; y < getHeight(); ++y) {
             for (int x = 0; x < getWidth(); ++x) {
                 placeGenerateItem(x, y);
