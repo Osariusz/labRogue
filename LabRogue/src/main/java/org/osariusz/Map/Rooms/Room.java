@@ -18,6 +18,7 @@ import java.util.logging.Level;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 public class Room extends Spawnable {
+    //TODO: Path generation optimization
     protected int width;
 
     protected int height;
