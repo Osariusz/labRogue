@@ -3,6 +3,7 @@ package org.osariusz.Actors;
 import org.osariusz.GameElements.GameElement;
 import org.osariusz.Items.Weapon;
 import org.osariusz.Utils.Logging;
+import org.osariusz.Utils.SpawnHelper;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -10,7 +11,7 @@ import java.util.logging.Level;
 public class ActorList {
     public static final List<Monster.MonsterBuilder<?, ?>> monsters = new ArrayList<>() {
         {
-            add(new Monster().toBuilder().spawnChance(80).hp(2).agility(60).weapon(Weapon.builder().damage(1).shootChance(10).build()).id("rat").name("Szczur"));
+            add(new Monster().toBuilder().hp(2).agility(60).weapon(Weapon.builder().damage(1).shootChance(10).build()).id("rat").name("Szczur").spawnChance(80));
             add(new Monster().toBuilder().spawnChance(40).hp(10).weapon(Weapon.builder().damage(1).shootChance(40).range(2).build()).id("plague_doctor").name("Zarażony doktor"));
             add(new Monster().toBuilder().spawnChance(40).id("escaped").name("Uciekinier"));
             add(new Monster().toBuilder().spawnChance(10).hp(15).agility(0).weapon(Weapon.builder().damage(2).shootChance(50).range(2).build()).id("statue").name("Statua"));
@@ -20,21 +21,10 @@ public class ActorList {
     };
 
     public static List<Map.Entry<Integer, Monster.MonsterBuilder<?, ?>>> getMonsterSpawnList() {
-        List<Map.Entry<Integer, Monster.MonsterBuilder<?, ?>>> result = new ArrayList<>();
-        for(Monster.MonsterBuilder<?, ?> builder : monsters) {
-            Monster exampleMonster = builder.build();
-            result.add(new AbstractMap.SimpleEntry<>(exampleMonster.getSpawnChance(),builder));
-        }
-        return result;
+        return SpawnHelper.getSpawnList(monsters);
     }
 
     public static Monster.MonsterBuilder<?, ?> getMonster(String id) {
-        for(Monster.MonsterBuilder<?, ?> monsterBuilder : monsters) {
-            if(monsterBuilder.build().getId().equals(id)) {
-                return monsterBuilder;
-            }
-        }
-        Logging.logger.log(Level.WARNING,"No monster with id: "+id+" found!");
-        return null;
+        return SpawnHelper.getGameElement(monsters, id);
     }
 }

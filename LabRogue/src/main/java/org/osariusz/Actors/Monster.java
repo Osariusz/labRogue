@@ -12,7 +12,6 @@ import java.util.Random;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 public class Monster extends Actor {
-    private int spawnChance;
 
     public void moveMonster(Map map) {
         int sightRange = 10;

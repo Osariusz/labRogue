@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.osariusz.GameElements.GameElement;
+import org.osariusz.GameElements.Spawnable;
 
 import java.util.*;
 

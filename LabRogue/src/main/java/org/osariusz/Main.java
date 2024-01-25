@@ -13,5 +13,6 @@ public class Main {
         Map map = Map.builder().width(100).height(20).player(player).build();
         IO display = new IO();
         display.IOLoop(map);
+
     }
 }

@@ -87,7 +87,6 @@ public class Map {
                 return false;
             }
             if(room.getClosestRoom(rooms).isRoomPathTo(room,x,y)) {
-                System.out.println(x+" "+y+" is a room path");
                 someRoomPath = true;
             }
         }

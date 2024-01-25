@@ -1,11 +1,11 @@
 package org.osariusz.Actors;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.osariusz.GameElements.GameElement;
+import org.osariusz.GameElements.Spawnable;
 import org.osariusz.Items.Equipment;
 import org.osariusz.Items.Item;
 import org.osariusz.Items.Weapon;

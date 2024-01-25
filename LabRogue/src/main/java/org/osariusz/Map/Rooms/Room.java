@@ -3,6 +3,7 @@ package org.osariusz.Map.Rooms;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.osariusz.GameElements.Spawnable;
 import org.osariusz.Map.Map;
 import org.osariusz.MapElements.MapElement;
 import org.osariusz.MapElements.Tile;
@@ -16,11 +17,7 @@ import java.util.logging.Level;
 @Getter
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class Room {
-    {
-        initializeDefaults();
-    }
-
+public class Room extends Spawnable {
     protected int width;
 
     protected int height;
@@ -29,6 +26,10 @@ public class Room {
     protected int startY;
 
     protected boolean roomBorders;
+
+    protected int spawnChance;
+
+    protected String id;
 
     public MapElement getRoomSpecificFeature(int x, int y) {
         return new Tile().toBuilder().build();
@@ -75,7 +76,7 @@ public class Room {
 
     public Room getClosestRoom(List<Room> rooms) {
         if(rooms.isEmpty() || (rooms.size() == 1 && rooms.get(0).equals(this))) {
-            Logging.logger.log(Level.WARNING, "Room was passed an array with no different rooms to check distance");
+            Logging.logger.log(Level.WARNING, "Room " +getStartX()+", "+getStartY()+" was passed an array with no other rooms to check distance");
             return this;
         }
         double minimumDistance = -1;
@@ -91,7 +92,6 @@ public class Room {
             }
 
         }
-        System.out.println("Closest room to "+startX+", "+startY+" is "+result.startX+", "+result.startY);
         return result;
     }
 
@@ -145,10 +145,11 @@ public class Room {
     }
 
     public void initializeDefaults() {
+        super.id = "generic_room";
+        super.spawnChance = 10;
         this.width = 7;
         this.height = 7;
         this.roomBorders = true;
     }
-
 
 }

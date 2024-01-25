@@ -3,6 +3,7 @@ package org.osariusz.Items;
 import org.osariusz.Actors.Actor;
 import org.osariusz.Actors.Monster;
 import org.osariusz.GameElements.GameElement;
+import org.osariusz.Utils.SpawnHelper;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -20,11 +21,10 @@ public class ItemList {
     };
 
     public static List<Map.Entry<Integer, Item.ItemBuilder<?, ?>>> getItemSpawnList() {
-        List<Map.Entry<Integer, Item.ItemBuilder<?, ?>>> result = new ArrayList<>();
-        for(Item.ItemBuilder<?, ?> builder : items) {
-            Item exampleItem = builder.build();
-            result.add(new AbstractMap.SimpleEntry<>(exampleItem.spawnChance,builder));
-        }
-        return result;
+        return SpawnHelper.getSpawnList(items);
+    }
+
+    public static Item.ItemBuilder<?, ?> getItem(String id) {
+        return SpawnHelper.getGameElement(items, id);
     }
 }

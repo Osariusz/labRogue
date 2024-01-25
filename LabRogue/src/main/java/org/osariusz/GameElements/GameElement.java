@@ -1,7 +1,6 @@
 package org.osariusz.GameElements;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -10,20 +9,18 @@ import org.osariusz.Items.Item;
 @SuperBuilder(toBuilder = true)
 @Getter
 @NoArgsConstructor
-public class GameElement {
-    {
-        initializeDefaults();
-    }
+public class GameElement extends Spawnable {
 
     protected String name;
-    protected String id;
+
     protected char symbol;
 
+    @Override
     protected void initializeDefaults() {
+        super.initializeDefaults();
+        super.id = "generic_element";
         this.name = "Generic Element";
-        this.id = "generic_element";
         this.symbol = '~';
-
     }
 
     @Override
