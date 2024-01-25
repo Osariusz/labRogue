@@ -13,8 +13,10 @@ import java.util.Map;
 public class RoomsList {
     public static final List<Room.RoomBuilder<?, ?>> rooms = new ArrayList<>() {
         {
-            add(new Room().toBuilder().width(7).height(7));
-            add(new Room().toBuilder().width(10).height(4));
+            add(new Room().toBuilder().width(10).height(10));
+            add(new Room().toBuilder().width(15).height(7));
+            add(new Room().toBuilder().width(7).height(15));
+            add(new Room().toBuilder().width(20).height(10));
         }
     };
     public static List<Map.Entry<Integer, Room.RoomBuilder<?, ?>>> getRoomSpawnList() {

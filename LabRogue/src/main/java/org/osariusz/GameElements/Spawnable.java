@@ -18,6 +18,7 @@ public class Spawnable {
     protected void initializeDefaults() {
         this.id = "generic_id";
         this.spawnChance = 10;
+        int h = 0;
     }
 
 

@@ -8,6 +8,7 @@ import org.osariusz.Actors.Monster;
 import org.osariusz.Actors.Player;
 import org.osariusz.Items.ItemList;
 import org.osariusz.Map.Rooms.Room;
+import org.osariusz.Map.Rooms.RoomsList;
 import org.osariusz.MapElements.MapElement;
 import org.osariusz.MapElements.Tile;
 import org.osariusz.MapElements.Wall;
@@ -97,7 +98,8 @@ public class Map {
         List<Room> rooms = new ArrayList<>();
         for (int y = 0; y < getHeight(); ++y) {
             for (int x = 0; x < getWidth(); ++x) {
-                Room room = new Room().toBuilder().startX(x).startY(y).build();
+                Room.RoomBuilder<?, ?> chosenRoom = RandomChoice.choose(new Random(), RoomsList.getRoomSpawnList());
+                Room room = chosenRoom.startX(x).startY(y).build();
                 if(room.canPlace(rooms, this,x,y)) {
                     placeRoom(room, x, y);
                     rooms.add(room);

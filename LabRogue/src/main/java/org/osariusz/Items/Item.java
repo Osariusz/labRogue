@@ -20,11 +20,9 @@ public class Item extends GameElement {
         super.name = "Generic Item";
         super.id = "generic_item";
         super.symbol = 'i';
-        this.spawnChance = 10;
+        super.spawnChance = 10;
         this.transmutationChances = new ArrayList<>(List.of(new AbstractMap.SimpleEntry<>(1,super.id)));
     }
-
-    protected int spawnChance;
 
     protected List<Map.Entry<Integer, String>> transmutationChances;
 

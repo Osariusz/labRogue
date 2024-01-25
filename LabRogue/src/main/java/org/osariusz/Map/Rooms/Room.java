@@ -27,10 +27,6 @@ public class Room extends Spawnable {
 
     protected boolean roomBorders;
 
-    protected int spawnChance;
-
-    protected String id;
-
     public MapElement getRoomSpecificFeature(int x, int y) {
         return new Tile().toBuilder().build();
     }
@@ -144,7 +140,9 @@ public class Room extends Spawnable {
         return getRoomSpecificFeature(x,y);
     }
 
+    @Override
     public void initializeDefaults() {
+        super.initializeDefaults();
         super.id = "generic_room";
         super.spawnChance = 10;
         this.width = 7;

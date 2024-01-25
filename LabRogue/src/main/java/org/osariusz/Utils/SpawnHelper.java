@@ -1,6 +1,8 @@
 package org.osariusz.Utils;
 
 import org.osariusz.GameElements.Spawnable;
+import org.osariusz.Items.Item;
+import org.osariusz.Map.Rooms.Room;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
