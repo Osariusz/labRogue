@@ -52,11 +52,11 @@ public class Map {
     }
 
     public void placeRoom(Room room, int startX, int startY) {
-        if(room.getWidth()+startX >= getWidth()) {
+        if(room.getWidth()+startX > getWidth()) {
             Logging.logger.log(Level.WARNING,"Can't generate room at "+startX+", "+startY+" because of width");
             return;
         }
-        if(room.getHeight()+startY >= getHeight()) {
+        if(room.getHeight()+startY > getHeight()) {
             Logging.logger.log(Level.WARNING,"Can't generate room at "+startX+", "+startY+" because of height");
             return;
         }
@@ -97,6 +97,17 @@ public class Map {
                 if(room.canPlace(rooms, this,x,y)) {
                     placeRoom(room, x, y);
                     rooms.add(room);
+                }
+            }
+        }
+        //generatePaths(rooms);
+    }
+
+    public void generatePaths(List<Room> rooms) {
+        for (int y = 0; y < getHeight(); ++y) {
+            for (int x = 0; x < getWidth(); ++x) {
+                if(checkPath(rooms, x, y)) {
+                    placeMapElement(new Tile().toBuilder().build(),x,y);
                 }
             }
         }

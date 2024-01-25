@@ -35,7 +35,7 @@ public class Room {
     }
 
     public boolean pointInside(int x, int y) {
-        return x>=getStartX() && x<=getStartX()+getWidth() && y>=getStartY() && y<=getStartY()+getHeight();
+        return x>=getStartX() && x<getStartX()+getWidth() && y>=getStartY() && y<getStartY()+getHeight();
     }
 
     public double centerDistanceTo(Point point) {
@@ -48,9 +48,9 @@ public class Room {
                 if(map.isSpaceTaken(rooms, x,y)) {
                     return false;
                 }
-                if(map.checkPath(rooms, x, y)) {
-                    return false;
-                }
+//                if(map.checkPath(rooms, x, y)) {
+//                    return false;
+//                }
             }
         }
         return true;
@@ -98,7 +98,8 @@ public class Room {
 
         int workingCoordinate, passiveCoordinate;
 
-        if((room.nearestCentrePoint().getY()-nearestCentrePoint().getY())/(room.nearestCentrePoint().getX()- nearestCentrePoint().getX()) > 1) {
+        if((room.nearestCentrePoint().getX()- nearestCentrePoint().getX()==0) ||
+                (room.nearestCentrePoint().getY()-nearestCentrePoint().getY())/(room.nearestCentrePoint().getX()- nearestCentrePoint().getX()) > 1) {
             workingCoordinate1 = nearestCentrePoint().getY();
             passiveCoordinate1 = nearestCentrePoint().getX();
 
