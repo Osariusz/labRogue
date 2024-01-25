@@ -26,7 +26,7 @@ public class Room extends Spawnable {
     protected int startX;
     protected int startY;
 
-    protected boolean roomBorders;
+    protected int roomBordersSize;
 
     public MapElement getRoomSpecificFeature(int x, int y) {
         return new Tile().toBuilder().build();
@@ -135,7 +135,7 @@ public class Room extends Spawnable {
     }
 
     public MapElement getFeature(int x, int y) {
-        if(roomBorders && (x == 0 || x == width-1 || y == 0 || y == height-1)) {
+        if(x <= (roomBordersSize-1) || x >= width-roomBordersSize || y <= (roomBordersSize-1) || y >= height-roomBordersSize) {
             return new Wall().toBuilder().build();
         }
         return getRoomSpecificFeature(x,y);
@@ -148,7 +148,7 @@ public class Room extends Spawnable {
         super.spawnChance = 10;
         this.width = 7;
         this.height = 7;
-        this.roomBorders = true;
+        this.roomBordersSize = 2;
     }
 
 }
