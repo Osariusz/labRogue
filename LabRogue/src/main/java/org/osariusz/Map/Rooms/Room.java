@@ -48,9 +48,9 @@ public class Room {
                 if(map.isSpaceTaken(rooms, x,y)) {
                     return false;
                 }
-//                if(map.checkPath(rooms, x, y)) {
-//                    return false;
-//                }
+                if(map.checkPath(rooms, x, y)) {
+                    return false;
+                }
             }
         }
         return true;
@@ -74,21 +74,31 @@ public class Room {
     }
 
     public Room getClosestRoom(List<Room> rooms) {
-        if(rooms.isEmpty()) {
-            Logging.logger.log(Level.WARNING, "Room was passed an empty array of rooms to check distance");
+        if(rooms.isEmpty() || (rooms.size() == 1 && rooms.get(0).equals(this))) {
+            Logging.logger.log(Level.WARNING, "Room was passed an array with no different rooms to check distance");
             return this;
         }
-        double minimumDistance = centerDistanceTo(rooms.get(0).nearestCentrePoint());
-        Room result = rooms.get(0);
+        double minimumDistance = -1;
+        Room result = null;
         for(Room room : rooms) {
-            minimumDistance = Math.min(minimumDistance, centerDistanceTo(room.nearestCentrePoint()));
-            result = room;
+            if(room.equals(this)) {
+                continue;
+            }
+            double distance = centerDistanceTo(room.nearestCentrePoint());
+            if(minimumDistance < 0 || minimumDistance > distance) {
+                minimumDistance = distance;
+                result = room;
+            }
+
         }
+        System.out.println("Closest room to "+startX+", "+startY+" is "+result.startX+", "+result.startY);
         return result;
     }
 
     public boolean isRoomPathTo(Room room, int x, int y) {
-
+        if(room.pointInside(x, y)) {
+            return false;
+        }
         if(!pointBetweenCenters(room, x , y)) {
             return false;
         }

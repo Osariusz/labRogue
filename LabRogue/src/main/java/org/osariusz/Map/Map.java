@@ -81,12 +81,17 @@ public class Map {
     }
 
     public boolean checkPath(List<Room> rooms, int x, int y) {
+        boolean someRoomPath = false;
         for(Room room : rooms) {
+            if(room.pointInside(x,y)) {
+                return false;
+            }
             if(room.getClosestRoom(rooms).isRoomPathTo(room,x,y)) {
-                return true;
+                System.out.println(x+" "+y+" is a room path");
+                someRoomPath = true;
             }
         }
-        return false;
+        return someRoomPath;
     }
 
     public void generateRooms() {
@@ -100,7 +105,7 @@ public class Map {
                 }
             }
         }
-        //generatePaths(rooms);
+        generatePaths(rooms);
     }
 
     public void generatePaths(List<Room> rooms) {
