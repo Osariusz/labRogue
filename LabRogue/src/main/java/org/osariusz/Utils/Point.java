@@ -11,6 +11,10 @@ public class Point {
         return Math.sqrt(Math.pow(getX()-point.getX(),2)+Math.pow(getY()-point.getY(),2));
     }
 
+    public Point offset(Point pointOffset) {
+        return new Point(x+pointOffset.getX(), y+pointOffset.getY());
+    }
+
     public Point(int x, int y) {
         this.x = x;
         this.y = y;

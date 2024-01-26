@@ -6,6 +6,7 @@ import org.osariusz.Items.Equipment;
 import org.osariusz.Items.Item;
 import org.osariusz.Map.Map;
 import org.osariusz.Utils.Logging;
+import org.osariusz.Utils.Point;
 
 import java.util.List;
 import java.util.Scanner;
@@ -23,6 +24,18 @@ public class IO {
     public void displayMap(Map map) {
         for (int y = 0; y < map.getHeight(); y++) {
             for (int x = 0; x < map.getWidth(); x++) {
+                System.out.print(map.getFeature(x, y).getSymbol());
+            }
+            System.out.print("\n");
+        }
+    }
+
+    public void displayMapActor(Map map, Actor actor) {
+        int offset = actor.getSightRange()/2;
+        Point start = actor.getPosition().offset(new Point(-offset, -offset));
+        Point end = actor.getPosition().offset(new Point(offset, offset));
+        for (int y = start.getY(); y < end.getY(); y++) {
+            for (int x = start.getX(); x < end.getX(); x++) {
                 System.out.print(map.getFeature(x, y).getSymbol());
             }
             System.out.print("\n");
@@ -107,7 +120,7 @@ public class IO {
 
     public void IOLoop(Map map) {
         while (true) {
-            displayMap(map);
+            displayMapActor(map, map.getPlayer());
             displayPlayerEquipment(map.getPlayer());
             userInput(map);
             map.actorsTurn();

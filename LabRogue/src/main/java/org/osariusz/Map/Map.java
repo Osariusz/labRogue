@@ -45,6 +45,9 @@ public class Map {
     }
 
     public MapElement getFeature(int x, int y) {
+        if(x < 0 || y < 0 || x >= getWidth() || y >= getHeight()) {
+            return new Wall().toBuilder().build();
+        }
         return map.get(y).get(x);
     }
 
