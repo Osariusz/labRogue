@@ -48,6 +48,11 @@ public class Point {
         return this.getX() == point.getX() && this.getY() == point.getY();
     }
 
+    @Override
+    public String toString() {
+        return "Point: "+getX()+", "+getY();
+    }
+
     public Point(int x, int y) {
         this.x = x;
         this.y = y;

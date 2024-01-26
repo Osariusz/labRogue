@@ -2,6 +2,7 @@ package org.osariusz.Map;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.java.Log;
 import org.osariusz.Actors.Actor;
 import org.osariusz.Actors.ActorList;
 import org.osariusz.Actors.Monster;
@@ -137,8 +138,10 @@ public class Map {
                 }
                 java.util.Map.Entry<Point, Point> doors = room.closestUnusedDoorsForRooms(anotherRoom);
                 if(doors != null) {
+                    Logging.logger.log(Level.INFO, "door1: "+ doors.getKey()+" door2: "+doors.getValue());
                     diggers.add(new CorridorDigger(doors.getKey(), doors.getValue()));
                     room.useDoor(doors.getKey());
+                    break;
                 }
             }
         }

@@ -172,6 +172,8 @@ public class Room extends Spawnable {
         List<Point> thisDoors = getUnusedDoors();
         List<Point> hisDoors = room.getUnusedDoors();
 
+        //TODO: check why many doors often take the first room's first door
+
         if(thisDoors.isEmpty()) {
             Logging.logger.log(Level.WARNING,"No unused door found for room1 in closestUnusedDoorForRoom "+this);
             return null;
