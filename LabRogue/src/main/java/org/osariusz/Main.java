@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         //testNewEnemies();
         Player player = new Player().toBuilder().build();
-        Map map = Map.builder().width(20).height(10).player(player).build();
+        Map map = Map.builder().width(100).height(30).player(player).build();
         IO display = new IO();
         display.IOLoop(map);
 

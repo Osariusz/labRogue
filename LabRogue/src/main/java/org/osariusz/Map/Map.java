@@ -110,7 +110,7 @@ public class Map {
             for (int x = 0; x < getWidth(); ++x) {
 
                 Room.RoomBuilder<?, ?> chosenRoom = RandomChoice.choose(new Random(), RoomsList.getRoomSpawnList());
-                Room room = chosenRoom.startX(x).startY(y).build();
+                Room room = chosenRoom.startPoint(new Point(x,y)).build();
                 if(room.canPlace(rooms, this,x,y)) {
                     placeRoom(room, x, y);
                     rooms.add(room);
@@ -138,6 +138,7 @@ public class Map {
                 java.util.Map.Entry<Point, Point> doors = room.closestUnusedDoorsForRooms(anotherRoom);
                 if(doors != null) {
                     diggers.add(new CorridorDigger(doors.getKey(), doors.getValue()));
+                    room.useDoor(doors.getKey());
                 }
             }
         }

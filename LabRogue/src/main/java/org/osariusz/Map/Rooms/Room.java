@@ -26,10 +26,20 @@ public class Room extends Spawnable {
 
     protected int height;
 
-    protected int startX;
-    protected int startY;
+    protected Point startPoint;
+
+    public int getStartX() {
+        return startPoint.getX();
+    }
+
+    public int getStartY() {
+        return startPoint.getY();
+    }
 
     protected int roomBordersSize;
+
+    protected List<Point> doors;
+    protected List<Point> usedDoors;
 
     public MapElement getRoomSpecificFeature(int x, int y) {
         return new Tile().toBuilder().build();
@@ -71,7 +81,7 @@ public class Room extends Spawnable {
     }
 
     public Point nearestCentrePoint() {
-        return new Point(startX+(width/2),startY+(height/2));
+        return startPoint.offset(new Point(width/2,height/2));
     }
 
     public Room getClosestRoom(List<Room> rooms) {
@@ -138,40 +148,29 @@ public class Room extends Spawnable {
     }
 
     public MapElement getFeature(int x, int y) {
+        if(new Point(x,y).pointInList(doors)) {
+            return new Tile().toBuilder().symbol('d').build();
+        }
         if(x <= (roomBordersSize-1) || x >= width-roomBordersSize || y <= (roomBordersSize-1) || y >= height-roomBordersSize) {
             return new Wall().toBuilder().build();
         }
         return getRoomSpecificFeature(x,y);
     }
 
-    public List<Point> unusedDoors() {
-        //TODO: list all doors
-        return new ArrayList<>(List.of(new Point(startX, startY)));
+    public void useDoor(Point point) {
+        usedDoors.add(point);
     }
 
-    public Point closestUnusedDoor(Point point) {
-        List<Point> doors = unusedDoors();
-
-        if(doors.isEmpty()) {
-            Logging.logger.log(Level.WARNING,"No unused door found for room "+this);
-            return null;
-        }
-
-        double minimumDistance = doors.get(0).distanceTo(point);
-        Point minimalPoint = doors.get(0);
-        for(Point door : doors) {
-            if(door.distanceTo(point) < minimumDistance) {
-                minimumDistance = door.distanceTo(point);
-                minimalPoint = door;
-            }
-        }
-
-        return minimalPoint;
+    public List<Point> getUnusedDoors() {
+        List<Point> result = new ArrayList<>(doors);
+        result.removeAll(usedDoors);
+        result.replaceAll(p -> p.offset(startPoint));
+        return result;
     }
 
     public java.util.Map.Entry<Point, Point> closestUnusedDoorsForRooms(Room room) {
-        List<Point> thisDoors = unusedDoors();
-        List<Point> hisDoors = room.unusedDoors();
+        List<Point> thisDoors = getUnusedDoors();
+        List<Point> hisDoors = room.getUnusedDoors();
 
         if(thisDoors.isEmpty()) {
             Logging.logger.log(Level.WARNING,"No unused door found for room1 in closestUnusedDoorForRoom "+this);
@@ -208,6 +207,13 @@ public class Room extends Spawnable {
         this.width = 7;
         this.height = 7;
         this.roomBordersSize = 2;
+        this.doors = new ArrayList<>(List.of(
+                new Point(width/2, 0),
+                new Point(width, height/2),
+                new Point(width/2,height),
+                new Point(0, height/2)
+        ));
+        this.usedDoors = new ArrayList<>();
     }
 
 }
