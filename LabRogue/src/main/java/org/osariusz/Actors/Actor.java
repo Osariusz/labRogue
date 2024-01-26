@@ -10,6 +10,7 @@ import org.osariusz.Items.Equipment;
 import org.osariusz.Items.Item;
 import org.osariusz.Items.Weapon;
 import org.osariusz.Utils.FightReport;
+import org.osariusz.Utils.Point;
 
 import java.util.*;
 
@@ -26,6 +27,15 @@ public abstract class Actor extends GameElement {
     @Getter
     protected int movementSpeed;
 
+    protected int sightRange; //should always be odd
+
+    public int getSightRange() {
+        if(sightRange%2==0) {
+            return sightRange+1;
+        }
+        return sightRange;
+    }
+
     @Getter
     protected boolean canPickItems;
 
@@ -41,7 +51,8 @@ public abstract class Actor extends GameElement {
 
     @Getter
     @Setter
-    protected int x, y;
+    protected Point position;
+
 
     @Override
     protected void initializeDefaults() {
@@ -56,6 +67,7 @@ public abstract class Actor extends GameElement {
         this.backpack = new ArrayList<>();
         this.equipment = initialEquipment();
         this.weapon = Weapon.builder().damage(1).shootChance(50).build(); //TODO: rewrite as an item in equipment
+        this.sightRange = 10;
     }
 
     public void addToBackpack(List<Item> items) {

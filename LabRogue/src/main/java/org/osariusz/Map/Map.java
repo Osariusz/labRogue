@@ -192,12 +192,11 @@ public class Map {
     }
 
     public void moveActor(Actor actor, int xMovement, int yMovement) {
-        int x = actor.getX() + xMovement;
-        int y = actor.getY() + yMovement;
+        int x = actor.getPosition().getX() + xMovement;
+        int y = actor.getPosition().getY() + yMovement;
         if (canPlaceActor(actor, x, y)) {
-            removeActor(actor.getX(), actor.getY());
-            actor.setX(x);
-            actor.setY(y);
+            removeActor(actor.getPosition().getX(), actor.getPosition().getY());
+            actor.setPosition(new Point(x,y));
             placeActor(actor, x, y);
         } else {
             Logging.logger.log(Level.WARNING, "Can't move " + actor.toString() + " to " + x + ", " + y);
@@ -208,8 +207,7 @@ public class Map {
         if (canPlaceActor(actor, x, y)) {
             Tile tile = (Tile) map.get(y).get(x);
             tile.setActor(actor);
-            actor.setX(x);
-            actor.setY(y);
+            actor.setPosition(new Point(x,y));
 
             if (actor.isCanPickItems() && tile.hasItems()) {
                 tile.transferItemsToActor(actor);
