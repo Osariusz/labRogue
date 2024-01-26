@@ -44,8 +44,15 @@ public class Map {
         return new GeneratorMapBuilder();
     }
 
-    public MapElement getFeature(int x, int y) {
+    public boolean outOfBounds(int x, int y) {
         if(x < 0 || y < 0 || x >= getWidth() || y >= getHeight()) {
+            return true;
+        }
+        return false;
+    }
+
+    public MapElement getFeature(int x, int y) {
+        if(outOfBounds(x, y)) {
             return new Wall().toBuilder().build();
         }
         return map.get(y).get(x);
@@ -110,17 +117,52 @@ public class Map {
                 }
             }
         }
-        //generatePaths(rooms);
+        generatePaths(rooms);
+    }
+
+    public List<Point> getAllCorridorPoints(List<CorridorDigger> corridorDiggers) {
+        List<Point> result = new ArrayList<>();
+        for(CorridorDigger digger : corridorDiggers) {
+            result.addAll(digger.getCorridorPoints());
+        }
+        return result;
     }
 
     public void generatePaths(List<Room> rooms) {
-        for (int y = 0; y < getHeight(); ++y) {
-            for (int x = 0; x < getWidth(); ++x) {
-                if(checkPath(rooms, x, y)) {
-                    placeMapElement(new Tile().toBuilder().build(),x,y);
+        List<CorridorDigger> diggers = new ArrayList<>();
+        for(Room room : rooms) {
+            for(Room anotherRoom : rooms) {
+                if(room.equals(anotherRoom)) {
+                    continue;
+                }
+                java.util.Map.Entry<Point, Point> doors = room.closestUnusedDoorsForRooms(anotherRoom);
+                if(doors != null) {
+                    diggers.add(new CorridorDigger(doors.getKey(), doors.getValue()));
                 }
             }
         }
+        int allowedIterations = 100;
+        for(int i = 0;i<allowedIterations; ++i) {
+            boolean allFinished = true;
+            for(CorridorDigger digger : diggers) {
+                if(!digger.diggerFinished()) {
+                    allFinished = false;
+
+                    List<CorridorDigger> otherDiggers = new ArrayList<>(diggers);
+                    otherDiggers.remove(digger);
+                    digger.updateDestination(this, getAllCorridorPoints(otherDiggers));
+                    digger.stepForward();
+                }
+            }
+            if(allFinished) {
+                break;
+            }
+        }
+        List<Point> digPoints = getAllCorridorPoints(diggers);
+        for(Point dig : digPoints) {
+            placeMapElement(new Tile().toBuilder().symbol('/').build(), dig.getX(), dig.getY());
+        }
+                
     }
 
     public void placeGenerateItem(int x, int y) {
@@ -134,6 +176,9 @@ public class Map {
     }
 
     public void placeMapElement(MapElement mapElement, int x, int y) {
+        if(outOfBounds(x, y)) {
+            return;
+        }
         getMap().get(y).set(x, mapElement);
     }
 

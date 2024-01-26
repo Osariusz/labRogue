@@ -1,9 +1,6 @@
 package org.osariusz.Utils;
 
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,5 +26,17 @@ public class RandomChoice {
             }
         }
         return list.get(list.size()-1).getValue();
+    }
+
+    public static <T> T chooseExcludingItself(Random random, List<T> list, T itself) {
+        List<T> newList = new ArrayList<T>(list);
+        newList.remove(itself);
+
+        List<Map.Entry<Integer, T>> toChoose = new ArrayList<>();
+        for(T element: newList) {
+            toChoose.add(new AbstractMap.SimpleEntry<>(1, element));
+        }
+
+        return choose(random, toChoose);
     }
 }

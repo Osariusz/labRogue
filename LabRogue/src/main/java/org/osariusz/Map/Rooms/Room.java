@@ -5,12 +5,15 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.osariusz.GameElements.Spawnable;
 import org.osariusz.Map.Map;
+import org.osariusz.MapElements.Door;
 import org.osariusz.MapElements.MapElement;
 import org.osariusz.MapElements.Tile;
 import org.osariusz.MapElements.Wall;
 import org.osariusz.Utils.Logging;
 import org.osariusz.Utils.Point;
 
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -139,6 +142,62 @@ public class Room extends Spawnable {
             return new Wall().toBuilder().build();
         }
         return getRoomSpecificFeature(x,y);
+    }
+
+    public List<Point> unusedDoors() {
+        //TODO: list all doors
+        return new ArrayList<>(List.of(new Point(startX, startY)));
+    }
+
+    public Point closestUnusedDoor(Point point) {
+        List<Point> doors = unusedDoors();
+
+        if(doors.isEmpty()) {
+            Logging.logger.log(Level.WARNING,"No unused door found for room "+this);
+            return null;
+        }
+
+        double minimumDistance = doors.get(0).distanceTo(point);
+        Point minimalPoint = doors.get(0);
+        for(Point door : doors) {
+            if(door.distanceTo(point) < minimumDistance) {
+                minimumDistance = door.distanceTo(point);
+                minimalPoint = door;
+            }
+        }
+
+        return minimalPoint;
+    }
+
+    public java.util.Map.Entry<Point, Point> closestUnusedDoorsForRooms(Room room) {
+        List<Point> thisDoors = unusedDoors();
+        List<Point> hisDoors = room.unusedDoors();
+
+        if(thisDoors.isEmpty()) {
+            Logging.logger.log(Level.WARNING,"No unused door found for room1 in closestUnusedDoorForRoom "+this);
+            return null;
+        }
+        if(hisDoors.isEmpty()) {
+            Logging.logger.log(Level.WARNING,"No unused door found for room2 in closestUnusedDoorForRoom "+room);
+            return null;
+        }
+
+        double minimalDistance = Double.MAX_VALUE;
+        Point minimalThisPoint = null;
+        Point minimalHisPoint = null;
+
+        for(Point thisDoor : thisDoors) {
+            for(Point hisDoor : hisDoors) {
+                if(thisDoor.distanceTo(hisDoor) < minimalDistance) {
+                    minimalDistance = thisDoor.distanceTo(hisDoor);
+                    minimalThisPoint = thisDoor;
+                    minimalHisPoint = hisDoor;
+                }
+            }
+        }
+
+        return new AbstractMap.SimpleEntry<>(minimalThisPoint, minimalHisPoint);
+
     }
 
     @Override
