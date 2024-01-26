@@ -120,7 +120,8 @@ public class IO {
 
     public void IOLoop(Map map) {
         while (true) {
-            displayMapActor(map, map.getPlayer());
+            displayMap(map);
+            //displayMapActor(map, map.getPlayer());
             displayPlayerEquipment(map.getPlayer());
             userInput(map);
             map.actorsTurn();

@@ -15,7 +15,7 @@ public class RoomsList {
         {
             add(new Room().toBuilder().width(10).height(10));
             add(new Room().toBuilder().width(15).height(7));
-            add(new Room().toBuilder().width(7).height(15));
+            add(new Room().toBuilder().width(10).height(15));
             add(new Room().toBuilder().width(20).height(10));
             add(new Room().toBuilder().width(10).height(7).roomBordersSize(1));
         }

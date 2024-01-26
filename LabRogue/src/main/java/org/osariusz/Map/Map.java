@@ -101,6 +101,7 @@ public class Map {
         List<Room> rooms = new ArrayList<>();
         for (int y = 0; y < getHeight(); ++y) {
             for (int x = 0; x < getWidth(); ++x) {
+
                 Room.RoomBuilder<?, ?> chosenRoom = RandomChoice.choose(new Random(), RoomsList.getRoomSpawnList());
                 Room room = chosenRoom.startX(x).startY(y).build();
                 if(room.canPlace(rooms, this,x,y)) {
@@ -109,7 +110,7 @@ public class Map {
                 }
             }
         }
-        generatePaths(rooms);
+        //generatePaths(rooms);
     }
 
     public void generatePaths(List<Room> rooms) {
