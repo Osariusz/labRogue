@@ -14,7 +14,7 @@ public class Point {
     }
 
     public double distanceTo(Point point) {
-        return Math.sqrt(Math.pow(getX()-point.getX(),2)+Math.pow(getY()-point.getY(),2));
+        return Math.abs(x-point.x)+Math.abs(y-point.y);
     }
 
     public Point offset(Point pointOffset) {
