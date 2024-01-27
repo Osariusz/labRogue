@@ -33,6 +33,6 @@ public class ItemTests {
         assert item.getSpawnChance() == 10;
         assert item.getName().equals("Equipment");
         assert item.getId().equals("equipment");
-        assert item.getSymbol() == 'i';
+        assert item.getSymbol() == 'e';
     }
 }
