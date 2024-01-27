@@ -14,6 +14,6 @@ public class Door extends MapElement {
         super.initializeDefaults();
         super.name = "Door";
         super.id = "door";
-        super.symbol = '▯';
+        super.symbol = '#';
     }
 }

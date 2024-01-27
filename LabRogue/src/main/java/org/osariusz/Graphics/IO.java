@@ -110,6 +110,9 @@ public class IO {
                 case "help":
                     System.out.println(helpText);
                     continue;
+                case "pos":
+                    System.out.println("Player position: "+map.getPlayer().getPosition());
+                    continue;
                 default:
                     System.out.println("Wrong input!");
                     continue;

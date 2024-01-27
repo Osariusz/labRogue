@@ -18,7 +18,7 @@ public class Wall extends MapElement {
         super.initializeDefaults();
         super.id = "wall";
         super.name = "Wall";
-        super.symbol = '#';
+        super.symbol = '▒';
     }
 
 }

@@ -1,5 +1,6 @@
 package org.osariusz.Map.Rooms;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -40,6 +41,7 @@ public class Room extends Spawnable {
 
     protected List<Point> doors;
     protected List<Point> usedDoors;
+
 
     public MapElement getRoomSpecificFeature(int x, int y) {
         return new Tile().toBuilder().build();
@@ -149,7 +151,7 @@ public class Room extends Spawnable {
 
     public MapElement getFeature(int x, int y) {
         if(new Point(x,y).pointInList(doors)) {
-            return new Tile().toBuilder().symbol('d').build();
+            return new Door().toBuilder().build();
         }
         if(x <= (roomBordersSize-1) || x >= width-roomBordersSize || y <= (roomBordersSize-1) || y >= height-roomBordersSize) {
             return new Wall().toBuilder().build();
@@ -201,6 +203,16 @@ public class Room extends Spawnable {
 
     }
 
+    public void initializeDoors() {
+        this.doors = new ArrayList<>(List.of(
+                new Point(width/2, roomBordersSize-1),
+                new Point(width-roomBordersSize, height/2),
+                new Point(width/2,height-roomBordersSize),
+                new Point(roomBordersSize-1, height/2)
+        ));
+        this.usedDoors = new ArrayList<>();
+    }
+
     @Override
     public void initializeDefaults() {
         super.initializeDefaults();
@@ -209,13 +221,16 @@ public class Room extends Spawnable {
         this.width = 7;
         this.height = 7;
         this.roomBordersSize = 2;
-        this.doors = new ArrayList<>(List.of(
-                new Point(width/2, 0),
-                new Point(width, height/2),
-                new Point(width/2,height),
-                new Point(0, height/2)
-        ));
-        this.usedDoors = new ArrayList<>();
+        this.doors = null;
+        this.usedDoors = null;
+    }
+
+    private static final class RoomBuilderImpl extends RoomBuilder<Room, RoomBuilderImpl> {
+        public Room build() {
+            Room result = new Room(this);
+            result.initializeDoors();
+            return result;
+        }
     }
 
 }

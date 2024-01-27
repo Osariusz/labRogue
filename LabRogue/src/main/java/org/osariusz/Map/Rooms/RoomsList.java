@@ -14,10 +14,10 @@ public class RoomsList {
     public static final List<Room.RoomBuilder<?, ?>> rooms = new ArrayList<>() {
         {
             add(new Room().toBuilder().width(10).height(10));
-//            add(new Room().toBuilder().width(15).height(7));
-//            add(new Room().toBuilder().width(10).height(15));
-//            add(new Room().toBuilder().width(20).height(10));
-//            add(new Room().toBuilder().width(10).height(7).roomBordersSize(1));
+            add(new Room().toBuilder().width(15).height(7));
+            add(new Room().toBuilder().width(10).height(15));
+            add(new Room().toBuilder().width(20).height(10));
+            add(new Room().toBuilder().width(10).height(7).roomBordersSize(1));
         }
     };
     public static List<Map.Entry<Integer, Room.RoomBuilder<?, ?>>> getRoomSpawnList() {

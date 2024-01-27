@@ -10,6 +10,7 @@ import org.osariusz.Actors.Player;
 import org.osariusz.Items.ItemList;
 import org.osariusz.Map.Rooms.Room;
 import org.osariusz.Map.Rooms.RoomsList;
+import org.osariusz.MapElements.Door;
 import org.osariusz.MapElements.MapElement;
 import org.osariusz.MapElements.Tile;
 import org.osariusz.MapElements.Wall;
@@ -40,6 +41,9 @@ public class Map {
     @Getter
     @Builder.Default
     private Player player = new Player().toBuilder().build();
+
+    @Builder.Default
+    private List<Point> corridorPoints = new ArrayList<>();
 
     public static MapBuilder builder() {
         return new GeneratorMapBuilder();
@@ -115,18 +119,24 @@ public class Map {
                 if(room.canPlace(rooms, this,x,y)) {
                     placeRoom(room, x, y);
                     rooms.add(room);
+                    generatePaths(rooms);
                 }
             }
         }
-        generatePaths(rooms);
     }
 
     public List<Point> getAllCorridorPoints(List<CorridorDigger> corridorDiggers) {
-        List<Point> result = new ArrayList<>();
+        List<Point> result = new ArrayList<>(corridorPoints);
         for(CorridorDigger digger : corridorDiggers) {
             result.addAll(digger.getCorridorPoints());
         }
         return result;
+    }
+
+    public void updateCorridorPoints(List<CorridorDigger> corridorDiggers) {
+        for(CorridorDigger digger : corridorDiggers) {
+            corridorPoints.addAll(digger.getCorridorPoints());
+        }
     }
 
     public void generatePaths(List<Room> rooms) {
@@ -173,9 +183,11 @@ public class Map {
         }
         List<Point> digPoints = getAllCorridorPoints(diggers);
         for(Point dig : digPoints) {
-            placeMapElement(new Tile().toBuilder().symbol('/').build(), dig.getX(), dig.getY());
+            if(getFeature(dig.getX(),dig.getY()) instanceof Wall) {
+                placeMapElement(new Tile().toBuilder().symbol('/').build(), dig.getX(), dig.getY());
+            }
         }
-                
+        updateCorridorPoints(diggers);
     }
 
     public void placeGenerateItem(int x, int y) {
@@ -256,11 +268,21 @@ public class Map {
     public void moveActor(Actor actor, int xMovement, int yMovement) {
         int x = actor.getPosition().getX() + xMovement;
         int y = actor.getPosition().getY() + yMovement;
+
+        if(getFeature(x,y) instanceof Door) {
+            xMovement *= 2;
+            yMovement *= 2;
+        }
+
+        x = actor.getPosition().getX() + xMovement;
+        y = actor.getPosition().getY() + yMovement;
+
         if (canPlaceActor(actor, x, y)) {
             removeActor(actor.getPosition().getX(), actor.getPosition().getY());
             actor.setPosition(new Point(x,y));
             placeActor(actor, x, y);
-        } else {
+        }
+        else {
             Logging.logger.log(Level.WARNING, "Can't move " + actor.toString() + " to " + x + ", " + y);
         }
     }
