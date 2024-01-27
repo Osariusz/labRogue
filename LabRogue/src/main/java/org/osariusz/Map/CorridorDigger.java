@@ -121,10 +121,7 @@ public class CorridorDigger {
             return true;
         }
         for(Room room : map.getRooms()) {
-            if(room.pointIsDoor(realPoint)) {
-                if(room.pointInside(getCorridorPoints().get(0).getX(), getCorridorPoints().get(0).getY())) {
-                    continue;
-                }
+            if(room.pointIsDoor(realPoint) && !room.pointInside(getCorridorPoints().get(0).getX(), getCorridorPoints().get(0).getY())) {
                 return true;
             }
         }

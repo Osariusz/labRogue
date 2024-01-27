@@ -51,7 +51,9 @@ public class Room extends Spawnable {
     }
 
     public boolean pointIsDoor(Point point) {
-        return point.pointInList(doors);
+        Point p =startPoint.multiplyPoints(new Point(-1,-1));
+        Point pp =point.offset(p);
+        return pp.pointInList(doors);
     }
 
     public double centerDistanceTo(Point point) {

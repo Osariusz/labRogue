@@ -11,10 +11,10 @@ import static org.osariusz.Utils.FightScenarios.*;
 public class Main {
     public static void main(String[] args) {
         Random random = new Random();
-        random.setSeed(2138);
+        random.setSeed(2136);
         //testNewEnemies();
         Player player = new Player().toBuilder().build();
-        Map map = Map.builder().random(random).width(100).height(30).player(player).build();
+        Map map = Map.builder().random(random).width(200).height(30).player(player).build();
         IO display = new IO();
         display.IOLoop(map);
 
