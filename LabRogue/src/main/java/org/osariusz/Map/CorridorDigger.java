@@ -39,19 +39,18 @@ public class CorridorDigger {
 
     public Point getNewPointByAxis(Point movingDirection, boolean moveY) {
         Point newPoint = null;
-        if (!moveY) {
-            newPoint = new Point(getLastPoint().getX() + movingDirection.getX(), getLastPoint().getY());
-        } else {
+        if(moveY || movingDirection.getX() == 0) {
             newPoint = new Point(getLastPoint().getX(), getLastPoint().getY() + movingDirection.getY());
+        }
+        else {
+            newPoint = new Point(getLastPoint().getX() + movingDirection.getX(), getLastPoint().getY());
         }
         return newPoint;
     }
 
     public Point validNewPoint(List<Point> newPoints) {
         for(Point newPoint : newPoints) {
-            if(corridorPoints.stream().filter(
-                    p -> p.getX() == newPoint.getX() && p.getY() == newPoint.getY()
-            ).toList().isEmpty()) {
+            if(!newPoint.pointInList(corridorPoints)) {
                 return newPoint;
             }
         }
@@ -72,7 +71,9 @@ public class CorridorDigger {
 
         if(newPoint == null) {
             Logging.logger.log(Level.WARNING, "Corridor Digger can't find route "+this);
+            return;
         }
+        corridorPoints.add(newPoint);
     }
 
     public boolean diggerFinished() {
@@ -96,12 +97,7 @@ public class CorridorDigger {
 
     public void stepForward() {
         Point movingDirection = getLastPoint().movingDirection(destination);
-
-        if (movingDirection.getY() != 0 && movingDirection.getX() != 0) {
-            stepTowardChosenDirection(movingDirection);
-        } else {
-            corridorPoints.add(getLastPoint().offset(movingDirection));
-        }
+        stepTowardChosenDirection(movingDirection);
     }
 
 }

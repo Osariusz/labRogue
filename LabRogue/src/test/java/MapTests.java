@@ -6,6 +6,7 @@ import org.osariusz.Items.Item;
 import org.osariusz.Map.Map;
 import org.osariusz.MapElements.Tile;
 import org.osariusz.MapElements.Wall;
+import org.osariusz.Utils.Point;
 
 public class MapTests {
 
@@ -20,8 +21,8 @@ public class MapTests {
     @Test
     public void testPlaceItemOnItem() {
         Map map = Map.builder().width(10).height(10).build();
-        map.placeItem(Item.builder().build(), 5, 5);
-        assert !map.canPlaceItem(Item.builder().build(), 5, 5);
+        map.placeItem(Item.builder().build(), new Point(5, 5));
+        assert !map.canPlaceItem(Item.builder().build(), new Point(5, 5));
     }
 
     @Test

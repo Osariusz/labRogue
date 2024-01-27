@@ -49,40 +49,40 @@ public class Map {
         return new GeneratorMapBuilder();
     }
 
-    public boolean outOfBounds(int x, int y) {
-        if(x < 0 || y < 0 || x >= getWidth() || y >= getHeight()) {
+    public boolean outOfBounds(Point point) {
+        if(point.getX() < 0 || point.getY() < 0 || point.getX() >= getWidth() || point.getY() >= getHeight()) {
             return true;
         }
         return false;
     }
 
-    public MapElement getFeature(int x, int y) {
-        if(outOfBounds(x, y)) {
+    public MapElement getFeature(Point point) {
+        if(outOfBounds(point)) {
             return new Wall().toBuilder().build();
         }
-        return map.get(y).get(x);
+        return map.get(point.getY()).get(point.getX());
     }
 
     public MapElement generateFeature(int x, int y) {
         return new Wall().toBuilder().build();
     }
 
-    public void placeRoom(Room room, int startX, int startY) {
-        if(room.getWidth()+startX > getWidth()) {
-            Logging.logger.log(Level.WARNING,"Can't generate room at "+startX+", "+startY+" because of width");
+    public void placeRoom(Room room) {
+        if(room.getWidth()+room.getStartX() > getWidth()) {
+            Logging.logger.log(Level.WARNING,"Can't generate room at "+room.getStartX()+", "+room.getStartY()+" because of width");
             return;
         }
-        if(room.getHeight()+startY > getHeight()) {
-            Logging.logger.log(Level.WARNING,"Can't generate room at "+startX+", "+startY+" because of height");
+        if(room.getHeight()+room.getStartY() > getHeight()) {
+            Logging.logger.log(Level.WARNING,"Can't generate room at "+room.getStartX()+", "+room.getStartY()+" because of height");
             return;
         }
 
         for(int roomX = 0;roomX< room.getWidth();++roomX) {
             for(int roomY = 0;roomY< room.getHeight();++roomY) {
-                int mapX = roomX+startX;
-                int mapY = roomY+startY;
+                int mapX = roomX+room.getStartX();
+                int mapY = roomY+room.getStartY();
 
-                placeMapElement(room.getFeature(roomX,roomY), mapX, mapY);
+                placeMapElement(room.getFeature(roomX,roomY), new Point(mapX, mapY));
             }
         }
     }
@@ -116,8 +116,8 @@ public class Map {
 
                 Room.RoomBuilder<?, ?> chosenRoom = RandomChoice.choose(new Random(), RoomsList.getRoomSpawnList());
                 Room room = chosenRoom.startPoint(new Point(x,y)).build();
-                if(room.canPlace(rooms, this,x,y)) {
-                    placeRoom(room, x, y);
+                if(room.canPlace(rooms, this)) {
+                    placeRoom(room);
                     rooms.add(room);
                     generatePaths(rooms);
                 }
@@ -183,28 +183,29 @@ public class Map {
         }
         List<Point> digPoints = getAllCorridorPoints(diggers);
         for(Point dig : digPoints) {
-            if(getFeature(dig.getX(),dig.getY()) instanceof Wall) {
-                placeMapElement(new Tile().toBuilder().symbol('/').build(), dig.getX(), dig.getY());
+            if(getFeature(dig) instanceof Wall) {
+                placeMapElement(new Tile().toBuilder().symbol('/').build(), dig);
             }
         }
         updateCorridorPoints(diggers);
     }
 
-    public void placeGenerateItem(int x, int y) {
+    public void placeGenerateItem(Point point) {
         Random random = new Random();
         if (random.nextInt(1, 101) <= itemGenerationChance) {
             Item item = RandomChoice.choose(random, ItemList.getItemSpawnList()).build();
-            if (getFeature(x, y) instanceof Tile tile) {
-                placeItem(item, x, y);
+            if (getFeature(point) instanceof Tile tile) {
+                placeItem(item, point);
             }
         }
     }
 
-    public void placeMapElement(MapElement mapElement, int x, int y) {
-        if(outOfBounds(x, y)) {
+    public void placeMapElement(MapElement mapElement, Point point) {
+        if(outOfBounds(point)) {
+            Logging.logger.log(Level.WARNING, "Can't place "+mapElement+" on "+point+" because it is out of bounds!");
             return;
         }
-        getMap().get(y).set(x, mapElement);
+        getMap().get(point.getY()).set(point.getX(), mapElement);
     }
 
     public Point getAnyFieldForActor(Actor actor) {
@@ -231,7 +232,7 @@ public class Map {
         generateRooms();
         for (int y = 0; y < getHeight(); ++y) {
             for (int x = 0; x < getWidth(); ++x) {
-                placeGenerateItem(x, y);
+                placeGenerateItem(new Point(x,y));
             }
         }
         Point emptySlot = getAnyFieldForActor(player);
@@ -269,7 +270,7 @@ public class Map {
         int x = actor.getPosition().getX() + xMovement;
         int y = actor.getPosition().getY() + yMovement;
 
-        if(getFeature(x,y) instanceof Door) {
+        if(getFeature(new Point(x,y)) instanceof Door) {
             xMovement *= 2;
             yMovement *= 2;
         }
@@ -324,9 +325,9 @@ public class Map {
         return items;
     }
 
-    public void placeItem(Item item, int x, int y) {
-        if (canPlaceItem(item, x, y)) {
-            Tile tile = (Tile) map.get(y).get(x);
+    public void placeItem(Item item, Point point) {
+        if (canPlaceItem(item, point)) {
+            Tile tile = (Tile) map.get(point.getY()).get(point.getX());
             tile.addItem(item);
         }
     }
@@ -343,8 +344,8 @@ public class Map {
         }
     }
 
-    public boolean canPlaceItem(Item item, int x, int y) {
-        if (map.get(y).get(x) instanceof Tile tile) {
+    public boolean canPlaceItem(Item item, Point point) {
+        if (map.get(point.getY()).get(point.getX()) instanceof Tile tile) {
             return tile.getItems().isEmpty();
         }
         return false;

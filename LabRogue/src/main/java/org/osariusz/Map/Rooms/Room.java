@@ -55,15 +55,21 @@ public class Room extends Spawnable {
         return point.distanceTo(nearestCentrePoint());
     }
 
-    public boolean canPlace(List<Room> rooms, Map map, int positionX, int positionY) {
-        for(int x = positionX;x<getWidth()+positionX;++x) {
-            for(int y = positionY;y<getHeight()+positionY;++y) {
+    public boolean canPlace(List<Room> rooms, Map map) {
+        for(int x = getStartX();x<getWidth()+getStartX();++x) {
+            for(int y = getStartY();y<getHeight()+getStartY();++y) {
+                if(x > map.getWidth()) {
+                    return false;
+                }
+                if(y > map.getHeight()) {
+                    return false;
+                }
                 if(map.isSpaceTaken(rooms, x,y)) {
                     return false;
                 }
-                if(map.checkPath(rooms, x, y)) {
-                    return false;
-                }
+                //if(map.checkPath(rooms, x, y)) {
+                //    return false;
+                //}
             }
         }
         return true;

@@ -24,7 +24,7 @@ public class IO {
     public void displayMap(Map map) {
         for (int y = 0; y < map.getHeight(); y++) {
             for (int x = 0; x < map.getWidth(); x++) {
-                System.out.print(map.getFeature(x, y).getSymbol());
+                System.out.print(map.getFeature(new Point(x,y)).getSymbol());
             }
             System.out.print("\n");
         }
@@ -36,7 +36,7 @@ public class IO {
         Point end = actor.getPosition().offset(new Point(offset, offset));
         for (int y = start.getY(); y < end.getY(); y++) {
             for (int x = start.getX(); x < end.getX(); x++) {
-                System.out.print(map.getFeature(x, y).getSymbol());
+                System.out.print(map.getFeature(new Point(x,y)).getSymbol());
             }
             System.out.print("\n");
         }
