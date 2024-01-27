@@ -68,10 +68,10 @@ public class Room extends Spawnable {
     public boolean canPlace(List<Room> rooms, Map map) {
         for(int x = getStartX();x<getWidth()+getStartX();++x) {
             for(int y = getStartY();y<getHeight()+getStartY();++y) {
-                if(x > map.getWidth()) {
+                if(x >= map.getWidth()) {
                     return false;
                 }
-                if(y > map.getHeight()) {
+                if(y >= map.getHeight()) {
                     return false;
                 }
                 if(map.isSpaceTaken(rooms, x,y)) {

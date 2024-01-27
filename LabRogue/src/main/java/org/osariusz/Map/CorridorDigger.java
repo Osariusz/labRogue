@@ -1,6 +1,7 @@
 package org.osariusz.Map;
 
 import lombok.Getter;
+import lombok.extern.java.Log;
 import org.osariusz.Map.Rooms.Room;
 import org.osariusz.Utils.Logging;
 import org.osariusz.Utils.Point;
@@ -83,6 +84,7 @@ public class CorridorDigger {
     }
 
 
+
     public void stepTowardChosenDirection(Point movingDirection) {
         //TODO: add to avoid going through rooms
         boolean moveY = random.nextBoolean();
@@ -114,12 +116,25 @@ public class CorridorDigger {
         return false;
     }
 
+    public boolean validDestination(Map map, Point realPoint, List<Point> othersCorridorPoints) {
+        if(realPoint.pointInList(othersCorridorPoints)) {
+            return true;
+        }
+//        for(Room room : map.getRooms()) {
+//            if(realPoint.pointInList(room.getDoors())) {
+//                return true;
+//            }
+//        }
+        return false;
+    }
+
     public void updateDestination(Map map, List<Point> othersCorridorPoints) {
         int diggerSightRadius = 5;
         for(int y = -diggerSightRadius;y<diggerSightRadius;++y) {
             for(int x = -diggerSightRadius;x<diggerSightRadius;++x) {
                 Point realPoint = getLastPoint().offset(new Point(x,y));
-                if(realPoint.pointInList(othersCorridorPoints) && getLastPoint().distanceTo(destination) > getLastPoint().distanceTo(realPoint)) {
+                if(validDestination(map, realPoint, othersCorridorPoints) && getLastPoint().distanceTo(destination) > getLastPoint().distanceTo(realPoint)) {
+                    Logging.logger.log(Level.INFO, this+" found new destination "+realPoint);
                     destination = realPoint;
                 }
             }

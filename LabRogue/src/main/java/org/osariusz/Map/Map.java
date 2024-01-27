@@ -44,6 +44,12 @@ public class Map {
     @Builder.Default
     private List<Point> corridorPoints = new ArrayList<>();
 
+    @Builder.Default
+    private List<Room> rooms = new ArrayList<>();
+
+    @Builder.Default
+    Random random = new Random();
+
     public static MapBuilder builder() {
         return new GeneratorMapBuilder();
     }
@@ -67,14 +73,14 @@ public class Map {
     }
 
     public void placeRoom(Room room) {
-        if(room.getWidth()+room.getStartX() > getWidth()) {
-            Logging.logger.log(Level.WARNING,"Can't generate room at "+room.getStartX()+", "+room.getStartY()+" because of width");
-            return;
-        }
-        if(room.getHeight()+room.getStartY() > getHeight()) {
-            Logging.logger.log(Level.WARNING,"Can't generate room at "+room.getStartX()+", "+room.getStartY()+" because of height");
-            return;
-        }
+//        if(room.getWidth()+room.getStartX() > getWidth()) {
+//            Logging.logger.log(Level.WARNING,"Can't generate room at "+room.getStartX()+", "+room.getStartY()+" because of width");
+//            return;
+//        }
+//        if(room.getHeight()+room.getStartY() > getHeight()) {
+//            Logging.logger.log(Level.WARNING,"Can't generate room at "+room.getStartX()+", "+room.getStartY()+" because of height");
+//            return;
+//        }
 
         for(int roomX = 0;roomX< room.getWidth();++roomX) {
             for(int roomY = 0;roomY< room.getHeight();++roomY) {
@@ -100,11 +106,11 @@ public class Map {
     }
 
     public void generateRooms() {
-        List<Room> rooms = new ArrayList<>();
+        rooms.clear();
         for (int y = 0; y < getHeight(); ++y) {
             for (int x = 0; x < getWidth(); ++x) {
 
-                Room.RoomBuilder<?, ?> chosenRoom = RandomChoice.choose(new Random(), RoomsList.getRoomSpawnList());
+                Room.RoomBuilder<?, ?> chosenRoom = RandomChoice.choose(random, RoomsList.getRoomSpawnList());
                 Room room = chosenRoom.startPoint(new Point(x,y)).build();
                 if(room.canPlace(rooms, this)) {
                     placeRoom(room);
@@ -171,7 +177,7 @@ public class Map {
             }
             if(minimalDoors != null) {
                 Logging.logger.log(Level.INFO, "door1: "+ minimalDoors.getKey()+" door2: "+minimalDoors.getValue());
-                diggers.add(new CorridorDigger(minimalDoors.getKey(), minimalDoors.getValue(), this, rooms));
+                diggers.add(new CorridorDigger(minimalDoors.getKey(), minimalDoors.getValue(), this, rooms, random));
                 room.useDoor(minimalDoors.getKey());
             }
         }
@@ -192,6 +198,7 @@ public class Map {
                 break;
             }
         }
+        diggers = diggers.stream().filter(CorridorDigger::diggerFinished).toList();
         List<Point> digPoints = getAllCorridorPoints(diggers);
         for(Point dig : digPoints) {
             if(getFeature(dig) instanceof Wall) {
@@ -202,7 +209,6 @@ public class Map {
     }
 
     public void placeGenerateItem(Point point) {
-        Random random = new Random();
         if (random.nextInt(1, 101) <= itemGenerationChance) {
             Item item = RandomChoice.choose(random, ItemList.getItemSpawnList()).build();
             if (getFeature(point) instanceof Tile tile) {
