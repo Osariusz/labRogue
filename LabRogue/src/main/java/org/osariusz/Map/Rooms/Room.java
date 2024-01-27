@@ -1,6 +1,5 @@
 package org.osariusz.Map.Rooms;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -55,6 +54,17 @@ public class Room extends Spawnable {
         return point.distanceTo(nearestCentrePoint());
     }
 
+    public boolean integralWallPart(Point point) {
+        point = point.offset(startPoint.multiplyPoints(new Point(-1,-1)));
+        if(point.pointInList(getDoors())) {
+            return false;
+        }
+        if(point.getY() >= roomBordersSize-1 && point.getY() <= getHeight()-roomBordersSize && point.getX() >= roomBordersSize-1 && point.getX() <= getWidth()-roomBordersSize) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean canPlace(List<Room> rooms, Map map) {
         for(int x = getStartX();x<getWidth()+getStartX();++x) {
             for(int y = getStartY();y<getHeight()+getStartY();++y) {
@@ -67,9 +77,9 @@ public class Room extends Spawnable {
                 if(map.isSpaceTaken(rooms, x,y)) {
                     return false;
                 }
-                //if(map.checkPath(rooms, x, y)) {
-                //    return false;
-                //}
+                if(map.checkPath(rooms, new Point(x,y))) {
+                    return false;
+                }
             }
         }
         return true;
@@ -176,11 +186,11 @@ public class Room extends Spawnable {
         return result;
     }
 
-    public java.util.Map.Entry<Point, Point> closestUnusedDoorsForRooms(Room room) {
+
+    public java.util.Map.Entry<Point, Point> closestUnusedDoorsInCorrectDirectionForRooms(Room room) {
         List<Point> thisDoors = getUnusedDoors();
         List<Point> hisDoors = room.getUnusedDoors();
 
-        //TODO: check why many doors often take the first room's first door
 
         if(thisDoors.isEmpty()) {
             Logging.logger.log(Level.WARNING,"No unused door found for room1 in closestUnusedDoorForRoom "+this);
@@ -197,6 +207,10 @@ public class Room extends Spawnable {
 
         for(Point thisDoor : thisDoors) {
             for(Point hisDoor : hisDoors) {
+                Point thisDoorRoomDirection = new Point(thisDoor.getX()-nearestCentrePoint().getX(),thisDoor.getY()- nearestCentrePoint().getY());
+                if(!Map.checkIfDoorInThisDirection(thisDoor, thisDoorRoomDirection, hisDoor)) {
+                    continue;
+                }
                 if(thisDoor.distanceTo(hisDoor) < minimalDistance) {
                     minimalDistance = thisDoor.distanceTo(hisDoor);
                     minimalThisPoint = thisDoor;

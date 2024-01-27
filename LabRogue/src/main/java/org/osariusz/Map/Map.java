@@ -2,7 +2,6 @@ package org.osariusz.Map;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.extern.java.Log;
 import org.osariusz.Actors.Actor;
 import org.osariusz.Actors.ActorList;
 import org.osariusz.Actors.Monster;
@@ -96,17 +95,8 @@ public class Map {
         return false;
     }
 
-    public boolean checkPath(List<Room> rooms, int x, int y) {
-        boolean someRoomPath = false;
-        for(Room room : rooms) {
-            if(room.pointInside(x,y)) {
-                return false;
-            }
-            if(room.getClosestRoom(rooms).isRoomPathTo(room,x,y)) {
-                someRoomPath = true;
-            }
-        }
-        return someRoomPath;
+    public boolean checkPath(List<Room> rooms, Point point) {
+        return point.pointInList(getCorridorPoints());
     }
 
     public void generateRooms() {
@@ -139,6 +129,27 @@ public class Map {
         }
     }
 
+    public static boolean checkIfDoorInThisDirection(Point startingPoint, Point direction, Point door) {
+        int xDiff = door.getX()-startingPoint.getX();
+        int yDiff = door.getY()-startingPoint.getY();
+        if((direction.getX() == 0 || Math.signum(xDiff) == Math.signum(direction.getX())) &&
+                (direction.getY() == 0 || Math.signum(yDiff) == Math.signum(direction.getY()))) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean anyDoorInThisDirection(Point startingPoint, Point direction, List<Room> rooms) {
+        for(Room room : rooms) {
+            for(Point door : room.getDoors()) {
+                if(checkIfDoorInThisDirection(startingPoint, door, direction)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void generatePaths(List<Room> rooms) {
         List<CorridorDigger> diggers = new ArrayList<>();
         for(Room room : rooms) {
@@ -148,7 +159,7 @@ public class Map {
                 if(room.equals(anotherRoom)) {
                     continue;
                 }
-                java.util.Map.Entry<Point, Point> doors = room.closestUnusedDoorsForRooms(anotherRoom);
+                java.util.Map.Entry<Point, Point> doors = room.closestUnusedDoorsInCorrectDirectionForRooms(anotherRoom);
                 if(doors == null) {
                     continue;
                 }
@@ -160,11 +171,11 @@ public class Map {
             }
             if(minimalDoors != null) {
                 Logging.logger.log(Level.INFO, "door1: "+ minimalDoors.getKey()+" door2: "+minimalDoors.getValue());
-                diggers.add(new CorridorDigger(minimalDoors.getKey(), minimalDoors.getValue()));
+                diggers.add(new CorridorDigger(minimalDoors.getKey(), minimalDoors.getValue(), this, rooms));
                 room.useDoor(minimalDoors.getKey());
             }
         }
-        int allowedIterations = 100;
+        int allowedIterations = 50;
         for(int i = 0;i<allowedIterations; ++i) {
             boolean allFinished = true;
             for(CorridorDigger digger : diggers) {
