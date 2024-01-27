@@ -132,17 +132,26 @@ public class Map {
     public void generatePaths(List<Room> rooms) {
         List<CorridorDigger> diggers = new ArrayList<>();
         for(Room room : rooms) {
+            double minimalDoorDistance = Double.MAX_VALUE;
+            java.util.Map.Entry<Point, Point> minimalDoors = null;
             for(Room anotherRoom : rooms) {
                 if(room.equals(anotherRoom)) {
                     continue;
                 }
                 java.util.Map.Entry<Point, Point> doors = room.closestUnusedDoorsForRooms(anotherRoom);
-                if(doors != null) {
-                    Logging.logger.log(Level.INFO, "door1: "+ doors.getKey()+" door2: "+doors.getValue());
-                    diggers.add(new CorridorDigger(doors.getKey(), doors.getValue()));
-                    room.useDoor(doors.getKey());
-                    break;
+                if(doors == null) {
+                    continue;
                 }
+                double doorDistance = doors.getKey().distanceTo(doors.getValue());
+                if(doorDistance < minimalDoorDistance) {
+                    minimalDoorDistance = doorDistance;
+                    minimalDoors = doors;
+                }
+            }
+            if(minimalDoors != null) {
+                Logging.logger.log(Level.INFO, "door1: "+ minimalDoors.getKey()+" door2: "+minimalDoors.getValue());
+                diggers.add(new CorridorDigger(minimalDoors.getKey(), minimalDoors.getValue()));
+                room.useDoor(minimalDoors.getKey());
             }
         }
         int allowedIterations = 100;
