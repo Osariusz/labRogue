@@ -50,6 +50,10 @@ public class Room extends Spawnable {
         return x>=getStartX() && x<getStartX()+getWidth() && y>=getStartY() && y<getStartY()+getHeight();
     }
 
+    public boolean pointIsDoor(Point point) {
+        return point.offset(startPoint).pointInList(doors);
+    }
+
     public double centerDistanceTo(Point point) {
         return point.distanceTo(nearestCentrePoint());
     }
