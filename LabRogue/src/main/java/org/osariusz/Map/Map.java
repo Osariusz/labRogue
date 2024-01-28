@@ -50,6 +50,9 @@ public class Map {
     @Builder.Default
     Random random = new Random();
 
+    @Builder.Default
+    List<CorridorDigger> failedDiggers = new ArrayList<>();
+
     public static MapBuilder builder() {
         return new GeneratorMapBuilder();
     }
@@ -119,6 +122,7 @@ public class Map {
                 }
             }
         }
+        retryGeneratePaths(rooms);
     }
 
     public List<Point> getAllCorridorPoints(List<CorridorDigger> corridorDiggers) {
@@ -156,6 +160,49 @@ public class Map {
         return false;
     }
 
+    public int getAllowedDiggersOperations() {
+        return Math.max(getWidth(), getHeight());
+    }
+
+    public void retryGeneratePaths(List<Room> rooms) {
+        failedDiggers.forEach(d -> Logging.logger.log(Level.INFO, "failed digger "+d));
+        List<CorridorDigger> newDiggers = new ArrayList<>();
+        for(CorridorDigger failedDigger : failedDiggers) {
+            newDiggers.add(new CorridorDigger(failedDigger.startPoint,failedDigger.destination,this,rooms,failedDigger.random));
+        }
+        runAllDiggers(newDiggers, getAllowedDiggersOperations());
+        newDiggers = newDiggers.stream().filter(CorridorDigger::diggerFinished).toList();
+        digCorridors(newDiggers);
+    }
+
+    public void runAllDiggers(List<CorridorDigger> diggers, int allowedIterations) {
+        for(int i = 0;i<allowedIterations; ++i) {
+            boolean allFinished = true;
+            for(CorridorDigger digger : diggers) {
+                if(!digger.diggerFinished()) {
+                    allFinished = false;
+
+                    List<CorridorDigger> otherDiggers = new ArrayList<>(diggers);
+                    otherDiggers.remove(digger);
+                    digger.updateDestination(this, getAllCorridorPoints(otherDiggers));
+                    digger.stepForward();
+                }
+            }
+            if(allFinished) {
+                break;
+            }
+        }
+    }
+
+    public void digCorridors(List<CorridorDigger> diggers) {
+        List<Point> digPoints = getAllCorridorPoints(diggers);
+        for(Point dig : digPoints) {
+            if(getFeature(dig) instanceof Wall) {
+                placeMapElement(new Tile().toBuilder().symbol('/').build(), dig);
+            }
+        }
+    }
+
     public void generatePaths(List<Room> rooms) {
         List<CorridorDigger> diggers = new ArrayList<>();
         for(Room room : rooms) {
@@ -183,30 +230,10 @@ public class Map {
                 room.useDoor(minimalDoors.getKey());
             }
         }
-        int allowedIterations = Math.max(getWidth(), getHeight());
-        for(int i = 0;i<allowedIterations; ++i) {
-            boolean allFinished = true;
-            for(CorridorDigger digger : diggers) {
-                if(!digger.diggerFinished()) {
-                    allFinished = false;
-
-                    List<CorridorDigger> otherDiggers = new ArrayList<>(diggers);
-                    otherDiggers.remove(digger);
-                    digger.updateDestination(this, getAllCorridorPoints(otherDiggers));
-                    digger.stepForward();
-                }
-            }
-            if(allFinished) {
-                break;
-            }
-        }
+        runAllDiggers(diggers, getAllowedDiggersOperations());
+        failedDiggers.addAll(diggers.stream().filter(d -> !d.diggerFinished()).toList());
         diggers = diggers.stream().filter(CorridorDigger::diggerFinished).toList();
-        List<Point> digPoints = getAllCorridorPoints(diggers);
-        for(Point dig : digPoints) {
-            if(getFeature(dig) instanceof Wall) {
-                placeMapElement(new Tile().toBuilder().symbol('/').build(), dig);
-            }
-        }
+        digCorridors(diggers);
         updateCorridorPoints(diggers);
     }
 

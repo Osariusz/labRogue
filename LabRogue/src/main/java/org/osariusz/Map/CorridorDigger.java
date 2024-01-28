@@ -24,11 +24,14 @@ public class CorridorDigger {
 
     Point destination;
 
+    Point startPoint;
+
     Random random = new Random();
 
     boolean reverted = false;
 
     public CorridorDigger(Point startPoint, Point destination, Map map, List<Room> rooms) {
+        this.startPoint = startPoint;
         corridorPoints.add(startPoint);
         this.destination = destination;
         this.map = map;
@@ -138,7 +141,7 @@ public class CorridorDigger {
         if(corridorPoints.get(0).getX() == 106 && corridorPoints.get(0).getY() == 7) {
             int h= 0;
         }
-        int diggerSightRadius = 4;
+        int diggerSightRadius = 5;
         for(int y = -diggerSightRadius;y<diggerSightRadius;++y) {
             for(int x = -diggerSightRadius;x<diggerSightRadius;++x) {
                 Point realPoint = getLastPoint().offset(new Point(x,y));
