@@ -161,6 +161,7 @@ public class Map {
         for(Room room : rooms) {
             double minimalDoorDistance = Double.MAX_VALUE;
             java.util.Map.Entry<Point, Point> minimalDoors = null;
+            Room chosenAnotherRoom = null;
             for(Room anotherRoom : rooms) {
                 if(room.equals(anotherRoom)) {
                     continue;
@@ -173,6 +174,7 @@ public class Map {
                 if(doorDistance < minimalDoorDistance) {
                     minimalDoorDistance = doorDistance;
                     minimalDoors = doors;
+                    chosenAnotherRoom = anotherRoom;
                 }
             }
             if(minimalDoors != null) {
@@ -181,7 +183,7 @@ public class Map {
                 room.useDoor(minimalDoors.getKey());
             }
         }
-        int allowedIterations = 50;
+        int allowedIterations = Math.max(getWidth(), getHeight());
         for(int i = 0;i<allowedIterations; ++i) {
             boolean allFinished = true;
             for(CorridorDigger digger : diggers) {

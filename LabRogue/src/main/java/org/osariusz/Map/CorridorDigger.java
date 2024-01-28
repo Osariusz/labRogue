@@ -26,6 +26,8 @@ public class CorridorDigger {
 
     Random random = new Random();
 
+    boolean reverted = false;
+
     public CorridorDigger(Point startPoint, Point destination, Map map, List<Room> rooms) {
         corridorPoints.add(startPoint);
         this.destination = destination;
@@ -83,9 +85,15 @@ public class CorridorDigger {
         return null;
     }
 
-
+    public void revert() {
+        reverted = true;
+        Logging.logger.log(Level.WARNING, "Corridor Digger can't find route "+this);
+        forbiddenPoints.add(getLastPoint());
+        corridorPoints.remove(getLastPoint());
+    }
 
     public void stepTowardChosenDirection(Point movingDirection) {
+        reverted = false;
         //TODO: add to avoid going through rooms
         boolean moveY = random.nextBoolean();
         Point newPoint = validNewPoint(new ArrayList<>(List.of(
@@ -100,9 +108,7 @@ public class CorridorDigger {
         )));
 
         if(newPoint == null) {
-            Logging.logger.log(Level.WARNING, "Corridor Digger can't find route "+this);
-            forbiddenPoints.add(getLastPoint());
-            corridorPoints.remove(getLastPoint());
+            revert();
             return;
         }
         Logging.logger.log(Level.INFO, this+" with moving direction of "+ movingDirection+" moved to "+newPoint);
@@ -129,11 +135,14 @@ public class CorridorDigger {
     }
 
     public void updateDestination(Map map, List<Point> othersCorridorPoints) {
-        int diggerSightRadius = 5;
+        if(corridorPoints.get(0).getX() == 106 && corridorPoints.get(0).getY() == 7) {
+            int h= 0;
+        }
+        int diggerSightRadius = 4;
         for(int y = -diggerSightRadius;y<diggerSightRadius;++y) {
             for(int x = -diggerSightRadius;x<diggerSightRadius;++x) {
                 Point realPoint = getLastPoint().offset(new Point(x,y));
-                if(validDestination(map, realPoint, othersCorridorPoints) && getLastPoint().distanceTo(destination) > getLastPoint().distanceTo(realPoint)) {
+                if(validDestination(map, realPoint, othersCorridorPoints) && (getLastPoint().distanceTo(destination) > getLastPoint().distanceTo(realPoint))) {
                     Logging.logger.log(Level.INFO, this+" found new destination "+realPoint);
                     destination = realPoint;
                 }
@@ -151,6 +160,10 @@ public class CorridorDigger {
 
     @Override
     public String toString() {
-        return "CorridorDigger with destination "+destination;
+        Point start = null;
+        if(!corridorPoints.isEmpty()) {
+            start = corridorPoints.get(0);
+        }
+        return "CorridorDigger starting at"+ start +" with destination "+destination;
     }
 }
