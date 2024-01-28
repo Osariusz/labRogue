@@ -161,7 +161,7 @@ public class Map {
     }
 
     public int getAllowedDiggersOperations() {
-        return Math.max(getWidth(), getHeight());
+        return Math.min(getWidth(), getHeight());
     }
 
     public void retryGeneratePaths(List<Room> rooms) {
@@ -170,7 +170,7 @@ public class Map {
         for(CorridorDigger failedDigger : failedDiggers) {
             newDiggers.add(new CorridorDigger(failedDigger.startPoint,failedDigger.destination,this,rooms,failedDigger.random));
         }
-        runAllDiggers(newDiggers, getAllowedDiggersOperations());
+        runAllDiggers(newDiggers, getAllowedDiggersOperations()*2);
         newDiggers = newDiggers.stream().filter(CorridorDigger::diggerFinished).toList();
         digCorridors(newDiggers);
     }
