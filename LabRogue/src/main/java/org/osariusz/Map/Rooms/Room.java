@@ -246,7 +246,7 @@ public class Room extends Spawnable {
         super.spawnChance = 10;
         this.width = 7;
         this.height = 7;
-        this.roomBordersSize = 2;
+        this.roomBordersSize = 2; //minimum is 2
         this.doors = null;
         this.usedDoors = null;
     }
