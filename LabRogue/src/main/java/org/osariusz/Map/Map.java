@@ -228,8 +228,8 @@ public class Map {
     }
 
     public Point getAnyFieldForActor(Actor actor) {
-        for(int y = 0;y<map.size();++y) {
-            for(int x = 0;x<map.size();++x) {
+        for(int y = 0;y<height;++y) {
+            for(int x = 0;x<width;++x) {
                 if(map.get(y).get(x) instanceof Tile tile) {
                     if(canPlaceActor(actor,x,y)) {
                         return new Point(x, y);
