@@ -11,6 +11,7 @@ import org.osariusz.Map.Rooms.Room;
 import org.osariusz.Map.Rooms.RoomsList;
 import org.osariusz.MapElements.*;
 import org.osariusz.Items.Item;
+import org.osariusz.Utils.FightReport;
 import org.osariusz.Utils.Logging;
 import org.osariusz.Utils.Point;
 import org.osariusz.Utils.RandomChoice;
@@ -49,6 +50,9 @@ public class Map {
 
     @Builder.Default
     List<CorridorDigger> failedDiggers = new ArrayList<>();
+
+    @Builder.Default
+    List<FightReport> fightReports = new ArrayList<>();
 
     public static MapBuilder builder() {
         return new GeneratorMapBuilder();
@@ -354,7 +358,8 @@ public class Map {
         }
         else if(actorsPresent(point)) {
             Tile tile = (Tile)getFeature(point);
-            actor.attackActor(tile.getActor());
+            List<FightReport> reports = actor.attackActor(tile.getActor());
+            fightReports.addAll(reports);
             if(!tile.getActor().isAlive()) {
                 removeActor(point);
             }

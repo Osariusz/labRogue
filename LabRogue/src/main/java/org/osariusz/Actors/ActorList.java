@@ -15,7 +15,7 @@ public class ActorList {
         {
             add(new Monster().toBuilder().equipment(new HashMap<>(Map.ofEntries(
                     new AbstractMap.SimpleEntry<>(Actor.EquipmentSlots.WEAPON, new ArrayList<>(List.of(new Weapon().toBuilder().damage(1).shootChance(10).build())))
-            ))).hp(2).agility(60).name("Szczur").id("rat").spawnChance(80));
+            ))).hp(2).agility(20).name("Szczur").id("rat").spawnChance(80));
 
             add(new Monster().toBuilder().equipment(new HashMap<>(Map.ofEntries(
                     new AbstractMap.SimpleEntry<>(Actor.EquipmentSlots.WEAPON, new ArrayList<>(List.of(new Weapon().toBuilder().damage(1).shootChance(40).range(2).build())))
@@ -27,7 +27,7 @@ public class ActorList {
                     new AbstractMap.SimpleEntry<>(Actor.EquipmentSlots.WEAPON, new ArrayList<>(List.of(new Weapon().toBuilder().damage(2).shootChance(50).range(2).build())))
             ))).name("Statua").id("statue"));
 
-            add(new Monster().toBuilder().spawnChance(1).hp(100).agility(-20).equipment(new HashMap<>(Map.ofEntries(
+            add(new Monster().toBuilder().spawnChance(1).hp(100).agility(-10).equipment(new HashMap<>(Map.ofEntries(
                     new AbstractMap.SimpleEntry<>(Actor.EquipmentSlots.WEAPON, new ArrayList<>(List.of(new Weapon().toBuilder().damage(10).shootChance(70).range(5).build())))
             ))).name("Dinozaur").id("dinosaur"));
         }

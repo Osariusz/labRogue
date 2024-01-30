@@ -66,7 +66,7 @@ public abstract class Actor extends GameElement {
         super.id = "generic_actor";
         super.symbol = 'A';
         this.hp = 10;
-        this.agility = 20;
+        this.agility = 5;
         this.movementSpeed = 1;
         this.canPickItems = false;
         this.backpack = new ArrayList<>();
@@ -288,21 +288,28 @@ public abstract class Actor extends GameElement {
         return result;
     }
 
-    public void attackActor(Actor attacked) {
+    public List<FightReport> attackActor(Actor attacked) {
+        List<FightReport> result = new ArrayList<>();
+
         Random random = new Random();
-        FightReport.FightReportBuilder fightReportBuilder = FightReport.builder().attacker(this).defender(attacked);
+        FightReport.FightReportBuilder<?, ?> fightReportBuilder = FightReport.builder().attacker(this).defender(attacked);
         int randomNumber = random.nextInt(1, 101);
         fightReportBuilder.rolledShot(randomNumber);
-        List<Equipment> equipment1 = getEquipment().get(EquipmentSlots.WEAPON);
-        for(Equipment weaponEquipment : equipment1) {
+
+        List<Equipment> actorWeapons = new ArrayList<>(getEquipment().get(EquipmentSlots.WEAPON));
+        if(actorWeapons.isEmpty()) {
+            actorWeapons.add(new Weapon().toBuilder().range(1).shootChance(50).damage(1).id("hand").name("Hand").build());
+        }
+        for(Equipment weaponEquipment : actorWeapons) {
             Weapon weapon = (Weapon) weaponEquipment;
+            fightReportBuilder.weapon(weapon);
             if (randomNumber <= getRealShootChance(attacked, weapon)) { //will be replaced
                 fightReportBuilder.damage(getWeaponDamage(weapon));
                 attacked.dealDamage(getWeaponDamage(weapon));
             }
-            //fightReportBuilder.build().showReport();
+            result.add(fightReportBuilder.build());
         }
-
+        return result;
     }
 
     @Override

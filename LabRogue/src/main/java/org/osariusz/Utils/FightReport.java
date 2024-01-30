@@ -23,7 +23,7 @@ public class FightReport {
                 builder.attacker.toString(),
                 builder.defender.toString(),
                 builder.damage,
-                builder.attacker.getShootThreshold(weapon),
+                builder.attacker.getRealShootChance(builder.defender, builder.weapon),
                 builder.rolledShot
         );
     }

@@ -5,6 +5,7 @@ import org.osariusz.Actors.Player;
 import org.osariusz.Items.Equipment;
 import org.osariusz.Items.Item;
 import org.osariusz.Map.Map;
+import org.osariusz.Utils.FightReport;
 import org.osariusz.Utils.Logging;
 import org.osariusz.Utils.Point;
 
@@ -62,6 +63,13 @@ public class IO {
             }
             System.out.print("\n");
         }
+    }
+
+    public void displayNewFightReports(Map map) {
+        for(FightReport fightReport : map.getFightReports()) {
+            fightReport.showReport();
+        }
+        map.getFightReports().clear();
     }
 
     public void displayPlayerEquipment(Player player) {
@@ -188,6 +196,7 @@ public class IO {
         while (true) {
             displayMap(map);
             //displayMapActor(map, map.getPlayer());
+            displayNewFightReports(map);
             displayPlayerStats(map.getPlayer());
             displayPlayerEquipment(map.getPlayer());
             userInput(map);
