@@ -310,9 +310,12 @@ public class Map {
     }
 
     public void activateNearbyUpgraders(Point position, Actor actor) {
+        if(actor.getBackpack().isEmpty()) {
+            return;
+        }
         for(int x = -1;x<=1;++x) {
             for(int y = -1;y<=1;++y) {
-                if(getFeature(position) instanceof Upgrader upgrader) {
+                if(getFeature(position.offset(new Point(x,y))) instanceof Upgrader upgrader) {
                     upgrader.upgradeBackpackItem(actor, actor.getRandomItemInBackpack());
                 }
             }

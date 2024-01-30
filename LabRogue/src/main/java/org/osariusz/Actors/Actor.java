@@ -116,6 +116,10 @@ public abstract class Actor extends GameElement {
     }
 
     public Item getRandomItemInBackpack() {
+        if(getBackpack().isEmpty()) {
+            Logging.logger.log(Level.WARNING, "Can't get random item as the backpack is empty");
+            return null;
+        }
         Random random = new Random();
         int itemSlot = random.nextInt(0, getBackpack().size());
         return getItemInBackpack(itemSlot);
