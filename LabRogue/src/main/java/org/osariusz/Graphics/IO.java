@@ -16,8 +16,8 @@ public class IO {
 
     String helpText = """
             w s a d - move
-            e [slotNumber] [slotName] - equip item on slotNumber from backpack to slotName
-            de [slotNumber] [slotName] - deequip item on position slotNumber from slotName
+            e [backpackSlotNumber] [slotName] [equipmentSlotNumber] - equip item on backpackSlotNumber from backpack to slotName on position equipmentSlotNumber
+            de [equipmentSlotNumber] [slotName] [backpackSlotNumber] - deequip item on position equipmentSlotNumber from slotName to backpackSlotNumber
             f [wsad] - fire/attack on selected position 
             """;
 
