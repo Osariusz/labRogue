@@ -50,6 +50,9 @@ public abstract class Actor extends GameElement {
     protected Map<EquipmentSlots, List<Equipment>> equipment;
 
     @Getter
+    protected Map<EquipmentSlots, Integer> equipmentCapacity;
+
+    @Getter
     protected List<Item> backpack;
 
     @Getter
@@ -73,6 +76,7 @@ public abstract class Actor extends GameElement {
         this.backpack = new ArrayList<>();
         this.backpackCapacity = 6;
         this.equipment = initialEquipment();
+        this.equipmentCapacity = initialEquipmentCapacity();
         this.weapon = Weapon.builder().damage(1).shootChance(50).build(); //TODO: rewrite as an item in equipment
         this.sightRange = 10;
     }
@@ -112,6 +116,9 @@ public abstract class Actor extends GameElement {
             return false;
         }
         if(!equipment.getAllowedSlots().contains(equipmentSlot)) {
+            return false;
+        }
+        if(slotNumber >= getEquipmentCapacity().get(equipmentSlot)) {
             return false;
         }
         return true;
@@ -172,6 +179,15 @@ public abstract class Actor extends GameElement {
             newEquipment.put(slot, new ArrayList<>());
         }
         return newEquipment;
+    }
+
+    private static Map<EquipmentSlots, Integer> initialEquipmentCapacity() {
+        Map<EquipmentSlots, Integer> capacity = new HashMap<>();
+        for(EquipmentSlots slot : EquipmentSlots.values()) {
+            capacity.put(slot, 1);
+        }
+        capacity.put(EquipmentSlots.PASSIVE, 5);
+        return capacity;
     }
 
     public void dealDamage(int damage) {
