@@ -62,6 +62,27 @@ public class IO {
         }
     }
 
+    public String statisticString(int real, int original, String name) {
+        int diff = real-original;
+        String string = name+": "+real;
+        if(diff != 0) {
+            string += " (";
+            string += diff;
+            string += ")";
+        }
+        return string;
+    }
+
+    public void displayPlayerStats(Player player) {
+        System.out.println("Player stats: ");
+
+        String hpString = statisticString(player.getRealHP(), player.getHp(), "Hp");
+        System.out.println(hpString);
+
+        String agilityString = statisticString(player.getRealAgility(), player.getAgility(), "Agility");
+        System.out.println(agilityString);
+    }
+
     public void displayMapItems(Map map) {
         for (Item item : map.getAllItems()) {
             System.out.println(item.toString());
@@ -140,6 +161,7 @@ public class IO {
         while (true) {
             displayMap(map);
             //displayMapActor(map, map.getPlayer());
+            displayPlayerStats(map.getPlayer());
             displayPlayerEquipment(map.getPlayer());
             userInput(map);
             map.actorsTurn();

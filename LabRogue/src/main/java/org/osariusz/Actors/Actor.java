@@ -194,9 +194,18 @@ public abstract class Actor extends GameElement {
         int realHp = hp;
         List<Equipment> equippedItems = getAllEquipment();
         for (Equipment item : equippedItems) {
-            hp += item.getHpBonus();
+            realHp += item.getHpBonus();
         }
         return realHp;
+    }
+
+    public int getRealAgility() {
+        int realAgility = agility;
+        List<Equipment> equippedItems = getAllEquipment();
+        for (Equipment item : equippedItems) {
+            realAgility += item.getAgilityBonus();
+        }
+        return realAgility;
     }
 
     public boolean isAlive() {
