@@ -38,6 +38,10 @@ public class ItemList {
                     new AbstractMap.SimpleEntry<>(30, "rat_tail"),
                     new AbstractMap.SimpleEntry<>(1, "ash")
             ))).id("spacesuit").name("Space suit"));
+
+            add(new Equipment().toBuilder().hpBonus(1).agilityBonus(1).preventUpgrader(true).allowedSlots(new ArrayList<>(List.of(
+                    Actor.EquipmentSlots.HELMET
+            ))).name("Upgrader's eye").id("upgraders_eye"));
         }
 
     };

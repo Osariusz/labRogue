@@ -30,7 +30,7 @@ public class Equipment extends Item{
 
     @Override
     public String toString() {
-        String base = name;
+        String base = super.toString();
 
 
 
@@ -66,7 +66,7 @@ public class Equipment extends Item{
             allowedSlotsString = "";
         }
 
-        return name + modifiersString + allowedSlotsString;
+        return base + modifiersString + allowedSlotsString;
     }
 
 }

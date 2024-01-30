@@ -194,6 +194,13 @@ public abstract class Actor extends GameElement {
         }
     }
 
+    public void throwItem(org.osariusz.Map.Map map, Item item) {
+        if(getBackpack().contains(item)) {
+            removeFromBackpack(item);
+            map.placeItem(item, getPosition());
+        }
+    }
+
     public enum EquipmentSlots {
         HELMET,
         OUTFIT,

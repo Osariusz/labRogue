@@ -23,7 +23,7 @@ public class IO {
             de [slotName] [equipmentSlotNumber] - deequip item on position equipmentSlotNumber from slotName
             f [wsad] - fire/attack on selected position 
             u [backpackSlotNumber] - upgrade an item on backpackSlotNumber position in your backpack
-            
+            t [backpackSlotNumber] - throw item at backpackSlotNumber on the ground
             """;
 
     String rulesText = """
@@ -70,7 +70,7 @@ public class IO {
         for(Actor.EquipmentSlots slot : equipment.keySet()) {
             System.out.println(slot+":");
             for(int i = 0;i<equipment.get(slot).size();++i) {
-                System.out.println(i+". "+equipment.get(slot).get(i));
+                System.out.println((i+1)+". "+equipment.get(slot).get(i));
             }
         }
         System.out.println("Your backpack: ");
@@ -163,11 +163,14 @@ public class IO {
                         System.out.println("Player position: " + map.getPlayer().getPosition());
                         continue;
                     case "e":
-                        map.getPlayer().equip(Integer.parseInt(arguments[1]), map.getPlayer().getEquipmentSlot(arguments[2]), Integer.parseInt(arguments[3]));
+                        map.getPlayer().equip(Integer.parseInt(arguments[1])-1, map.getPlayer().getEquipmentSlot(arguments[2]), Integer.parseInt(arguments[3])-1);
                         break;
                     case "de":
-                        map.getPlayer().deequip(map.getPlayer().getEquipmentSlot(arguments[1]), Integer.parseInt(arguments[2]));
+                        map.getPlayer().deequip(map.getPlayer().getEquipmentSlot(arguments[1]), Integer.parseInt(arguments[2])-1);
                         break;
+                    case "t":
+                        map.getPlayer().throwItem(map, map.getPlayer().getItemInBackpack(Integer.parseInt(arguments[1])-1));
+                        continue;
                     default:
                         System.out.println("Wrong input!");
                         continue;

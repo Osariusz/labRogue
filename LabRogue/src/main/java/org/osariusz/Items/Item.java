@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.osariusz.Actors.Actor;
 import org.osariusz.GameElements.GameElement;
 import org.osariusz.GameElements.Spawnable;
 import org.osariusz.Map.Rooms.Room;
@@ -49,6 +50,15 @@ public class Item extends GameElement {
             result.initializeTransmutation();
             return result;
         }
+    }
+
+    @Override
+    public String toString() {
+        String base = name;
+        if(preventUpgrader) {
+            base += " (prevents upgrader) ";
+        }
+        return base;
     }
 
 }
