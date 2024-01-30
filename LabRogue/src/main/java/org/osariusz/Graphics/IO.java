@@ -141,6 +141,15 @@ public class IO {
         }
     }
 
+    public boolean successfulMovement(Map map, Point movePoint) {
+        if(map.canPlaceActor(map.getPlayer(),map.getPlayer().getPosition().offset(movePoint))) {
+            map.moveActor(map.getPlayer(), movePoint.getX(), movePoint.getY());
+            return true;
+        }
+        System.out.println("Can't move here");
+        return false;
+    }
+
     public void userInput(Map map) {
         while (true) {
             Scanner input = new Scanner(System.in);
@@ -150,17 +159,25 @@ public class IO {
                 command = arguments[0];
                 switch (command) { //break means you lose a turn, continue means you don't
                     case "w":
-                        map.moveActor(map.getPlayer(), 0, -1);
-                        break;
+                        if(successfulMovement(map, new Point(0, -1))) {
+                            break;
+                        }
+                        continue;
                     case "s":
-                        map.moveActor(map.getPlayer(), 0, 1);
-                        break;
+                        if(successfulMovement(map, new Point(0, 1))) {
+                            break;
+                        }
+                        continue;
                     case "a":
-                        map.moveActor(map.getPlayer(), -1, 0);
-                        break;
+                        if(successfulMovement(map, new Point(-1, 0))) {
+                            break;
+                        }
+                        continue;
                     case "d":
-                        map.moveActor(map.getPlayer(), 1, 0);
-                        break;
+                        if(successfulMovement(map, new Point(1, 0))) {
+                            break;
+                        }
+                        continue;
                     case "help":
                         System.out.println(helpText);
                         continue;
