@@ -5,16 +5,14 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.osariusz.GameElements.Spawnable;
 import org.osariusz.Map.Map;
-import org.osariusz.MapElements.Door;
-import org.osariusz.MapElements.MapElement;
-import org.osariusz.MapElements.Tile;
-import org.osariusz.MapElements.Wall;
+import org.osariusz.MapElements.*;
 import org.osariusz.Utils.Logging;
 import org.osariusz.Utils.Point;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 
 @Getter
@@ -41,8 +39,29 @@ public class Room extends Spawnable {
     protected List<Point> doors;
     protected List<Point> usedDoors;
 
+    protected int upgraderChance; //in %
 
-    public MapElement getRoomSpecificFeature(int x, int y) {
+
+    public MapElement getRoomSpecificFeature(Point point, Random random) {
+        boolean notNearSpecial = true;
+        for(int xOffset = -1;xOffset<=1;++xOffset) {
+            for(int yOffset = -1;yOffset<=1;++yOffset) {
+                Point newPoint = point.offset(new Point(xOffset, yOffset));
+                if(doorPosition(newPoint) || wallPosition(newPoint)) {
+                    notNearSpecial = false;
+                    break;
+                }
+            }
+            if(!notNearSpecial) {
+                break;
+            }
+        }
+        if(notNearSpecial) {
+            int randomNumber = random.nextInt(1, 101);
+            if(randomNumber <= upgraderChance) {
+                return new Upgrader().toBuilder().build();
+            }
+        }
         return new Tile().toBuilder().build();
     }
 
@@ -171,14 +190,22 @@ public class Room extends Spawnable {
 
     }
 
-    public MapElement getFeature(int x, int y) {
-        if(new Point(x,y).pointInList(doors)) {
+    public boolean doorPosition(Point point) {
+        return point.pointInList(doors);
+    }
+
+    public boolean wallPosition(Point point) {
+        return point.getX() <= (roomBordersSize-1) || point.getX() >= width-roomBordersSize || point.getY() <= (roomBordersSize-1) || point.getY() >= height-roomBordersSize;
+    }
+
+    public MapElement getFeature(Point point, Random random) {
+        if(doorPosition(point)) {
             return new Door().toBuilder().build();
         }
-        if(x <= (roomBordersSize-1) || x >= width-roomBordersSize || y <= (roomBordersSize-1) || y >= height-roomBordersSize) {
+        if(wallPosition(point)) {
             return new Wall().toBuilder().build();
         }
-        return getRoomSpecificFeature(x,y);
+        return getRoomSpecificFeature(point, random);
     }
 
     public void useDoor(Point point) {
@@ -249,6 +276,7 @@ public class Room extends Spawnable {
         this.roomBordersSize = 2; //minimum is 2
         this.doors = null;
         this.usedDoors = null;
+        this.upgraderChance = 5;
     }
 
     private static final class RoomBuilderImpl extends RoomBuilder<Room, RoomBuilderImpl> {

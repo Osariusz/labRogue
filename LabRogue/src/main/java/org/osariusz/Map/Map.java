@@ -87,7 +87,7 @@ public class Map {
                 int mapX = roomX+room.getStartX();
                 int mapY = roomY+room.getStartY();
 
-                placeMapElement(room.getFeature(roomX,roomY), new Point(mapX, mapY));
+                placeMapElement(room.getFeature(new Point(roomX,roomY), random), new Point(mapX, mapY));
             }
         }
     }
