@@ -8,9 +8,11 @@ import lombok.experimental.SuperBuilder;
 import org.osariusz.Actors.Actor;
 import org.osariusz.GameElements.GameElement;
 import org.osariusz.Items.Item;
+import org.osariusz.Utils.Logging;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 @Getter
 @SuperBuilder(toBuilder = true)
@@ -58,8 +60,13 @@ public class Tile extends MapElement {
     }
 
     public void transferItemsToActor(Actor actor) {
-        actor.addToBackpack(items);
-        items.clear();
+        if(actor.canAddToBackpack(items.size())) {
+            actor.addToBackpack(items);
+            items.clear();
+        }
+        else {
+            Logging.logger.log(Level.INFO, "You can't carry more items so you didn't pick anything");
+        }
     }
 
     public char getSymbol() {

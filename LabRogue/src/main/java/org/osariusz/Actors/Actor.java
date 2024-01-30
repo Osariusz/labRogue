@@ -4,15 +4,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.java.Log;
 import org.osariusz.GameElements.GameElement;
 import org.osariusz.GameElements.Spawnable;
 import org.osariusz.Items.Equipment;
 import org.osariusz.Items.Item;
 import org.osariusz.Items.Weapon;
 import org.osariusz.Utils.FightReport;
+import org.osariusz.Utils.Logging;
 import org.osariusz.Utils.Point;
 
 import java.util.*;
+import java.util.logging.Level;
 
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
@@ -50,6 +53,9 @@ public abstract class Actor extends GameElement {
     protected List<Item> backpack;
 
     @Getter
+    protected int backpackCapacity;
+
+    @Getter
     @Setter
     protected Point position;
 
@@ -65,16 +71,86 @@ public abstract class Actor extends GameElement {
         this.movementSpeed = 1;
         this.canPickItems = false;
         this.backpack = new ArrayList<>();
+        this.backpackCapacity = 6;
         this.equipment = initialEquipment();
         this.weapon = Weapon.builder().damage(1).shootChance(50).build(); //TODO: rewrite as an item in equipment
         this.sightRange = 10;
     }
 
+    public boolean canAddToBackpack(int itemAmount) {
+        return backpack.size()+itemAmount <= backpackCapacity;
+    }
+
     public void addToBackpack(List<Item> items) {
+        if(!canAddToBackpack(items.size())) {
+            Logging.logger.log(Level.INFO, "Can't equip that item");
+            return;
+        }
         backpack.addAll(items);
     }
 
+    public Item getItemInBackpack(int backpackSlot) {
+        if(backpackSlot >= backpack.size()) {
+            Logging.logger.log(Level.WARNING, "Requested "+backpackSlot+" item in backpack of size "+backpack.size());
+            return null;
+        }
+        return getBackpack().get(backpackSlot);
+    }
 
+    public Equipment getEquipmentIfPresent(String equipmentSlot, int slotNumber) {
+        if(!getEquipment().containsKey(equipmentSlot)) {
+            return null;
+        }
+        if(getEquipment().get(equipmentSlot).size() <= slotNumber) {
+            return null;
+        }
+        return getEquipment().get(equipmentSlot).get(slotNumber);
+    }
+
+    public boolean canEquip(String equipmentSlot, int slotNumber, Equipment equipment) {
+        if (!getEquipment().containsKey(equipmentSlot)) {
+            return false;
+        }
+        return true;
+    }
+
+    public void equip(int backpackSlot, String equipmentSlot, int slotNumber) {
+        Item backpackItem = getItemInBackpack(backpackSlot);
+        if(!(backpackItem instanceof Equipment backpackEquipment)) {
+            Logging.logger.log(Level.INFO, "Can't equip non-equipment");
+            return;
+        }
+        Equipment alreadyThere = getEquipmentIfPresent(equipmentSlot, slotNumber);
+        if(canEquip(equipmentSlot, slotNumber, backpackEquipment) && canDeequip(equipmentSlot, slotNumber, alreadyThere)) {
+            if(alreadyThere != null) {
+                addToBackpack(new ArrayList<>(List.of(alreadyThere)));
+                getEquipment().get(equipmentSlot).remove(alreadyThere);
+            }
+            getEquipment().get(equipmentSlot).add(backpackEquipment);
+            getBackpack().remove(backpackItem);
+        }
+        else {
+            Logging.logger.log(Level.INFO, "Can't equip "+backpackEquipment);
+        }
+    }
+
+    public boolean canDeequip(String equipmentSlot, int slotNumber, Equipment equipment) {
+        if(!canAddToBackpack(1)) {
+            return false;
+        }
+        return true;
+    }
+
+    public void deequip(String slotName, int equipmentSlotNumber) {
+        Equipment equipmentThere = getEquipmentIfPresent(slotName, equipmentSlotNumber);
+        if(equipmentThere != null && canDeequip(slotName, equipmentSlotNumber, equipmentThere) && canAddToBackpack(1)) {
+            addToBackpack(new ArrayList<>(List.of(equipmentThere)));
+            getEquipment().get(slotName).remove(equipmentSlotNumber);
+        }
+        else {
+            Logging.logger.log(Level.INFO,"Can't deequip "+ equipmentThere);
+        }
+    }
 
     public enum EquipmentSlots {
         HELMET,
