@@ -13,7 +13,7 @@ public class MapTests {
     @Test
     public void testPlaceItem() {
         Map map = Map.builder().width(10).height(10).build();
-        map.placeItem(Item.builder().build(), 5, 5);
+        map.placeItem(Item.builder().build(), new Point(5,5));
         assert map.getMap().get(5).get(5) instanceof Tile;
         assert !((Tile) map.getMap().get(5).get(5)).getItems().isEmpty();
     }

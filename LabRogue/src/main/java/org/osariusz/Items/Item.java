@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.osariusz.GameElements.GameElement;
 import org.osariusz.GameElements.Spawnable;
+import org.osariusz.Map.Rooms.Room;
+import org.osariusz.Utils.RandomChoice;
 
 import java.util.*;
 
@@ -21,9 +23,29 @@ public class Item extends GameElement {
         super.id = "generic_item";
         super.symbol = 'i';
         super.spawnChance = 10;
-        this.transmutationChances = new ArrayList<>(List.of(new AbstractMap.SimpleEntry<>(1,super.id)));
+        this.transmutationChances = null;
     }
 
     protected List<Map.Entry<Integer, String>> transmutationChances;
+
+    public void initializeTransmutation() {
+        if(this.transmutationChances == null) {
+            this.transmutationChances = new ArrayList<>(List.of(new AbstractMap.SimpleEntry<>(1,this.id)));
+        }
+    }
+
+    public Item transmuteItem() {
+        String itemId = RandomChoice.choose(new Random(), this.transmutationChances);
+        ItemBuilder<?, ?> itemBuilder = ItemList.getItem(itemId);
+        return itemBuilder.build();
+    }
+
+    private static final class ItemBuilderImpl extends Item.ItemBuilder<Item, Item.ItemBuilderImpl> {
+        public Item build() {
+            Item result = new Item(this);
+            result.initializeTransmutation();
+            return result;
+        }
+    }
 
 }
