@@ -16,10 +16,31 @@ import java.util.logging.Level;
 public class IO {
 
     String helpText = """
+            help - shows this message
+            rules - read the rules
             w s a d - move
             e [backpackSlotNumber] [slotName] [equipmentSlotNumber] - equip item on backpackSlotNumber from backpack to slotName on position equipmentSlotNumber
             de [slotName] [equipmentSlotNumber] - deequip item on position equipmentSlotNumber from slotName
             f [wsad] - fire/attack on selected position 
+            u [backpackSlotNumber] - upgrade an item on backpackSlotNumber position in your backpack
+            
+            """;
+
+    String rulesText = """
+            You are a fugitive in a secret laboratory. You used to be a test subject, but luckily for you a containment breach happened and you are free.
+            The only problem is that all the dangerous anomalies you were to be tested on are free as well!!!
+            Try to escape by going through all the levels in the facility and try not to get killed by all the monsters.
+            Beware of the Upgraders as they will upgrade a random item from your backpack if you are not protected!
+            All of the game elements are symbolised by letters. Below is a glossary of all the elements.
+            
+            You can always get this message again by typing rules or get help with other command by typing help
+            
+            e - equipment
+            p - passive equipment
+            # - door
+            i - item
+            @ - You!
+            U - upgrader
             """;
 
     public void displayMap(Map map) {
@@ -134,6 +155,9 @@ public class IO {
                         break;
                     case "help":
                         System.out.println(helpText);
+                        continue;
+                    case "rules":
+                        System.out.println(rulesText);
                         continue;
                     case "pos":
                         System.out.println("Player position: " + map.getPlayer().getPosition());

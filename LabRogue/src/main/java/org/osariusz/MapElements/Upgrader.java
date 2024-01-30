@@ -25,6 +25,10 @@ public class Upgrader extends MapElement {
     }
 
     public void upgradeBackpackItem(Actor actor, Item item) {
+        if(!actor.getBackpack().contains(item)) {
+            Logging.logger.log(Level.WARNING, "Can't upgrade as "+actor+" has no "+item+" in backpack!");
+            return;
+        }
         actor.removeFromBackpack(item);
         actor.addToBackpack(List.of(item.transmuteItem()));
     }
