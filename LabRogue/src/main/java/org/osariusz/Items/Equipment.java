@@ -50,8 +50,23 @@ public class Equipment extends Item{
             modifiers = true;
             modifiersString += "agility: "+agilityBonus;
         }
-        modifiersString += ")";
-        return name + modifiersString;
+        modifiersString += ") ";
+
+        boolean slots = false;
+        String allowedSlotsString = "allowed slots: ";
+        for(Actor.EquipmentSlots equipmentSlot : allowedSlots) {
+            if(slots) {
+                allowedSlotsString += ", ";
+            }
+            allowedSlotsString += equipmentSlot;
+            slots = true;
+        }
+
+        if(allowedSlots.isEmpty()) {
+            allowedSlotsString = "";
+        }
+
+        return name + modifiersString + allowedSlotsString;
     }
 
 }
