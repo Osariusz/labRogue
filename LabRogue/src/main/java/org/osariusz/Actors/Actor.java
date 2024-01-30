@@ -42,10 +42,6 @@ public abstract class Actor extends GameElement {
     @Getter
     protected boolean canPickItems;
 
-    @Setter
-    @Getter
-    protected Weapon weapon;
-
     @Getter
     protected Map<EquipmentSlots, List<Equipment>> equipment;
 
@@ -77,7 +73,6 @@ public abstract class Actor extends GameElement {
         this.backpackCapacity = 6;
         this.equipment = initialEquipment();
         this.equipmentCapacity = initialEquipmentCapacity();
-        this.weapon = Weapon.builder().damage(1).shootChance(50).build(); //TODO: rewrite as an item in equipment
         this.sightRange = 10;
     }
 
@@ -217,6 +212,7 @@ public abstract class Actor extends GameElement {
         for (EquipmentSlots slot : EquipmentSlots.values()) {
             newEquipment.put(slot, new ArrayList<>());
         }
+        newEquipment.get(EquipmentSlots.WEAPON).add(Weapon.builder().name("Hand").id("hand").damage(1).shootChance(50).build()); //TODO: rewrite as an item in equipment
         return newEquipment;
     }
 
@@ -267,23 +263,23 @@ public abstract class Actor extends GameElement {
         return getRealHP() > 0;
     }
 
-    public int getShootThreshold() {
+    public int getShootThreshold(Weapon weapon) {
         if (weapon == null) {
             return 50;
         }
         return weapon.getShootChance();
     }
 
-    public int getWeaponDamage() {
+    public int getWeaponDamage(Weapon weapon) {
         if (weapon == null) {
             return 1;
         }
         return weapon.getDamage();
     }
 
-    public int getRealShootChance(Actor attacked) {
+    public int getRealShootChance(Actor attacked, Weapon weapon) {
         int distance = getPosition().distanceTo(attacked.getPosition());
-        int result = getShootThreshold() - attacked.agility - 2*distance;
+        int result = getShootThreshold(weapon) - attacked.agility - 2*distance;
         if (result > 100) {
             return 100;
         }
@@ -295,14 +291,18 @@ public abstract class Actor extends GameElement {
 
     public void attackActor(Actor attacked) {
         Random random = new Random();
-        FightReport.FightReportBuilder fightReportBuilder = new FightReport.FightReportBuilder().setAttacker(this).setDefender(attacked);
-        int randomNumber = random.nextInt(1, 101);//TODO: subtract distance
+        FightReport.FightReportBuilder fightReportBuilder = FightReport.builder().attacker(this).defender(attacked);
+        int randomNumber = random.nextInt(1, 101);
         fightReportBuilder.rolledShot(randomNumber);
-        if (randomNumber <= getRealShootChance(attacked)) { //will be replaced
-            fightReportBuilder.setDamage(getWeaponDamage());
-            attacked.dealDamage(getWeaponDamage());
+        for(Equipment weaponEquipment : getEquipment().get(EquipmentSlots.WEAPON)) {
+            Weapon weapon = (Weapon) weaponEquipment;
+            if (randomNumber <= getRealShootChance(attacked, weapon)) { //will be replaced
+                fightReportBuilder.damage(getWeaponDamage(weapon));
+                attacked.dealDamage(getWeaponDamage(weapon));
+            }
+            //fightReportBuilder.build().showReport();
         }
-        //fightReportBuilder.build().showReport();
+
     }
 
     @Override
