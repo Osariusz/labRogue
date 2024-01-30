@@ -214,7 +214,7 @@ public class Map {
                 if(doors == null) {
                     continue;
                 }
-                double doorDistance = doors.getKey().distanceTo(doors.getValue());
+                int doorDistance = doors.getKey().distanceTo(doors.getValue());
                 if(doorDistance < minimalDoorDistance) {
                     minimalDoorDistance = doorDistance;
                     minimalDoors = doors;

@@ -282,7 +282,8 @@ public abstract class Actor extends GameElement {
     }
 
     public int getRealShootChance(Actor attacked) {
-        int result = getShootThreshold() - attacked.agility;
+        int distance = getPosition().distanceTo(attacked.getPosition());
+        int result = getShootThreshold() - attacked.agility - 2*distance;
         if (result > 100) {
             return 100;
         }
