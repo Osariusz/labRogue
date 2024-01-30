@@ -28,7 +28,7 @@ public class MapTests {
     @Test
     public void testPlaceActor() {
         Map map = Map.builder().width(10).height(10).build();
-        map.placeActor(Monster.builder().build(), 5, 5);
+        map.placeActor(Monster.builder().build(), new Point(5, 5));
         assert map.getMap().get(5).get(5) instanceof Tile;
         Tile tile = (Tile) map.getMap().get(5).get(5);
         assert tile.hasActor();
@@ -37,8 +37,8 @@ public class MapTests {
     @Test
     public void testPlaceActorOnActor() {
         Map map = Map.builder().width(10).height(10).build();
-        map.placeActor(Monster.builder().build(), 5, 5);
-        assert !map.canPlaceActor(Monster.builder().build(), 5, 5);
+        map.placeActor(Monster.builder().build(), new Point(5, 5));
+        assert !map.canPlaceActor(Monster.builder().build(), new Point(5, 5));
     }
 
     @Test

@@ -2,14 +2,16 @@ package org.osariusz.Items;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.osariusz.Actors.Actor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 @SuperBuilder(toBuilder = true)
+@Getter
+@NoArgsConstructor
 public class Weapon extends Equipment {
 
     @Override
@@ -21,7 +23,7 @@ public class Weapon extends Equipment {
         super.allowedSlots = new ArrayList<>(List.of(Actor.EquipmentSlots.WEAPON));
         this.damage = 1;
         this.shootChance = 50;
-        range = 1;
+        this.range = 1;
     }
 
     int damage;

@@ -255,8 +255,9 @@ public class Map {
         for(int y = 0;y<height;++y) {
             for(int x = 0;x<width;++x) {
                 if(map.get(y).get(x) instanceof Tile tile) {
-                    if(canPlaceActor(actor,x,y)) {
-                        return new Point(x, y);
+                    Point point = new Point(x,y);
+                    if(canPlaceActor(actor,point)) {
+                        return point;
                     }
                 }
             }
@@ -279,10 +280,10 @@ public class Map {
             }
         }
         Point emptySlot = getAnyFieldForActor(player);
-        placeActor(getPlayer(), emptySlot.getX(), emptySlot.getY());
+        placeActor(getPlayer(), emptySlot);
         Monster rat = ActorList.getMonster("rat").build();
         Point emptySlot2 = getAnyFieldForActor(rat);
-        placeActor(rat,emptySlot2.getX(),emptySlot2.getY());
+        placeActor(rat,emptySlot2);
         return this;
     }
 
@@ -322,6 +323,13 @@ public class Map {
         }
     }
 
+    public boolean actorsPresent(Point point) {
+        if(getFeature(point) instanceof Tile tile) {
+            return !(tile.getActor() == null);
+        }
+        return false;
+    }
+
     public void moveActor(Actor actor, int xMovement, int yMovement) {
         int x = actor.getPosition().getX() + xMovement;
         int y = actor.getPosition().getY() + yMovement;
@@ -334,12 +342,21 @@ public class Map {
         x = actor.getPosition().getX() + xMovement;
         y = actor.getPosition().getY() + yMovement;
 
-        if (canPlaceActor(actor, x, y)) {
-            removeActor(actor.getPosition().getX(), actor.getPosition().getY());
-            actor.setPosition(new Point(x,y));
-            placeActor(actor, x, y);
+        Point point = new Point(x,y);
+
+        if (canPlaceActor(actor, point)) {
+            removeActor(actor.getPosition());
+            actor.setPosition(point);
+            placeActor(actor, point);
             if(!actor.immuneToUpgrader()) {
-                activateNearbyUpgraders(new Point(x,y), actor);
+                activateNearbyUpgraders(point, actor);
+            }
+        }
+        else if(actorsPresent(point)) {
+            Tile tile = (Tile)getFeature(point);
+            actor.attackActor(tile.getActor());
+            if(!tile.getActor().isAlive()) {
+                removeActor(point);
             }
         }
         else {
@@ -347,11 +364,11 @@ public class Map {
         }
     }
 
-    public void placeActor(Actor actor, int x, int y) {
-        if (canPlaceActor(actor, x, y)) {
-            Tile tile = (Tile) map.get(y).get(x);
+    public void placeActor(Actor actor, Point point) {
+        if (canPlaceActor(actor, point)) {
+            Tile tile = (Tile) map.get(point.getY()).get(point.getX());
             tile.setActor(actor);
-            actor.setPosition(new Point(x,y));
+            actor.setPosition(point);
 
             if (actor.isCanPickItems() && tile.hasItems()) {
                 tile.transferItemsToActor(actor);
@@ -359,14 +376,14 @@ public class Map {
         }
     }
 
-    public void removeActor(int x, int y) {
-        if (map.get(y).get(x) instanceof Tile tile) {
+    public void removeActor(Point point) {
+        if (map.get(point.getY()).get(point.getX()) instanceof Tile tile) {
             tile.removeActor();
         }
     }
 
-    public boolean canPlaceActor(Actor actor, int x, int y) {
-        if (map.get(y).get(x) instanceof Tile tile) {
+    public boolean canPlaceActor(Actor actor, Point point) {
+        if (map.get(point.getY()).get(point.getX()) instanceof Tile tile) {
             return tile.getActor() == null;
         }
         return false;

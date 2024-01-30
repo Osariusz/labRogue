@@ -212,7 +212,6 @@ public abstract class Actor extends GameElement {
         for (EquipmentSlots slot : EquipmentSlots.values()) {
             newEquipment.put(slot, new ArrayList<>());
         }
-        newEquipment.get(EquipmentSlots.WEAPON).add(Weapon.builder().name("Hand").id("hand").damage(1).shootChance(50).build()); //TODO: rewrite as an item in equipment
         return newEquipment;
     }
 
@@ -294,7 +293,8 @@ public abstract class Actor extends GameElement {
         FightReport.FightReportBuilder fightReportBuilder = FightReport.builder().attacker(this).defender(attacked);
         int randomNumber = random.nextInt(1, 101);
         fightReportBuilder.rolledShot(randomNumber);
-        for(Equipment weaponEquipment : getEquipment().get(EquipmentSlots.WEAPON)) {
+        List<Equipment> equipment1 = getEquipment().get(EquipmentSlots.WEAPON);
+        for(Equipment weaponEquipment : equipment1) {
             Weapon weapon = (Weapon) weaponEquipment;
             if (randomNumber <= getRealShootChance(attacked, weapon)) { //will be replaced
                 fightReportBuilder.damage(getWeaponDamage(weapon));
