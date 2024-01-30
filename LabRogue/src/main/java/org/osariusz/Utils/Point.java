@@ -2,7 +2,10 @@ package org.osariusz.Utils;
 
 import lombok.Getter;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Getter
 public class Point {
@@ -15,6 +18,37 @@ public class Point {
 
     public int distanceTo(Point point) {
         return Math.abs(x-point.x)+Math.abs(y-point.y);
+    }
+
+    public List<Point> bfsTo(Point destination, int limit, Function<Point, Boolean> checkPoint) {
+        Queue<List<Point>> nextPoints = new LinkedList<>();
+        List<Point> visited = new ArrayList<>();
+        nextPoints.add(List.of(this));
+        while(!nextPoints.isEmpty()) {
+            List<Point> nextPointList = nextPoints.remove();
+            Point nextPoint = nextPointList.get(nextPointList.size()-1);
+            if(nextPoint.pointInList(visited) || nextPointList.size() >= limit) {
+                continue;
+            }
+            visited.add(nextPoint);
+            if(nextPoint.equals(destination)) {
+                return nextPointList;
+            }
+            List<Point> neighbors = new ArrayList<>(List.of(
+                    nextPoint.offset(new Point(0,-1)),
+                    nextPoint.offset(new Point(0,1)),
+                    nextPoint.offset(new Point(1,0)),
+                    nextPoint.offset(new Point(-1,0))
+            ));
+            for(Point neighbor : neighbors) {
+                if(!neighbor.pointInList(visited) && checkPoint.apply(neighbor)) {
+                    List<Point> newList = new ArrayList<>(nextPointList);
+                    newList.add(neighbor);
+                    nextPoints.add(newList);
+                }
+            }
+        }
+        return null;
     }
 
     public Point offset(Point pointOffset) {
