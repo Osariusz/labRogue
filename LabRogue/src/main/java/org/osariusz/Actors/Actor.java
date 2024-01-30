@@ -74,6 +74,8 @@ public abstract class Actor extends GameElement {
         backpack.addAll(items);
     }
 
+
+
     public enum EquipmentSlots {
         HELMET,
         OUTFIT,
