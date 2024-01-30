@@ -13,7 +13,7 @@ public class Point {
         return !points.stream().filter(this::equals).toList().isEmpty();
     }
 
-    public double distanceTo(Point point) {
+    public int distanceTo(Point point) {
         return Math.abs(x-point.x)+Math.abs(y-point.y);
     }
 
