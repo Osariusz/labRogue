@@ -47,7 +47,7 @@ public abstract class Actor extends GameElement {
     protected Weapon weapon;
 
     @Getter
-    protected Map<String, List<Equipment>> equipment;
+    protected Map<EquipmentSlots, List<Equipment>> equipment;
 
     @Getter
     protected List<Item> backpack;
@@ -97,7 +97,7 @@ public abstract class Actor extends GameElement {
         return getBackpack().get(backpackSlot);
     }
 
-    public Equipment getEquipmentIfPresent(String equipmentSlot, int slotNumber) {
+    public Equipment getEquipmentIfPresent(EquipmentSlots equipmentSlot, int slotNumber) {
         if(!getEquipment().containsKey(equipmentSlot)) {
             return null;
         }
@@ -107,14 +107,17 @@ public abstract class Actor extends GameElement {
         return getEquipment().get(equipmentSlot).get(slotNumber);
     }
 
-    public boolean canEquip(String equipmentSlot, int slotNumber, Equipment equipment) {
+    public boolean canEquip(EquipmentSlots equipmentSlot, int slotNumber, Equipment equipment) {
         if (!getEquipment().containsKey(equipmentSlot)) {
+            return false;
+        }
+        if(!equipment.getAllowedSlots().contains(equipmentSlot)) {
             return false;
         }
         return true;
     }
 
-    public void equip(int backpackSlot, String equipmentSlot, int slotNumber) {
+    public void equip(int backpackSlot, EquipmentSlots equipmentSlot, int slotNumber) {
         Item backpackItem = getItemInBackpack(backpackSlot);
         if(!(backpackItem instanceof Equipment backpackEquipment)) {
             Logging.logger.log(Level.INFO, "Can't equip non-equipment");
@@ -134,18 +137,18 @@ public abstract class Actor extends GameElement {
         }
     }
 
-    public boolean canDeequip(String equipmentSlot, int slotNumber, Equipment equipment) {
+    public boolean canDeequip(EquipmentSlots equipmentSlot, int slotNumber, Equipment equipment) {
         if(!canAddToBackpack(1)) {
             return false;
         }
         return true;
     }
 
-    public void deequip(String slotName, int equipmentSlotNumber) {
-        Equipment equipmentThere = getEquipmentIfPresent(slotName, equipmentSlotNumber);
-        if(equipmentThere != null && canDeequip(slotName, equipmentSlotNumber, equipmentThere) && canAddToBackpack(1)) {
+    public void deequip(EquipmentSlots slot, int equipmentSlotNumber) {
+        Equipment equipmentThere = getEquipmentIfPresent(slot, equipmentSlotNumber);
+        if(equipmentThere != null && canDeequip(slot, equipmentSlotNumber, equipmentThere) && canAddToBackpack(1)) {
             addToBackpack(new ArrayList<>(List.of(equipmentThere)));
-            getEquipment().get(slotName).remove(equipmentSlotNumber);
+            getEquipment().get(slot).remove(equipmentSlotNumber);
         }
         else {
             Logging.logger.log(Level.INFO,"Can't deequip "+ equipmentThere);
@@ -159,10 +162,14 @@ public abstract class Actor extends GameElement {
         WEAPON
     }
 
-    private static Map<String, List<Equipment>> initialEquipment() {
-        Map<String, List<Equipment>> newEquipment = new HashMap<>();
+    public EquipmentSlots getEquipmentSlot(String name) {
+        return EquipmentSlots.valueOf(name);
+    }
+
+    private static Map<EquipmentSlots, List<Equipment>> initialEquipment() {
+        Map<EquipmentSlots, List<Equipment>> newEquipment = new HashMap<>();
         for (EquipmentSlots slot : EquipmentSlots.values()) {
-            newEquipment.put(slot.toString(), new ArrayList<>());
+            newEquipment.put(slot, new ArrayList<>());
         }
         return newEquipment;
     }

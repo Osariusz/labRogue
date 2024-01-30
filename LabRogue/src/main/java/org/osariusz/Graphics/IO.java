@@ -45,8 +45,8 @@ public class IO {
 
     public void displayPlayerEquipment(Player player) {
         System.out.println("Your equipment:");
-        java.util.Map<String, List<Equipment>> equipment = player.getEquipment();
-        for(String slot : equipment.keySet()) {
+        java.util.Map<Actor.EquipmentSlots, List<Equipment>> equipment = player.getEquipment();
+        for(Actor.EquipmentSlots slot : equipment.keySet()) {
             System.out.println(slot+":");
             for(int i = 0;i<equipment.get(slot).size();++i) {
                 System.out.println(i+". "+equipment.get(slot).get(i));
@@ -118,10 +118,10 @@ public class IO {
                         System.out.println("Player position: " + map.getPlayer().getPosition());
                         continue;
                     case "e":
-                        map.getPlayer().equip(Integer.parseInt(arguments[1]), arguments[2], Integer.parseInt(arguments[3]));
+                        map.getPlayer().equip(Integer.parseInt(arguments[1]), map.getPlayer().getEquipmentSlot(arguments[2]), Integer.parseInt(arguments[3]));
                         break;
                     case "de":
-                        map.getPlayer().deequip(arguments[1], Integer.parseInt(arguments[2]));
+                        map.getPlayer().deequip(map.getPlayer().getEquipmentSlot(arguments[1]), Integer.parseInt(arguments[2]));
                         break;
                     default:
                         System.out.println("Wrong input!");
