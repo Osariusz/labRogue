@@ -9,10 +9,7 @@ import org.osariusz.Actors.Player;
 import org.osariusz.Items.ItemList;
 import org.osariusz.Map.Rooms.Room;
 import org.osariusz.Map.Rooms.RoomsList;
-import org.osariusz.MapElements.Door;
-import org.osariusz.MapElements.MapElement;
-import org.osariusz.MapElements.Tile;
-import org.osariusz.MapElements.Wall;
+import org.osariusz.MapElements.*;
 import org.osariusz.Items.Item;
 import org.osariusz.Utils.Logging;
 import org.osariusz.Utils.Point;
@@ -312,6 +309,16 @@ public class Map {
         }
     }
 
+    public void activateNearbyUpgraders(Point position, Actor actor) {
+        for(int x = -1;x<=1;++x) {
+            for(int y = -1;y<=1;++y) {
+                if(getFeature(position) instanceof Upgrader upgrader) {
+                    upgrader.upgradeBackpackItem(actor, actor.getRandomItemInBackpack());
+                }
+            }
+        }
+    }
+
     public void moveActor(Actor actor, int xMovement, int yMovement) {
         int x = actor.getPosition().getX() + xMovement;
         int y = actor.getPosition().getY() + yMovement;
@@ -328,6 +335,9 @@ public class Map {
             removeActor(actor.getPosition().getX(), actor.getPosition().getY());
             actor.setPosition(new Point(x,y));
             placeActor(actor, x, y);
+            if(!actor.immuneToUpgrader()) {
+                activateNearbyUpgraders(new Point(x,y), actor);
+            }
         }
         else {
             Logging.logger.log(Level.WARNING, "Can't move " + actor.toString() + " to " + x + ", " + y);

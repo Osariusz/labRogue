@@ -93,6 +93,34 @@ public abstract class Actor extends GameElement {
         backpack.addAll(items);
     }
 
+    public void removeFromBackpack(Item item) {
+        if(!getBackpack().contains(item)) {
+            Logging.logger.log(Level.WARNING, item+" not present in backpack of "+this);
+            return;
+        }
+        getBackpack().remove(item);
+    }
+
+    public boolean immuneToUpgrader() {
+        for(Item item : getBackpack()) {
+            if(item.isPreventUpgrader()) {
+                return true;
+            }
+        }
+        for(Equipment activeEquipment : getAllEquipment()) {
+            if(activeEquipment.isPreventUpgrader()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Item getRandomItemInBackpack() {
+        Random random = new Random();
+        int itemSlot = random.nextInt(0, getBackpack().size());
+        return getItemInBackpack(itemSlot);
+    }
+
     public Item getItemInBackpack(int backpackSlot) {
         if(backpackSlot >= backpack.size()) {
             Logging.logger.log(Level.WARNING, "Requested "+backpackSlot+" item in backpack of size "+backpack.size());

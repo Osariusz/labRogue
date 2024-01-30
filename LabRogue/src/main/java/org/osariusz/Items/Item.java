@@ -24,9 +24,12 @@ public class Item extends GameElement {
         super.symbol = 'i';
         super.spawnChance = 10;
         this.transmutationChances = null;
+        this.preventUpgrader = false;
     }
 
     protected List<Map.Entry<Integer, String>> transmutationChances;
+
+    protected boolean preventUpgrader;
 
     public void initializeTransmutation() {
         if(this.transmutationChances == null) {
