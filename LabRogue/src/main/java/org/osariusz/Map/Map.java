@@ -2,6 +2,7 @@ package org.osariusz.Map;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.osariusz.Actors.Actor;
 import org.osariusz.Actors.ActorList;
 import org.osariusz.Actors.Monster;
@@ -11,10 +12,7 @@ import org.osariusz.Map.Rooms.Room;
 import org.osariusz.Map.Rooms.RoomsList;
 import org.osariusz.MapElements.*;
 import org.osariusz.Items.Item;
-import org.osariusz.Utils.FightReport;
-import org.osariusz.Utils.Logging;
-import org.osariusz.Utils.Point;
-import org.osariusz.Utils.RandomChoice;
+import org.osariusz.Utils.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +39,11 @@ public class Map {
 
     @Builder.Default
     List<java.util.Map.Entry<String, Integer>> randomOverride = new ArrayList<>();
+
+    @Getter
+    @Setter
+    @Builder.Default
+    int moveBetweenMaps = 0;
 
     @Getter
     @Builder.Default
@@ -131,6 +134,7 @@ public class Map {
             }
         }
         retryGeneratePaths(rooms);
+        generateStartAndFinish(rooms);
     }
 
     public List<Point> getAllCorridorPoints(List<CorridorDigger> corridorDiggers) {
@@ -198,6 +202,13 @@ public class Map {
             }
             if(allFinished) {
                 break;
+            }
+        }
+        for(CorridorDigger digger : diggers) {
+            for(Room room : rooms) {
+                if(digger.destination.pointInList(room.getUnconnectedDoors())) {
+                    room.connectDoor(digger.destination);
+                }
             }
         }
     }
@@ -295,6 +306,20 @@ public class Map {
                 }
             }
         }
+    }
+
+    public void generateStartAndFinish(List<Room> roomsOriginal) {
+        List<Room> rooms = roomsOriginal.stream().filter(r -> !r.getUnusedDoors().isEmpty()).toList();
+        Room randomStartRoom = RandomChoice.chooseEvenly(random, rooms);
+        List<Room> otherRooms = new ArrayList<>(rooms);
+        otherRooms.remove(randomStartRoom);
+        Room randomEndRoom = RandomChoice.chooseEvenly(random, otherRooms);
+
+        Point startDoor = RandomChoice.chooseEvenly(random, randomStartRoom.getUnconnectedDoors());
+        Point endDoor = RandomChoice.chooseEvenly(random, randomEndRoom.getUnconnectedDoors());
+
+        placeMapElement(new MapLeave().toBuilder().direction(-1).symbol('ɑ').build(), startDoor);
+        placeMapElement(new MapLeave().toBuilder().build(), endDoor);
     }
 
     public Map generateMap() {

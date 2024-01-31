@@ -3,8 +3,14 @@ package org.osariusz.Utils;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class RandomChoice {
+
+    public static <T> T chooseEvenly(Random random, List<T> items) {
+        List<Map.Entry<Integer, T>> list = items.stream().map(i -> new AbstractMap.SimpleEntry<>(1, i)).collect(Collectors.toList());
+        return choose(random, list);
+    }
 
     public static <T> T choose(Random random, List<Map.Entry<Integer, T>> list) {
         if(list.isEmpty()) {

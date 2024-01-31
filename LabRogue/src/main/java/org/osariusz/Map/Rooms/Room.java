@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 @Getter
 @SuperBuilder(toBuilder = true)
@@ -38,6 +39,7 @@ public class Room extends Spawnable {
 
     protected List<Point> doors;
     protected List<Point> usedDoors;
+    protected List<Point> connectedDoors;
 
     protected int upgraderChance; //in %
 
@@ -209,13 +211,30 @@ public class Room extends Spawnable {
     }
 
     public void useDoor(Point point) {
-        usedDoors.add(point);
+        Point doorPoint = point.offset(startPoint.multiplyPoints(new Point(-1,-1)));
+        if(!doorPoint.pointInList(usedDoors)) {
+            usedDoors.add(doorPoint);
+        }
+        connectDoor(point);
+    }
+
+    public void connectDoor(Point point) {
+        Point doorPoint = point.offset(startPoint.multiplyPoints(new Point(-1,-1)));
+        if(!doorPoint.pointInList(connectedDoors)) {
+            connectedDoors.add(doorPoint);
+        }
     }
 
     public List<Point> getUnusedDoors() {
         List<Point> result = new ArrayList<>(doors);
-        result.removeAll(usedDoors);
         result.replaceAll(p -> p.offset(startPoint));
+        return result;
+    }
+
+    public List<Point> getUnconnectedDoors() {
+        List<Point> result = doors.stream().filter(p -> p.pointInList(doors) && !p.pointInList(connectedDoors)).collect(Collectors.toList());
+        result.replaceAll(p -> p.offset(startPoint));
+        System.out.println(this+" "+doors+ " "+ connectedDoors);
         return result;
     }
 
@@ -264,6 +283,7 @@ public class Room extends Spawnable {
                 new Point(roomBordersSize-1, height/2)
         ));
         this.usedDoors = new ArrayList<>();
+        this.connectedDoors = new ArrayList<>();
     }
 
     @Override
@@ -287,4 +307,8 @@ public class Room extends Spawnable {
         }
     }
 
+    @Override
+    public String toString() {
+        return id+" start: "+startPoint;
+    }
 }

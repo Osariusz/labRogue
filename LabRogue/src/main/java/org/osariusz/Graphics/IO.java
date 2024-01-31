@@ -42,6 +42,12 @@ public class IO {
             i - item
             @ - You!
             U - upgrader
+            , - a rat (weak enemy)
+            H - Another human
+            Z - Infected Doctor
+            S - Statue (powerful enemy)
+            ɑ - door to the previous map
+            ჲ - door to the next map
             """;
 
     public void displayMap(Map map) {
