@@ -20,6 +20,7 @@ public class Player extends Actor {
         super.id = "player";
         super.symbol = '@';
         super.canPickItems = true;
+        super.sightRange = 21;
     }
 
     public boolean shootMonster(Map map, String input) {

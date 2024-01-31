@@ -31,7 +31,7 @@ public abstract class Actor extends GameElement {
     @Getter
     protected int movementSpeed;
 
-    protected int sightRange; //should always be odd //TODO: rewrite to be Radius instead
+    protected int sightRange; //should always be odd
 
     public int getSightRange() {
         if(sightRange%2==0) {

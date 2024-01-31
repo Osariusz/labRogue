@@ -58,8 +58,8 @@ public class Game {
     }
 
     public void playLoop(Map map) {
-        display.displayMap(map);
-        //displayMapActor(map, map.getPlayer());
+        //display.displayMap(map);
+        display.displayMapActor(map, map.getPlayer());
         display.displayNewFightReports(map);
         display.displayPlayerStats(map.getPlayer());
         display.displayPlayerEquipment(map.getPlayer());

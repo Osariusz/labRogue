@@ -59,6 +59,18 @@ public class ItemList {
             add(new Weapon().toBuilder().shootChance(50).damage(5).spawnChance(0).range(3).transmutationChances(new ArrayList<>(List.of(
                     new AbstractMap.SimpleEntry<>(5, "shotgun")
             ))).name("Shotgun with eyes").id("eyes_shotgun"));
+
+            add(new Weapon().toBuilder().shootChance(70).transmutationChances(new ArrayList<>(List.of(
+                    new AbstractMap.SimpleEntry<>(10, "stick"),
+                    new AbstractMap.SimpleEntry<>(5, "lightsaber")
+            ))).name("Stick").id("stick"));
+
+            add(new Weapon().toBuilder().spawnChance(1).shootChance(75).damage(3).transmutationChances(new ArrayList<>(List.of(
+                    new AbstractMap.SimpleEntry<>(10, "stick"),
+                    new AbstractMap.SimpleEntry<>(6, "ash"),
+                    new AbstractMap.SimpleEntry<>(2, "lightsaber"),
+                    new AbstractMap.SimpleEntry<>(1, "upgraders_eye")
+            ))).name("Lightsaber").id("lightsaber"));
         }
 
     };

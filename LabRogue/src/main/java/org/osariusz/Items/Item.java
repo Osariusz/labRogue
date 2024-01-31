@@ -23,7 +23,7 @@ public class Item extends GameElement {
         super.name = "Generic Item";
         super.id = "generic_item";
         super.symbol = 'i';
-        super.spawnChance = 10;
+        super.spawnChance = 20;
         this.transmutationChances = null;
         this.preventUpgrader = false;
         this.dropsFromDead = true;
