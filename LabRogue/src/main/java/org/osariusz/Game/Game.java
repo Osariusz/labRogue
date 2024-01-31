@@ -2,6 +2,7 @@ package org.osariusz.Game;
 
 import org.osariusz.Actors.Player;
 import org.osariusz.Graphics.IO;
+import org.osariusz.Items.ItemList;
 import org.osariusz.Map.Map;
 import org.osariusz.Utils.Logging;
 
@@ -76,7 +77,7 @@ public class Game {
             random.setSeed(seed.hashCode());
         }
         Player player = new Player().toBuilder().build();
-
+        player.getBackpack().add(ItemList.getItem("rifle").build());
 
         List<Map.MapBuilder> builders = new ArrayList<>(List.of(
                 Map.builder().random(random).width(50).height(20).player(player),

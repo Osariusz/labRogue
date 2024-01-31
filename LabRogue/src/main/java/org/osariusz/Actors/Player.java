@@ -47,16 +47,20 @@ public class Player extends Actor {
         for(char letter : input.toCharArray()) {
             switch (letter) {
                 case 'w':
-                    path.add(newPoint.offset(new Point(0,-1)));
+                    newPoint = newPoint.offset(new Point(0,-1));
+                    path.add(newPoint);
                     break;
                 case 's':
-                    path.add(newPoint.offset(new Point(0,1)));
+                    newPoint = newPoint.offset(new Point(0,1));
+                    path.add(newPoint);
                     break;
                 case 'a':
-                    path.add(newPoint.offset(new Point(-1,0)));
+                    newPoint = newPoint.offset(new Point(-1,0));
+                    path.add(newPoint);
                     break;
                 case 'd':
-                    path.add(newPoint.offset(new Point(1,0)));
+                    newPoint = newPoint.offset(new Point(1,0));
+                    path.add(newPoint);
                     break;
             }
         }
