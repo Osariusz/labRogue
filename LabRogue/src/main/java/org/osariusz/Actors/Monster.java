@@ -23,7 +23,7 @@ public class Monster extends Actor {
         for(Equipment weaponEquipment: getEquipment().get(EquipmentSlots.WEAPON)) {
             Weapon weapon = (Weapon) weaponEquipment;
             if(canShoot(map, map.getPlayer(), weapon)) {
-                attackActor(map, map.getPlayer());
+                map.getFightReports().addAll(attackActor(map, map.getPlayer()));
                 return;
             }
         }
