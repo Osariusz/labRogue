@@ -70,27 +70,28 @@ public class Game {
 
     public void play() {
         int numberOfMaps = 6;
+        int mapWidth = 200;
+        int mapHeight = 30;
         Random random = new Random();
         if(!seed.isEmpty()) {
             random.setSeed(seed.hashCode());
         }
         Player player = new Player().toBuilder().build();
         List<Map> maps = new ArrayList<>();
-        for(int i = 0;i<numberOfMaps;++i) {
-            maps.add(
-                    Map.builder().random(random).width(200).height(30).player(player).build()
-            );
-        }
+        maps.add(Map.builder().random(random).width(mapWidth).height(mapHeight).player(player).build());
         int currentMap = 0;
         while(true) {
+            if(currentMap >= numberOfMaps) {
+                System.out.println("You won! :D");
+                break;
+            }
+            if(currentMap <= maps.size()) {
+                maps.add(Map.builder().random(random).width(mapWidth).height(mapHeight).player(player).build());
+            }
             if(maps.get(currentMap).getMoveBetweenMaps() != 0) {
                 int move = maps.get(currentMap).getMoveBetweenMaps();
                 maps.get(currentMap).setMoveBetweenMaps(0);
                 currentMap += move;
-            }
-            if(currentMap >= maps.size()) {
-                System.out.println("You won! :D");
-                break;
             }
             else if(!maps.get(currentMap).getPlayer().isAlive()) {
                 System.out.println("You died! :(");
