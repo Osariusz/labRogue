@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -309,7 +310,7 @@ public class Map {
     }
 
     public void generateStartAndFinish(List<Room> roomsOriginal) {
-        List<Room> rooms = roomsOriginal.stream().filter(r -> !r.getAvailableDoors().isEmpty()).toList();
+        List<Room> rooms = roomsOriginal.stream().filter(r -> !r.getUnconnectedDoors().isEmpty()).toList();
         Room randomStartRoom = RandomChoice.chooseEvenly(random, rooms);
         List<Room> otherRooms = new ArrayList<>(rooms);
         otherRooms.remove(randomStartRoom);
@@ -420,6 +421,9 @@ public class Map {
                 activateNearbyUpgraders(point, actor);
             }
         }
+        else if(actor instanceof Player && getFeature(point) instanceof MapLeave mapLeave) {
+            setMoveBetweenMaps(mapLeave.getDirection());
+        }
         else {
             Logging.logger.log(Level.WARNING, "Can't move " + actor.toString() + " to " + x + ", " + y);
         }
@@ -451,7 +455,7 @@ public class Map {
     }
 
     public boolean canMoveThrough(Actor actor, Point point) {
-        return canPlaceActor(actor, point) || getFeature(point) instanceof Door;
+        return canPlaceActor(actor, point) || getFeature(point) instanceof Door || actor instanceof Player && getFeature(point) instanceof MapLeave;
     }
 
     public boolean canShootThrough(Point point) {
@@ -460,7 +464,7 @@ public class Map {
 
     public void actorAttacked(Actor actor) {
         if(!actor.isAlive()) {
-            placeItems(actor.getAllItems(), actor.getPosition());
+            placeItems(actor.getAllItems().stream().filter(Item::isDropsFromDead).collect(Collectors.toList()), actor.getPosition());
             removeActor(actor.getPosition());
         }
     }

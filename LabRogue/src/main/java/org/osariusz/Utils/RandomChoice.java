@@ -13,8 +13,13 @@ public class RandomChoice {
     }
 
     public static <T> T choose(Random random, List<Map.Entry<Integer, T>> list) {
+        if(list == null) {
+            Logging.logger.log(Level.WARNING, "Passed null instead of list to random choice");
+            return null;
+        }
         if(list.isEmpty()) {
             Logging.logger.log(Level.WARNING, "Empty list passed to RandomChoice");
+            return null;
         }
 
         int max = 0;

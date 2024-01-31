@@ -3,8 +3,10 @@ package org.osariusz.Game;
 import org.osariusz.Actors.Player;
 import org.osariusz.Graphics.IO;
 import org.osariusz.Map.Map;
+import org.osariusz.Utils.Logging;
 
 import java.util.*;
+import java.util.logging.Level;
 
 public class Game {
 
@@ -55,16 +57,51 @@ public class Game {
         lastState = "menu";
     }
 
+    public void playLoop(Map map) {
+        display.displayMap(map);
+        //displayMapActor(map, map.getPlayer());
+        display.displayNewFightReports(map);
+        display.displayPlayerStats(map.getPlayer());
+        display.displayPlayerEquipment(map.getPlayer());
+        display.userInput(map);
+        map.actorsTurn();
+        display.clearDisplay();
+    }
+
     public void play() {
+        int numberOfMaps = 6;
         Random random = new Random();
         if(!seed.isEmpty()) {
             random.setSeed(seed.hashCode());
         }
         Player player = new Player().toBuilder().build();
-        Map map = Map.builder().random(random).width(200).height(30).randomOverride(new ArrayList<>(List.of(
-                new AbstractMap.SimpleEntry<>("15x15_bunker_room", 100000)
-        ))).player(player).build();
-        display.IOLoop(map);
+        List<Map> maps = new ArrayList<>();
+        for(int i = 0;i<numberOfMaps;++i) {
+            maps.add(
+                    Map.builder().random(random).width(200).height(30).player(player).build()
+            );
+        }
+        int currentMap = 0;
+        while(true) {
+            if(maps.get(currentMap).getMoveBetweenMaps() != 0) {
+                int move = maps.get(currentMap).getMoveBetweenMaps();
+                maps.get(currentMap).setMoveBetweenMaps(0);
+                currentMap += move;
+            }
+            if(currentMap >= maps.size()) {
+                System.out.println("You won! :D");
+                break;
+            }
+            else if(!maps.get(currentMap).getPlayer().isAlive()) {
+                System.out.println("You died! :(");
+                break;
+            }
+            else if(currentMap < 0) {
+                Logging.logger.log(Level.WARNING, "The map can't be lower than 0!");
+                currentMap = 0;
+            }
+            playLoop(maps.get(currentMap));
+        }
         lastState = "menu";
     }
 }

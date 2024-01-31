@@ -26,11 +26,14 @@ public class Item extends GameElement {
         super.spawnChance = 10;
         this.transmutationChances = null;
         this.preventUpgrader = false;
+        this.dropsFromDead = true;
     }
 
     protected List<Map.Entry<Integer, String>> transmutationChances;
 
     protected boolean preventUpgrader;
+
+    protected boolean dropsFromDead;
 
     public void initializeTransmutation() {
         if(this.transmutationChances == null) {
