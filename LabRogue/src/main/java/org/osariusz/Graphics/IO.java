@@ -218,6 +218,10 @@ public class IO {
 
     public void IOLoop(Map map) {
         while (true) {
+            if(!map.getPlayer().isAlive()) {
+                System.out.println("You died!");
+                return;
+            }
             displayMap(map);
             //displayMapActor(map, map.getPlayer());
             displayNewFightReports(map);
