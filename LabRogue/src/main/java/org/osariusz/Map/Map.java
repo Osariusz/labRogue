@@ -34,6 +34,10 @@ public class Map {
 
     @Builder.Default
     private int itemGenerationChance = 3; //3 is 3%
+    @Builder.Default
+    int monsterSpawnPlayerDistance = 10;
+    @Builder.Default
+    int monsterSpawnChance = 3; //10 is 10%
 
     @Getter
     @Builder.Default
@@ -275,13 +279,16 @@ public class Map {
     }
 
     public void generateMonsters() {
-        int playerDistance = 10;
         for(int y = 0;y<getHeight();++y) {
             for(int x = 0;x<getWidth();++x) {
-                Point place = new Point(x,y);
-                Monster monster = RandomChoice.choose(random,ActorList.getMonsterSpawnList()).build();
-                if(canPlaceActor(monster, place) && place.distanceTo(player.getPosition()) > playerDistance) {
-                    placeActor(monster, place);
+                int r = random.nextInt(1, 101);
+
+                if(r<=monsterSpawnChance) {
+                    Point place = new Point(x,y);
+                    Monster monster = RandomChoice.choose(random,ActorList.getMonsterSpawnList()).build();
+                    if(canPlaceActor(monster, place) && place.distanceTo(player.getPosition()) > monsterSpawnPlayerDistance) {
+                        placeActor(monster, place);
+                    }
                 }
             }
         }

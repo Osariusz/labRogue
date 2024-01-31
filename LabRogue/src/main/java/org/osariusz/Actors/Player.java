@@ -49,4 +49,8 @@ public class Player extends Actor {
         }
         return false;
     }
+
+    public List<Actor> actorsInSightRange(Map map) {
+        return map.getAllActors().stream().filter(actor -> getPosition().distanceTo(actor.getPosition()) < getSightRange() && !actor.equals(this)).toList();
+    }
 }

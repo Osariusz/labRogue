@@ -73,7 +73,7 @@ public abstract class Actor extends GameElement {
         this.backpackCapacity = 6;
         this.equipment = initialEquipment();
         this.equipmentCapacity = initialEquipmentCapacity();
-        this.sightRange = 10;
+        this.sightRange = 7;
     }
 
     public boolean canAddToBackpack(int itemAmount) {
@@ -258,6 +258,15 @@ public abstract class Actor extends GameElement {
         return realAgility;
     }
 
+    public int getRealMovementSpeed() {
+        int realMovementSpeed = getMovementSpeed();
+        List<Equipment> equippedItems = getAllEquipment();
+        for (Equipment item : equippedItems) {
+            realMovementSpeed += item.getMovementSpeedBonus();
+        }
+        return realMovementSpeed;
+    }
+
     public boolean isAlive() {
         return getRealHP() > 0;
     }
@@ -340,7 +349,8 @@ public abstract class Actor extends GameElement {
 
     @Override
     public String toString() {
-        return this.name;
+        String stats = "(Hp: "+getRealHP()+", Agility: "+getRealAgility()+", Movement speed: "+getMovementSpeed()+")";
+        return getName()+ " " + stats;
     }
 
 }

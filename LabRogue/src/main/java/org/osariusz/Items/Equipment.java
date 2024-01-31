@@ -26,6 +26,8 @@ public class Equipment extends Item{
 
     protected int agilityBonus;
 
+    protected int movementSpeedBonus;
+
     protected List<Actor.EquipmentSlots> allowedSlots;
 
     @Override
@@ -49,6 +51,13 @@ public class Equipment extends Item{
             }
             modifiers = true;
             modifiersString += "agility: "+agilityBonus;
+        }
+        if(movementSpeedBonus != 0) {
+            if(modifiers) {
+                modifiersString += ", ";
+            }
+            modifiers = true;
+            modifiersString += "movement speed: "+movementSpeedBonus;
         }
         modifiersString += ") ";
 

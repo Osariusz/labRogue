@@ -18,6 +18,12 @@ import java.util.Random;
 public class Monster extends Actor {
 
     public void moveMonster(Map map) {
+        for(int i = 0;i<getRealMovementSpeed();++i) {
+            moveMonsterOnce(map);
+        }
+    }
+
+    public void moveMonsterOnce(Map map) {
         int sightRange = 10;
 
         for(Equipment weaponEquipment: getEquipment().get(EquipmentSlots.WEAPON)) {

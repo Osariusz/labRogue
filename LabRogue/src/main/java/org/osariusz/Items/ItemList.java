@@ -36,12 +36,29 @@ public class ItemList {
             ))).transmutationChances(new ArrayList<>(List.of(
                     new AbstractMap.SimpleEntry<>(20, "spacesuit"),
                     new AbstractMap.SimpleEntry<>(30, "rat_tail"),
-                    new AbstractMap.SimpleEntry<>(1, "ash")
+                    new AbstractMap.SimpleEntry<>(5, "ash")
             ))).id("spacesuit").name("Space suit"));
 
             add(new Equipment().toBuilder().hpBonus(1).agilityBonus(1).preventUpgrader(true).allowedSlots(new ArrayList<>(List.of(
                     Actor.EquipmentSlots.HELMET
             ))).name("Upgrader's eye").id("upgraders_eye"));
+
+            add(new Equipment().toBuilder().hpBonus(1).movementSpeedBonus(1).spawnChance(3).allowedSlots(new ArrayList<>(List.of(
+                    Actor.EquipmentSlots.OUTFIT
+            ))).transmutationChances(new ArrayList<>(List.of(
+                    new AbstractMap.SimpleEntry<>(5, "spacesuit"),
+                    new AbstractMap.SimpleEntry<>(50, "ash")
+            ))).name("Hermes exosuit").id("hermes_exosuit"));
+
+            add(new Weapon().toBuilder().shootChance(30).damage(5).spawnChance(4).transmutationChances(new ArrayList<>(List.of(
+                    new AbstractMap.SimpleEntry<>(5, "hermes_exosuit"),
+                    new AbstractMap.SimpleEntry<>(20, "rat_tail"),
+                    new AbstractMap.SimpleEntry<>(1, "eyes_shotgun")
+            ))).name("Shotgun").id("shotgun"));
+
+            add(new Weapon().toBuilder().shootChance(50).damage(5).spawnChance(0).range(3).transmutationChances(new ArrayList<>(List.of(
+                    new AbstractMap.SimpleEntry<>(5, "shotgun")
+            ))).name("Shotgun with eyes").id("eyes_shotgun"));
         }
 
     };

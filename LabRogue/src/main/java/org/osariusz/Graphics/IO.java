@@ -150,67 +150,81 @@ public class IO {
         return false;
     }
 
+    public void displayActors(List<Actor> actors) {
+        int i = 1;
+        for(Actor actor : actors) {
+            System.out.println(i+". "+actor.toString());
+            i++;
+        }
+    }
+
     public void userInput(Map map) {
         while (true) {
-            Scanner input = new Scanner(System.in);
-            String command = input.nextLine();
-            String[] arguments = command.split(" ");
-            try {
-                command = arguments[0];
-                switch (command) { //break means you lose a turn, continue means you don't
-                    case "w":
-                        if(successfulMovement(map, new Point(0, -1))) {
+            int turns = map.getPlayer().getRealMovementSpeed();
+            while(turns > 0) {
+                Scanner input = new Scanner(System.in);
+                String command = input.nextLine();
+                String[] arguments = command.split(" ");
+                try {
+                    command = arguments[0];
+                    switch (command) { //break means you lose a turn, continue means you don't
+                        case "w":
+                            if (successfulMovement(map, new Point(0, -1))) {
+                                break;
+                            }
+                            continue;
+                        case "s":
+                            if (successfulMovement(map, new Point(0, 1))) {
+                                break;
+                            }
+                            continue;
+                        case "a":
+                            if (successfulMovement(map, new Point(-1, 0))) {
+                                break;
+                            }
+                            continue;
+                        case "d":
+                            if (successfulMovement(map, new Point(1, 0))) {
+                                break;
+                            }
+                            continue;
+                        case "help":
+                            System.out.println(helpText);
+                            continue;
+                        case "rules":
+                            System.out.println(rulesText);
+                            continue;
+                        case "pos":
+                            System.out.println("Player position: " + map.getPlayer().getPosition());
+                            continue;
+                        case "e":
+                            map.getPlayer().equip(Integer.parseInt(arguments[1]) - 1, map.getPlayer().getEquipmentSlot(arguments[2]), Integer.parseInt(arguments[3]) - 1);
                             break;
-                        }
-                        continue;
-                    case "s":
-                        if(successfulMovement(map, new Point(0, 1))) {
+                        case "de":
+                            map.getPlayer().deequip(map.getPlayer().getEquipmentSlot(arguments[1]), Integer.parseInt(arguments[2]) - 1);
                             break;
-                        }
-                        continue;
-                    case "a":
-                        if(successfulMovement(map, new Point(-1, 0))) {
-                            break;
-                        }
-                        continue;
-                    case "d":
-                        if(successfulMovement(map, new Point(1, 0))) {
-                            break;
-                        }
-                        continue;
-                    case "help":
-                        System.out.println(helpText);
-                        continue;
-                    case "rules":
-                        System.out.println(rulesText);
-                        continue;
-                    case "pos":
-                        System.out.println("Player position: " + map.getPlayer().getPosition());
-                        continue;
-                    case "e":
-                        map.getPlayer().equip(Integer.parseInt(arguments[1])-1, map.getPlayer().getEquipmentSlot(arguments[2]), Integer.parseInt(arguments[3])-1);
-                        break;
-                    case "de":
-                        map.getPlayer().deequip(map.getPlayer().getEquipmentSlot(arguments[1]), Integer.parseInt(arguments[2])-1);
-                        break;
-                    case "t":
-                        map.getPlayer().throwItem(map, map.getPlayer().getItemInBackpack(Integer.parseInt(arguments[1])-1));
-                        continue;
-                    case "f":
-                        boolean result = map.getPlayer().shootMonster(map, arguments[1]);
-                        if(result) {
-                            break;
-                        }
-                        System.out.println("Can't hit the target");
-                        continue;
-                    default:
-                        System.out.println("Wrong input!");
-                        continue;
+                        case "t":
+                            map.getPlayer().throwItem(map, map.getPlayer().getItemInBackpack(Integer.parseInt(arguments[1]) - 1));
+                            continue;
+                        case "f":
+                            boolean result = map.getPlayer().shootMonster(map, arguments[1]);
+                            if (result) {
+                                break;
+                            }
+                            System.out.println("Can't hit the target");
+                            continue;
+                        case "targets":
+                            displayActors(map.getPlayer().actorsInSightRange(map));
+                            continue;
+                        default:
+                            System.out.println("Wrong input!");
+                            continue;
+                    }
+                    turns--;
+                } catch (Exception e) {
+                    Logging.logger.log(Level.WARNING, "Can't read command exception " + Arrays.toString(e.getStackTrace()));
+                    continue;
                 }
-            }
-            catch (Exception e) {
-                Logging.logger.log(Level.WARNING, "Can't read command exception "+ Arrays.toString(e.getStackTrace()));
-                continue;
             }
             break;
         }
