@@ -33,6 +33,7 @@ public class IO {
             You are a fugitive in a secret laboratory. You used to be a test subject, but luckily for you a containment breach happened and you are free.
             The only problem is that all the dangerous anomalies you were to be tested on are free as well!!!
             Try to escape by going through all the levels in the facility and try not to get killed by all the monsters.
+            You die when your hp is lower than 0 for 3 consecutive turns!
             Beware of the Upgraders as they will upgrade a random item from your backpack if you are not protected!
             All of the game elements are symbolised by letters. Below is a glossary of all the elements.
             
@@ -42,6 +43,7 @@ public class IO {
             p - passive equipment
             # - door
             i - item
+            w - weapon
             @ - You!
             U - upgrader
             , - a rat (weak enemy)

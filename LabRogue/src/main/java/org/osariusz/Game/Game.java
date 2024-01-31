@@ -64,6 +64,7 @@ public class Game {
         display.displayPlayerStats(map.getPlayer());
         display.displayPlayerEquipment(map.getPlayer());
         display.userInput(map);
+        map.getPlayer().turn();
         map.actorsTurn();
         display.clearDisplay();
     }

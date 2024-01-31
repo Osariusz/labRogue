@@ -13,6 +13,10 @@ import java.util.List;
 public class Player extends Actor {
     private int toxicity;
 
+    protected int maxDeadTurns;
+
+    protected int deadTurns;
+
     @Override
     protected void initializeDefaults() {
         super.initializeDefaults();
@@ -21,6 +25,20 @@ public class Player extends Actor {
         super.symbol = '@';
         super.canPickItems = true;
         super.sightRange = 21;
+        super.hp = -1;
+        this.maxDeadTurns = 3;
+        this.deadTurns = 0;
+    }
+
+    public void turn() {
+        if(getRealHP() < 0) {
+            deadTurns++;
+        }
+    }
+
+    @Override
+    public boolean isAlive() {
+        return getRealHP() > 0 || deadTurns < maxDeadTurns;
     }
 
     public boolean shootMonster(Map map, String input) {
