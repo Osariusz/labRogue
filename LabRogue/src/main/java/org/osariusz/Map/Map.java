@@ -334,6 +334,13 @@ public class Map {
         return false;
     }
 
+    public void moveActor(Actor actor, Point destination) {
+        int xMovement = destination.getX()-actor.getPosition().getX();
+        int yMovement = destination.getY()-actor.getPosition().getY();
+
+        moveActor(actor, xMovement, yMovement);
+    }
+
     public void moveActor(Actor actor, int xMovement, int yMovement) {
         int x = actor.getPosition().getX() + xMovement;
         int y = actor.getPosition().getY() + yMovement;
@@ -358,7 +365,7 @@ public class Map {
         }
         else if(actorsPresent(point)) {
             Tile tile = (Tile)getFeature(point);
-            List<FightReport> reports = actor.attackActor(tile.getActor());
+            List<FightReport> reports = actor.attackActor(this, tile.getActor());
             fightReports.addAll(reports);
             if(!tile.getActor().isAlive()) {
                 removeActor(point);
@@ -392,6 +399,10 @@ public class Map {
             return tile.getActor() == null;
         }
         return false;
+    }
+
+    public boolean canShootThrough(Point point) {
+        return canPlaceActor(player, point);
     }
 
     public List<Item> getAllItems() {

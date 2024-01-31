@@ -288,7 +288,11 @@ public abstract class Actor extends GameElement {
         return result;
     }
 
-    public List<FightReport> attackActor(Actor attacked) {
+    public boolean canShoot(org.osariusz.Map.Map map, Actor actor, Weapon weapon) {
+        return getPosition().bfsTo(actor.getPosition(),weapon.getRange(), map::canShootThrough) != null;
+    }
+
+    public List<FightReport> attackActor(org.osariusz.Map.Map map, Actor attacked) {
         List<FightReport> result = new ArrayList<>();
 
         Random random = new Random();
@@ -302,6 +306,9 @@ public abstract class Actor extends GameElement {
         }
         for(Equipment weaponEquipment : actorWeapons) {
             Weapon weapon = (Weapon) weaponEquipment;
+            if(!canShoot(map, attacked, weapon)) {
+                continue;
+            }
             fightReportBuilder.weapon(weapon);
             if (randomNumber <= getRealShootChance(attacked, weapon)) { //will be replaced
                 fightReportBuilder.damage(getWeaponDamage(weapon));

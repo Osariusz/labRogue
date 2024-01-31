@@ -4,8 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.osariusz.Items.Equipment;
+import org.osariusz.Items.Weapon;
 import org.osariusz.Map.Map;
+import org.osariusz.Utils.Point;
 
+import java.util.List;
 import java.util.Random;
 
 @Getter
@@ -16,17 +20,17 @@ public class Monster extends Actor {
     public void moveMonster(Map map) {
         int sightRange = 10;
 
-        int playerDiffX = map.getPlayer().getPosition().getX()-getPosition().getX();
-        int playerDiffY = map.getPlayer().getPosition().getY()-getPosition().getY();
+        for(Equipment weaponEquipment: getEquipment().get(EquipmentSlots.WEAPON)) {
+            Weapon weapon = (Weapon) weaponEquipment;
+            if(canShoot(map, map.getPlayer(), weapon)) {
+                attackActor(map, map.getPlayer());
+                return;
+            }
+        }
 
-        if(playerDiffX+playerDiffY <= sightRange) {
-            //TODO: Rework AI so it follows the player via bfs
-            if(playerDiffX != 0) {
-                map.moveActor(this, playerDiffX/Math.abs(playerDiffX),0);
-            }
-            else {
-                map.moveActor(this, playerDiffY/Math.abs(playerDiffY),0);
-            }
+        List<Point> path = position.bfsTo(map.getPlayer().getPosition(),sightRange,(Point p) -> {return map.canPlaceActor(this, p) || map.actorsPresent(p);});
+        if(position.distanceTo(map.getPlayer().getPosition()) <= sightRange && path != null && path.size() > 1) {
+            map.moveActor(this, path.get(1));
         }
         else {
             //random movement if no player found

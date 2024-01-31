@@ -10,6 +10,8 @@ import org.osariusz.Utils.Point;
 
 public class FightTests {
 
+    Map map = Map.builder().build();
+
     @Test
     public void kill() {
         Map map = Map.builder().width(4).height(4).build();
@@ -18,7 +20,7 @@ public class FightTests {
         Monster monster2 = (Monster) Monster.builder().hp(1).build();
         map.placeActor(monster1, new Point(1, 1));
         map.placeActor(monster2, new Point(2, 1));
-        monster1.attackActor(monster2);
+        monster1.attackActor(map, monster2);
         assert (!monster2.isAlive());
     }
 
@@ -30,7 +32,7 @@ public class FightTests {
         map.placeActor(actor1, new Point(1, 1));
         map.placeActor(actor2, new Point(2, 1));
         Assertions.assertDoesNotThrow(() -> {
-            actor1.attackActor(actor2);
+            actor1.attackActor(map, actor2);
         });
     }
 }
