@@ -16,6 +16,7 @@ import static org.osariusz.Utils.FightScenarios.*;
 
 public class Main {
     public static void main(String[] args) {
+        Logging.logger.setLevel(Level.SEVERE);
         Game game = new Game();
         game.gameLoop();
     }

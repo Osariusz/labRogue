@@ -310,7 +310,6 @@ public class Map {
             for(int x = 0;x<width;++x) {
                 Point newPoint = new Point(x,y);
                 if(canPlaceActor(getPlayer(), newPoint) && newPoint.distanceTo(leavePoint) < 3) {
-                    System.out.println(newPoint+" is player point");
                     placeActor(getPlayer(), newPoint);
                     return;
                 }
