@@ -309,7 +309,7 @@ public class Map {
     }
 
     public void generateStartAndFinish(List<Room> roomsOriginal) {
-        List<Room> rooms = roomsOriginal.stream().filter(r -> !r.getUnusedDoors().isEmpty()).toList();
+        List<Room> rooms = roomsOriginal.stream().filter(r -> !r.getAvailableDoors().isEmpty()).toList();
         Room randomStartRoom = RandomChoice.chooseEvenly(random, rooms);
         List<Room> otherRooms = new ArrayList<>(rooms);
         otherRooms.remove(randomStartRoom);

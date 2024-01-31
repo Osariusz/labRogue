@@ -46,21 +46,21 @@ public class Room extends Spawnable {
 
     public MapElement getRoomSpecificFeature(Point point, Random random) {
         boolean notNearSpecial = true;
-        for(int xOffset = -1;xOffset<=1;++xOffset) {
-            for(int yOffset = -1;yOffset<=1;++yOffset) {
+        for (int xOffset = -1; xOffset <= 1; ++xOffset) {
+            for (int yOffset = -1; yOffset <= 1; ++yOffset) {
                 Point newPoint = point.offset(new Point(xOffset, yOffset));
-                if(doorPosition(newPoint) || wallPosition(newPoint)) {
+                if (doorPosition(newPoint) || wallPosition(newPoint)) {
                     notNearSpecial = false;
                     break;
                 }
             }
-            if(!notNearSpecial) {
+            if (!notNearSpecial) {
                 break;
             }
         }
-        if(notNearSpecial) {
+        if (notNearSpecial) {
             int randomNumber = random.nextInt(1, 101);
-            if(randomNumber <= upgraderChance) {
+            if (randomNumber <= upgraderChance) {
                 return new Upgrader().toBuilder().build();
             }
         }
@@ -68,12 +68,12 @@ public class Room extends Spawnable {
     }
 
     public boolean pointInside(int x, int y) {
-        return x>=getStartX() && x<getStartX()+getWidth() && y>=getStartY() && y<getStartY()+getHeight();
+        return x >= getStartX() && x < getStartX() + getWidth() && y >= getStartY() && y < getStartY() + getHeight();
     }
 
     public boolean pointIsDoor(Point point) {
-        Point p =startPoint.multiplyPoints(new Point(-1,-1));
-        Point pp =point.offset(p);
+        Point p = startPoint.multiplyPoints(new Point(-1, -1));
+        Point pp = point.offset(p);
         return pp.pointInList(doors);
     }
 
@@ -82,29 +82,29 @@ public class Room extends Spawnable {
     }
 
     public boolean integralWallPart(Point point) {
-        point = point.offset(startPoint.multiplyPoints(new Point(-1,-1)));
-        if(point.pointInList(getDoors())) {
+        point = point.offset(startPoint.multiplyPoints(new Point(-1, -1)));
+        if (point.pointInList(getDoors())) {
             return false;
         }
-        if(point.getY() >= roomBordersSize-1 && point.getY() <= getHeight()-roomBordersSize && point.getX() >= roomBordersSize-1 && point.getX() <= getWidth()-roomBordersSize) {
+        if (point.getY() >= roomBordersSize - 1 && point.getY() <= getHeight() - roomBordersSize && point.getX() >= roomBordersSize - 1 && point.getX() <= getWidth() - roomBordersSize) {
             return true;
         }
         return false;
     }
 
     public boolean canPlace(List<Room> rooms, Map map) {
-        for(int x = getStartX();x<getWidth()+getStartX();++x) {
-            for(int y = getStartY();y<getHeight()+getStartY();++y) {
-                if(x >= map.getWidth()) {
+        for (int x = getStartX(); x < getWidth() + getStartX(); ++x) {
+            for (int y = getStartY(); y < getHeight() + getStartY(); ++y) {
+                if (x >= map.getWidth()) {
                     return false;
                 }
-                if(y >= map.getHeight()) {
+                if (y >= map.getHeight()) {
                     return false;
                 }
-                if(map.isSpaceTaken(rooms, x,y)) {
+                if (map.isSpaceTaken(rooms, x, y)) {
                     return false;
                 }
-                if(map.checkPath(rooms, new Point(x,y))) {
+                if (map.checkPath(rooms, new Point(x, y))) {
                     return false;
                 }
             }
@@ -116,32 +116,32 @@ public class Room extends Spawnable {
         Point first = nearestCentrePoint();
         Point second = room.nearestCentrePoint();
 
-        int firstX = Math.min(first.getX(),second.getX());
-        int firstY = Math.min(first.getY(),second.getY());
+        int firstX = Math.min(first.getX(), second.getX());
+        int firstY = Math.min(first.getY(), second.getY());
 
-        int secondX = Math.max(first.getX(),second.getX());
-        int secondY = Math.max(first.getY(),second.getY());
+        int secondX = Math.max(first.getX(), second.getX());
+        int secondY = Math.max(first.getY(), second.getY());
 
         return x >= firstX && x <= secondX && y >= firstY && y <= secondY;
     }
 
     public Point nearestCentrePoint() {
-        return startPoint.offset(new Point(width/2,height/2));
+        return startPoint.offset(new Point(width / 2, height / 2));
     }
 
     public Room getClosestRoom(List<Room> rooms) {
-        if(rooms.isEmpty() || (rooms.size() == 1 && rooms.get(0).equals(this))) {
-            Logging.logger.log(Level.WARNING, "Room " +getStartX()+", "+getStartY()+" was passed an array with no other rooms to check distance");
+        if (rooms.isEmpty() || (rooms.size() == 1 && rooms.get(0).equals(this))) {
+            Logging.logger.log(Level.WARNING, "Room " + getStartX() + ", " + getStartY() + " was passed an array with no other rooms to check distance");
             return this;
         }
         double minimumDistance = -1;
         Room result = null;
-        for(Room room : rooms) {
-            if(room.equals(this)) {
+        for (Room room : rooms) {
+            if (room.equals(this)) {
                 continue;
             }
             double distance = centerDistanceTo(room.nearestCentrePoint());
-            if(minimumDistance < 0 || minimumDistance > distance) {
+            if (minimumDistance < 0 || minimumDistance > distance) {
                 minimumDistance = distance;
                 result = room;
             }
@@ -151,10 +151,10 @@ public class Room extends Spawnable {
     }
 
     public boolean isRoomPathTo(Room room, int x, int y) {
-        if(room.pointInside(x, y)) {
+        if (room.pointInside(x, y)) {
             return false;
         }
-        if(!pointBetweenCenters(room, x , y)) {
+        if (!pointBetweenCenters(room, x, y)) {
             return false;
         }
 
@@ -163,8 +163,8 @@ public class Room extends Spawnable {
 
         int workingCoordinate, passiveCoordinate;
 
-        if((room.nearestCentrePoint().getX()- nearestCentrePoint().getX()==0) ||
-                (room.nearestCentrePoint().getY()-nearestCentrePoint().getY())/(room.nearestCentrePoint().getX()- nearestCentrePoint().getX()) > 1) {
+        if ((room.nearestCentrePoint().getX() - nearestCentrePoint().getX() == 0) ||
+                (room.nearestCentrePoint().getY() - nearestCentrePoint().getY()) / (room.nearestCentrePoint().getX() - nearestCentrePoint().getX()) > 1) {
             workingCoordinate1 = nearestCentrePoint().getY();
             passiveCoordinate1 = nearestCentrePoint().getX();
 
@@ -173,8 +173,7 @@ public class Room extends Spawnable {
 
             workingCoordinate = y;
             passiveCoordinate = x;
-        }
-        else {
+        } else {
             workingCoordinate1 = nearestCentrePoint().getX();
             passiveCoordinate1 = nearestCentrePoint().getY();
 
@@ -186,9 +185,9 @@ public class Room extends Spawnable {
         }
 
         return
-                (passiveCoordinate == passiveCoordinate1 && workingCoordinate == (workingCoordinate1+workingCoordinate2)/2) ||
-                (workingCoordinate == (workingCoordinate1+workingCoordinate2)/2) ||
-                (passiveCoordinate == passiveCoordinate2 && workingCoordinate > (workingCoordinate1+workingCoordinate2)/2);
+                (passiveCoordinate == passiveCoordinate1 && workingCoordinate == (workingCoordinate1 + workingCoordinate2) / 2) ||
+                        (workingCoordinate == (workingCoordinate1 + workingCoordinate2) / 2) ||
+                        (passiveCoordinate == passiveCoordinate2 && workingCoordinate > (workingCoordinate1 + workingCoordinate2) / 2);
 
     }
 
@@ -197,35 +196,35 @@ public class Room extends Spawnable {
     }
 
     public boolean wallPosition(Point point) {
-        return point.getX() <= (roomBordersSize-1) || point.getX() >= width-roomBordersSize || point.getY() <= (roomBordersSize-1) || point.getY() >= height-roomBordersSize;
+        return point.getX() <= (roomBordersSize - 1) || point.getX() >= width - roomBordersSize || point.getY() <= (roomBordersSize - 1) || point.getY() >= height - roomBordersSize;
     }
 
     public MapElement getFeature(Point point, Random random) {
-        if(doorPosition(point)) {
+        if (doorPosition(point)) {
             return new Door().toBuilder().build();
         }
-        if(wallPosition(point)) {
+        if (wallPosition(point)) {
             return new Wall().toBuilder().build();
         }
         return getRoomSpecificFeature(point, random);
     }
 
     public void useDoor(Point point) {
-        Point doorPoint = point.offset(startPoint.multiplyPoints(new Point(-1,-1)));
-        if(!doorPoint.pointInList(usedDoors)) {
+        Point doorPoint = point.offset(startPoint.multiplyPoints(new Point(-1, -1)));
+        if (!doorPoint.pointInList(usedDoors)) {
             usedDoors.add(doorPoint);
         }
         connectDoor(point);
     }
 
     public void connectDoor(Point point) {
-        Point doorPoint = point.offset(startPoint.multiplyPoints(new Point(-1,-1)));
-        if(!doorPoint.pointInList(connectedDoors)) {
+        Point doorPoint = point.offset(startPoint.multiplyPoints(new Point(-1, -1)));
+        if (!doorPoint.pointInList(connectedDoors)) {
             connectedDoors.add(doorPoint);
         }
     }
 
-    public List<Point> getUnusedDoors() {
+    public List<Point> getAvailableDoors() {
         List<Point> result = new ArrayList<>(doors);
         result.replaceAll(p -> p.offset(startPoint));
         return result;
@@ -234,22 +233,21 @@ public class Room extends Spawnable {
     public List<Point> getUnconnectedDoors() {
         List<Point> result = doors.stream().filter(p -> p.pointInList(doors) && !p.pointInList(connectedDoors)).collect(Collectors.toList());
         result.replaceAll(p -> p.offset(startPoint));
-        System.out.println(this+" "+doors+ " "+ connectedDoors);
         return result;
     }
 
 
     public java.util.Map.Entry<Point, Point> closestUnusedDoorsInCorrectDirectionForRooms(Room room) {
-        List<Point> thisDoors = getUnusedDoors();
-        List<Point> hisDoors = room.getUnusedDoors();
+        List<Point> thisDoors = getAvailableDoors();
+        List<Point> hisDoors = room.getAvailableDoors();
 
 
-        if(thisDoors.isEmpty()) {
-            Logging.logger.log(Level.WARNING,"No unused door found for room1 in closestUnusedDoorForRoom "+this);
+        if (thisDoors.isEmpty()) {
+            Logging.logger.log(Level.WARNING, "No unused door found for room1 in closestUnusedDoorForRoom " + this);
             return null;
         }
-        if(hisDoors.isEmpty()) {
-            Logging.logger.log(Level.WARNING,"No unused door found for room2 in closestUnusedDoorForRoom "+room);
+        if (hisDoors.isEmpty()) {
+            Logging.logger.log(Level.WARNING, "No unused door found for room2 in closestUnusedDoorForRoom " + room);
             return null;
         }
 
@@ -257,13 +255,13 @@ public class Room extends Spawnable {
         Point minimalThisPoint = null;
         Point minimalHisPoint = null;
 
-        for(Point thisDoor : thisDoors) {
-            for(Point hisDoor : hisDoors) {
-                Point thisDoorRoomDirection = new Point(thisDoor.getX()-nearestCentrePoint().getX(),thisDoor.getY()- nearestCentrePoint().getY());
-                if(!Map.checkIfDoorInThisDirection(thisDoor, thisDoorRoomDirection, hisDoor)) {
+        for (Point thisDoor : thisDoors) {
+            for (Point hisDoor : hisDoors) {
+                Point thisDoorRoomDirection = new Point(thisDoor.getX() - nearestCentrePoint().getX(), thisDoor.getY() - nearestCentrePoint().getY());
+                if (!Map.checkIfDoorInThisDirection(thisDoor, thisDoorRoomDirection, hisDoor)) {
                     continue;
                 }
-                if(thisDoor.distanceTo(hisDoor) < minimalDistance) {
+                if (thisDoor.distanceTo(hisDoor) < minimalDistance) {
                     minimalDistance = thisDoor.distanceTo(hisDoor);
                     minimalThisPoint = thisDoor;
                     minimalHisPoint = hisDoor;
@@ -277,10 +275,10 @@ public class Room extends Spawnable {
 
     public void initializeDoors() {
         this.doors = new ArrayList<>(List.of(
-                new Point(width/2, roomBordersSize-1),
-                new Point(width-roomBordersSize, height/2),
-                new Point(width/2,height-roomBordersSize),
-                new Point(roomBordersSize-1, height/2)
+                new Point(width / 2, roomBordersSize - 1),
+                new Point(width - roomBordersSize, height / 2),
+                new Point(width / 2, height - roomBordersSize),
+                new Point(roomBordersSize - 1, height / 2)
         ));
         this.usedDoors = new ArrayList<>();
         this.connectedDoors = new ArrayList<>();
@@ -309,6 +307,6 @@ public class Room extends Spawnable {
 
     @Override
     public String toString() {
-        return id+" start: "+startPoint;
+        return id + " start: " + startPoint;
     }
 }
