@@ -472,10 +472,7 @@ public class Map {
     }
 
     public boolean canPlaceItem(Item item, Point point) {
-        if (map.get(point.getY()).get(point.getX()) instanceof Tile tile) {
-            return tile.getItems().isEmpty();
-        }
-        return false;
+        return true;
     }
 
     public static class GeneratorMapBuilder extends MapBuilder {
