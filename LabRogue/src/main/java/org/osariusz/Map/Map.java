@@ -447,12 +447,11 @@ public class Map {
         if (getFeature(point) instanceof Tile tile) {
             return tile.getActor() == null;
         }
-        if(actor.getPosition() != null && getFeature(point) instanceof Door) {
-            Point movement = point.offset(actor.getPosition().multiplyPoints(new Point(-1,-1)));
-            movement = movement.multiplyPoints(new Point(2,2));
-            return canPlaceActor(actor, actor.getPosition().offset(movement));
-        }
         return false;
+    }
+
+    public boolean canMoveThrough(Actor actor, Point point) {
+        return canPlaceActor(actor, point) || getFeature(point) instanceof Door;
     }
 
     public boolean canShootThrough(Point point) {

@@ -25,6 +25,8 @@ public class IO {
             f [wsad] - fire/attack on selected position 
             u [backpackSlotNumber] - upgrade an item on backpackSlotNumber position in your backpack
             t [backpackSlotNumber] - throw item at backpackSlotNumber on the ground
+            targets - prints a list of available targets
+            skip - skips one turn
             """;
 
     String rulesText = """
@@ -148,7 +150,7 @@ public class IO {
     }
 
     public boolean successfulMovement(Map map, Point movePoint) {
-        if(map.canPlaceActor(map.getPlayer(),map.getPlayer().getPosition().offset(movePoint))) {
+        if(map.canMoveThrough(map.getPlayer(),map.getPlayer().getPosition().offset(movePoint))) {
             map.moveActor(map.getPlayer(), movePoint.getX(), movePoint.getY());
             return true;
         }
@@ -222,6 +224,8 @@ public class IO {
                         case "targets":
                             displayActors(map.getPlayer().actorsInSightRange(map));
                             continue;
+                        case "skip":
+                            break;
                         default:
                             System.out.println("Wrong input!");
                             continue;

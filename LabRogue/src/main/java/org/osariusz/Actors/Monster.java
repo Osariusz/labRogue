@@ -35,7 +35,7 @@ public class Monster extends Actor {
         }
 
         List<Point> path = position.bfsTo(map.getPlayer().getPosition(),sightRange,(Point p) -> {
-            return map.canPlaceActor(this, p) || getPosition().equals(p) || map.getPlayer().position.equals(p);
+            return map.canMoveThrough(this, p) || getPosition().equals(p) || map.getPlayer().position.equals(p);
         });
         if(position.distanceTo(map.getPlayer().getPosition()) <= sightRange && path != null && path.size() > 1) {
             map.moveActor(this, path.get(1));
