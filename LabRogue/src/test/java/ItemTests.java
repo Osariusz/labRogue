@@ -21,7 +21,7 @@ public class ItemTests {
     @Test
     public void itemDefaultBuilderTest() {
         Item item = new Item().toBuilder().build();
-        assert item.getSpawnChance() == 10;
+        assert item.getSpawnChance() == 20;
         assert item.getName().equals("Generic Item");
         assert item.getId().equals("generic_item");
         assert item.getSymbol() == 'i';
@@ -30,7 +30,7 @@ public class ItemTests {
     @Test
     public void equipmentDefaultBuilderTest() {
         Equipment item = new Equipment().toBuilder().build();
-        assert item.getSpawnChance() == 10;
+        assert item.getSpawnChance() == 20;
         assert item.getName().equals("Equipment");
         assert item.getId().equals("equipment");
         assert item.getSymbol() == 'e';

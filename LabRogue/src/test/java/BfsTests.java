@@ -16,7 +16,7 @@ public class BfsTests {
     public void bfsNotNull() {
         Point a = new Point(0,0);
         Point b = new Point(3,3);
-        List<Point> bfs = a.bfsTo(b, Integer.MAX_VALUE, (p) -> {return true;});
+        List<Point> bfs = a.bfsTo(b, Integer.MAX_VALUE-1, (p) -> {return true;});
         System.out.println(bfs);
         assert bfs != null;
     }
@@ -36,7 +36,7 @@ public class BfsTests {
         Point a = new Point(0,1);
         Point b = new Point(2,1);
 
-        assert a.bfsTo(b, Integer.MAX_VALUE, (p) -> {
+        assert a.bfsTo(b, Integer.MAX_VALUE-1, (p) -> {
             if(p.getY() < 0 || p.getY() >= 3 || p.getX() < 0 || p.getX() >= 3) {
                 return false;
             }
@@ -45,7 +45,7 @@ public class BfsTests {
 
         map.get(1).set(1, new Tile().toBuilder().build());
 
-        assert a.bfsTo(b, Integer.MAX_VALUE, (p) -> {
+        assert a.bfsTo(b, Integer.MAX_VALUE-1, (p) -> {
             if(p.getY() < 0 || p.getY() >= 3 || p.getX() < 0 || p.getX() >= 3) {
                 return false;
             }
