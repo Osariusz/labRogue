@@ -63,6 +63,15 @@ public class ItemList {
 
     };
 
+    public static Item.ItemBuilder<?, ?> itemBuilderById(String id) {
+        for(Item.ItemBuilder<?, ?> builder : items) {
+            if(builder.build().getId().equals(id)) {
+                return builder;
+            }
+        }
+        return null;
+    }
+
     public static List<Map.Entry<Integer, Item.ItemBuilder<?, ?>>> getItemSpawnList() {
         return SpawnHelper.getSpawnList(items);
     }

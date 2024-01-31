@@ -16,6 +16,7 @@ import org.osariusz.Utils.Point;
 
 import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
@@ -97,13 +98,8 @@ public abstract class Actor extends GameElement {
     }
 
     public boolean immuneToUpgrader() {
-        for(Item item : getBackpack()) {
+        for(Item item : getAllItems()) {
             if(item.isPreventUpgrader()) {
-                return true;
-            }
-        }
-        for(Equipment activeEquipment : getAllEquipment()) {
-            if(activeEquipment.isPreventUpgrader()) {
                 return true;
             }
         }
@@ -237,6 +233,12 @@ public abstract class Actor extends GameElement {
         for (List<Equipment> layer : equipment.values()) {
             result.addAll(layer);
         }
+        return result;
+    }
+
+    public List<Item> getAllItems() {
+        List<Item> result = new ArrayList<>(getAllEquipment().stream().map(e -> (Item) e).toList());
+        result.addAll(backpack);
         return result;
     }
 

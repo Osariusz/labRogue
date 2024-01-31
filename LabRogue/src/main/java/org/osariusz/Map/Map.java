@@ -460,6 +460,7 @@ public class Map {
 
     public void actorAttacked(Actor actor) {
         if(!actor.isAlive()) {
+            placeItems(actor.getAllItems(), actor.getPosition());
             removeActor(actor.getPosition());
         }
     }
@@ -481,6 +482,13 @@ public class Map {
             Tile tile = (Tile) map.get(point.getY()).get(point.getX());
             tile.addItem(item);
         }
+    }
+
+    public void placeItems(List<Item> items, Point point) {
+        for(Item item : items) {
+            placeItem(item, point);
+        }
+
     }
 
     public void removeAllItems(Point point) {

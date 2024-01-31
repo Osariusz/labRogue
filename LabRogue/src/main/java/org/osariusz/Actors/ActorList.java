@@ -3,6 +3,7 @@ package org.osariusz.Actors;
 import org.osariusz.GameElements.GameElement;
 import org.osariusz.GameElements.Spawnable;
 import org.osariusz.Items.Equipment;
+import org.osariusz.Items.ItemList;
 import org.osariusz.Items.Weapon;
 import org.osariusz.Utils.Logging;
 import org.osariusz.Utils.SpawnHelper;
@@ -15,7 +16,7 @@ public class ActorList {
         {
             add(new Monster().toBuilder().equipment(new HashMap<>(Map.ofEntries(
                     new AbstractMap.SimpleEntry<>(Actor.EquipmentSlots.WEAPON, new ArrayList<>(List.of(new Weapon().toBuilder().damage(1).shootChance(10).build())))
-            ))).hp(2).agility(20).movementSpeed(2).name("Szczur").id("rat").spawnChance(80).symbol(','));
+            ))).startingItems(List.of("rat_tail")).hp(2).agility(20).movementSpeed(2).name("Szczur").id("rat").spawnChance(80).symbol(','));
 
             add(new Monster().toBuilder().equipment(new HashMap<>(Map.ofEntries(
                     new AbstractMap.SimpleEntry<>(Actor.EquipmentSlots.WEAPON, new ArrayList<>(List.of(new Weapon().toBuilder().damage(1).shootChance(40).range(2).build())))

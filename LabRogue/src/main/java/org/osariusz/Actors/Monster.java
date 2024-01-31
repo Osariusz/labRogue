@@ -5,17 +5,38 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.osariusz.Items.Equipment;
+import org.osariusz.Items.Item;
+import org.osariusz.Items.ItemList;
 import org.osariusz.Items.Weapon;
 import org.osariusz.Map.Map;
+import org.osariusz.Map.Rooms.Room;
 import org.osariusz.Utils.Point;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Getter
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 public class Monster extends Actor {
+
+    protected List<String> startingItems;
+
+
+    @Override
+    protected void initializeDefaults() {
+        super.initializeDefaults();
+        super.canPickItems = false;
+        this.startingItems = new ArrayList<>();
+    }
+
+    public void giveStartingItems() {
+        List<Item> startingItems = getStartingItems().stream().map(id -> ItemList.getItem(id).build()).collect(Collectors.toList());
+        this.getBackpack().clear();
+        addToBackpack(startingItems);
+    }
 
     public void moveMonster(Map map) {
         for(int i = 0;i<getRealMovementSpeed();++i) {
@@ -51,6 +72,14 @@ public class Monster extends Actor {
             else {
                 map.moveActor(this, 0, moveNegative);
             }
+        }
+    }
+
+    private static final class MonsterBuilderImpl extends Monster.MonsterBuilder<Monster, Monster.MonsterBuilderImpl> {
+        public Monster build() {
+            Monster result = new Monster(this);
+            result.giveStartingItems();
+            return result;
         }
     }
 }
