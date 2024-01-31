@@ -85,7 +85,7 @@ public class Game {
                 System.out.println("You won! :D");
                 break;
             }
-            if(currentMap <= maps.size()) {
+            if(currentMap >= maps.size()) {
                 maps.add(Map.builder().random(random).width(mapWidth).height(mapHeight).player(player).build());
             }
             if(maps.get(currentMap).getMoveBetweenMaps() != 0) {
