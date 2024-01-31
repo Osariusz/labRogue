@@ -258,8 +258,8 @@ public class Map {
     public Point getAnyFieldForActor(Actor actor) {
         for(int y = 0;y<height;++y) {
             for(int x = 0;x<width;++x) {
-                if(map.get(y).get(x) instanceof Tile tile) {
-                    Point point = new Point(x,y);
+                Point point = new Point(x,y);
+                if(getFeature(point) instanceof Tile tile) {
                     if(canPlaceActor(actor,point)) {
                         return point;
                     }
@@ -267,6 +267,24 @@ public class Map {
             }
         }
         return new Point(0,0);
+    }
+
+    public void placePlayer() {
+        Point emptySlot = getAnyFieldForActor(player);
+        placeActor(getPlayer(), emptySlot);
+    }
+
+    public void generateMonsters() {
+        int playerDistance = 10;
+        for(int y = 0;y<getHeight();++y) {
+            for(int x = 0;x<getWidth();++x) {
+                Point place = new Point(x,y);
+                Monster monster = RandomChoice.choose(random,ActorList.getMonsterSpawnList()).build();
+                if(canPlaceActor(monster, place) && place.distanceTo(player.getPosition()) > playerDistance) {
+                    placeActor(monster, place);
+                }
+            }
+        }
     }
 
     public Map generateMap() {
@@ -283,11 +301,8 @@ public class Map {
                 placeGenerateItem(new Point(x,y));
             }
         }
-        Point emptySlot = getAnyFieldForActor(player);
-        placeActor(getPlayer(), emptySlot);
-        Monster rat = ActorList.getMonster("rat").build();
-        Point emptySlot2 = getAnyFieldForActor(rat);
-        placeActor(rat,emptySlot2);
+        placePlayer();
+        generateMonsters();
         return this;
     }
 
@@ -303,7 +318,7 @@ public class Map {
         List<Actor> actors = new ArrayList<>();
         for (int x = 0; x < getWidth(); x++) {
             for (int y = 0; y < getHeight(); y++) {
-                MapElement mapElement = map.get(y).get(x);
+                MapElement mapElement = getFeature(new Point(x,y));
                 if (mapElement instanceof Tile && ((Tile) mapElement).hasActor()) {
                     actors.add(((Tile) mapElement).getActor());
                 }
@@ -336,7 +351,7 @@ public class Map {
 
     public boolean actorsPresent(Point point) {
         if(getFeature(point) instanceof Tile tile) {
-            return !(tile.getActor() == null);
+            return tile.getActor() != null;
         }
         return false;
     }
@@ -370,14 +385,6 @@ public class Map {
                 activateNearbyUpgraders(point, actor);
             }
         }
-        else if(actorsPresent(point)) {
-            Tile tile = (Tile)getFeature(point);
-            List<FightReport> reports = actor.attackActor(this, tile.getActor());
-            fightReports.addAll(reports);
-            if(!tile.getActor().isAlive()) {
-                removeActor(point);
-            }
-        }
         else {
             Logging.logger.log(Level.WARNING, "Can't move " + actor.toString() + " to " + x + ", " + y);
         }
@@ -396,13 +403,13 @@ public class Map {
     }
 
     public void removeActor(Point point) {
-        if (map.get(point.getY()).get(point.getX()) instanceof Tile tile) {
+        if (getFeature(point) instanceof Tile tile) {
             tile.removeActor();
         }
     }
 
     public boolean canPlaceActor(Actor actor, Point point) {
-        if (map.get(point.getY()).get(point.getX()) instanceof Tile tile) {
+        if (getFeature(point) instanceof Tile tile) {
             return tile.getActor() == null;
         }
         return false;
@@ -422,7 +429,7 @@ public class Map {
         List<Item> items = new ArrayList<>();
         for (int x = 0; x < map.size(); x++) {
             for (int y = 0; y < map.get(x).size(); y++) {
-                if (map.get(y).get(x) instanceof Tile tile) {
+                if (getFeature(new Point(x,y)) instanceof Tile tile) {
                     items.addAll(tile.getItems());
                 }
             }
@@ -437,14 +444,14 @@ public class Map {
         }
     }
 
-    public void removeAllItems(int x, int y) {
-        if (map.get(y).get(x) instanceof Tile tile) {
+    public void removeAllItems(Point point) {
+        if (getFeature(point) instanceof Tile tile) {
             tile.removeAllItems();
         }
     }
 
-    public void removeItem(Item item, int x, int y) {
-        if (map.get(y).get(x) instanceof Tile tile) {
+    public void removeItem(Item item, Point point) {
+        if (getFeature(point) instanceof Tile tile) {
             tile.removeItem(item);
         }
     }
