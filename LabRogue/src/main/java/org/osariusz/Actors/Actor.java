@@ -155,6 +155,7 @@ public abstract class Actor extends GameElement {
     }
 
     public void equip(int backpackSlot, EquipmentSlots equipmentSlot, int slotNumber) {
+        //TODO: fix equiping last item from backpack
         Item backpackItem = getItemInBackpack(backpackSlot);
         if(!(backpackItem instanceof Equipment backpackEquipment)) {
             Logging.logger.log(Level.INFO, "Can't equip non-equipment");
