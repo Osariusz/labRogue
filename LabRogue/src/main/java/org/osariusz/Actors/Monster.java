@@ -47,6 +47,19 @@ public class Monster extends Actor {
     public void moveMonsterOnce(Map map) {
         int sightRange = 10;
 
+        for(int i = 0;i<getBackpack().size();++i) {
+            Item item = getItemInBackpack(i);
+            if(item instanceof Equipment equipmentItem) {
+                for(EquipmentSlots equipmentSlots : equipmentItem.getAllowedSlots()) {
+                    if(canEquip(equipmentSlots, 1, equipmentItem) && equipmentSlotReady(equipmentSlots)) {
+                        equip(i, equipmentSlots, 1);
+                        return;
+                    }
+                }
+            }
+        }
+
+
         for(Equipment weaponEquipment: getEquipment().get(EquipmentSlots.WEAPON)) {
             Weapon weapon = (Weapon) weaponEquipment;
             if(canShoot(map, map.getPlayer(), weapon)) {

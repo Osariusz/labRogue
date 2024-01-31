@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import lombok.extern.java.Log;
 import org.osariusz.GameElements.GameElement;
-import org.osariusz.GameElements.Spawnable;
 import org.osariusz.Items.Equipment;
 import org.osariusz.Items.Item;
 import org.osariusz.Items.Weapon;
@@ -16,7 +14,6 @@ import org.osariusz.Utils.Point;
 
 import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
@@ -132,6 +129,16 @@ public abstract class Actor extends GameElement {
             return null;
         }
         return getEquipment().get(equipmentSlot).get(slotNumber);
+    }
+
+    public boolean equipmentSlotReady(EquipmentSlots equipmentSlots) {
+        if(!getEquipment().containsKey(equipmentSlots)) {
+            return false;
+        }
+        if(getEquipment().get(equipmentSlots).isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     public boolean canEquip(EquipmentSlots equipmentSlot, int slotNumber, Equipment equipment) {

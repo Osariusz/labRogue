@@ -23,24 +23,42 @@ public class ItemList {
                     Actor.EquipmentSlots.PASSIVE)
             )).transmutationChances(new ArrayList<>(List.of(
                     new AbstractMap.SimpleEntry<>(2, "ash"),
-                    new AbstractMap.SimpleEntry<>(10, "a_1000")
+                    new AbstractMap.SimpleEntry<>(5, "a_500"),
+                    new AbstractMap.SimpleEntry<>(19, "a_1000")
             ))).hpBonus(2).id("a_500").name("A-500"));
 
             add(new PassiveEquipment().toBuilder().spawnChance(1).allowedSlots(new ArrayList<>(List.of(
                     Actor.EquipmentSlots.PASSIVE))
             ).transmutationChances(new ArrayList<>(List.of(
-                    new AbstractMap.SimpleEntry<>(4, "a_1000"),
-                    new AbstractMap.SimpleEntry<>(1, "hp_syringe"),
+                    new AbstractMap.SimpleEntry<>(20, "a_1000"),
+                    new AbstractMap.SimpleEntry<>(5, "hp_syringe"),
                     new AbstractMap.SimpleEntry<>(1, "ash")
             ))).hpBonus(4).id("a_1000").name("A-1000"));
 
-            add(new Equipment().toBuilder().hpBonus(1).agilityBonus(-1).hpBonus(2).allowedSlots(new ArrayList<>(List.of(
+            add(new Equipment().toBuilder().agilityBonus(-1).hpBonus(2).allowedSlots(new ArrayList<>(List.of(
                     Actor.EquipmentSlots.OUTFIT
             ))).transmutationChances(new ArrayList<>(List.of(
                     new AbstractMap.SimpleEntry<>(20, "spacesuit"),
                     new AbstractMap.SimpleEntry<>(30, "rat_tail"),
-                    new AbstractMap.SimpleEntry<>(5, "ash")
+                    new AbstractMap.SimpleEntry<>(5, "ash"),
+                    new AbstractMap.SimpleEntry<>(5, "hermes_exosuit")
             ))).id("spacesuit").name("Space suit"));
+
+            add(new Equipment().toBuilder().hpBonus(10).agilityBonus(5).spawnChance(1).allowedSlots(new ArrayList<>(List.of(
+                    Actor.EquipmentSlots.OUTFIT
+            ))).transmutationChances(new ArrayList<>(List.of(
+                    new AbstractMap.SimpleEntry<>(5, "spacesuit"),
+                    new AbstractMap.SimpleEntry<>(20, "gordon_exosuit"),
+                    new AbstractMap.SimpleEntry<>(2, "hermes_exosuit")
+            ))).id("gordon_exosuit").name("Gordon exosuit"));
+
+            add(new Equipment().toBuilder().hpBonus(20).agilityBonus(20).spawnChance(0).allowedSlots(new ArrayList<>(List.of(
+                    Actor.EquipmentSlots.OUTFIT
+            ))).transmutationChances(new ArrayList<>(List.of(
+                    new AbstractMap.SimpleEntry<>(5, "rat_tail"),
+                    new AbstractMap.SimpleEntry<>(500, "gman_exosuit"),
+                    new AbstractMap.SimpleEntry<>(2, "hermes_exosuit")
+            ))).id("gman_exosuit").name("G-man exosuit"));
 
             add(new Equipment().toBuilder().hpBonus(1).agilityBonus(1).preventUpgrader(true).allowedSlots(new ArrayList<>(List.of(
                     Actor.EquipmentSlots.HELMET
@@ -53,7 +71,7 @@ public class ItemList {
                     new AbstractMap.SimpleEntry<>(50, "ash")
             ))).name("Hermes exosuit").id("hermes_exosuit"));
 
-            add(new Weapon().toBuilder().shootChance(30).damage(5).spawnChance(4).transmutationChances(new ArrayList<>(List.of(
+            add(new Weapon().toBuilder().shootChance(30).damage(5).spawnChance(4).range(2).transmutationChances(new ArrayList<>(List.of(
                     new AbstractMap.SimpleEntry<>(5, "hermes_exosuit"),
                     new AbstractMap.SimpleEntry<>(20, "rat_tail"),
                     new AbstractMap.SimpleEntry<>(1, "eyes_shotgun")
