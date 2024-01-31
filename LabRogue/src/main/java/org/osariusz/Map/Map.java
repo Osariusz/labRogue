@@ -3,6 +3,7 @@ package org.osariusz.Map;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.java.Log;
 import org.osariusz.Actors.Actor;
 import org.osariusz.Actors.ActorList;
 import org.osariusz.Actors.Monster;
@@ -290,28 +291,25 @@ public class Map {
     }
 
     public void placePlayer() {
-        Point omegaPoint = null;
+        Point alphaPoint = null;
         for(int y = 0; y<height;++y) {
             for(int x = 0;x<width;++x) {
                 Point newPoint = new Point(x,y);
                 if(getFeature(newPoint) instanceof MapLeave mapLeave) {
-                    if(mapLeave.getDirection() == 1) {
-                        omegaPoint = newPoint;
+                    if(mapLeave.getDirection() == -1) { //find position of alpha
+                        alphaPoint = newPoint;
                     }
                 }
             }
         }
-        if(omegaPoint == null) {
-            IO io = new IO();
-            io.displayMap(this);
-            System.out.println("No omega point found");
-            //placeActor(getPlayer(), getAnyFieldForActor(getPlayer()));
+        if(alphaPoint == null) {
+            Logging.logger.log(Level.SEVERE, "Map without alpha!");
             return;
         }
         for(int y = 0; y<height;++y) {
             for(int x = 0;x<width;++x) {
                 Point newPoint = new Point(x,y);
-                if(canPlaceActor(getPlayer(), newPoint) && newPoint.distanceTo(omegaPoint) < 3) {
+                if(canPlaceActor(getPlayer(), newPoint) && newPoint.distanceTo(alphaPoint) < 3) {
                     System.out.println(newPoint+" is player point");
                     placeActor(getPlayer(), newPoint);
                     return;

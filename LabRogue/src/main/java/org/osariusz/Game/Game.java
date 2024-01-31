@@ -86,6 +86,10 @@ public class Game {
                 maps.get(currentMap).setMoveBetweenMaps(0);
                 currentMap += move;
             }
+            if(currentMap < 0) {
+                Logging.logger.log(Level.WARNING, "The map can't be lower than 0!");
+                currentMap = 0;
+            }
             if(currentMap >= numberOfMaps) {
                 System.out.println("You won! :D");
                 break;
@@ -94,13 +98,9 @@ public class Game {
                 System.out.println("generating new map");
                 maps.add(Map.builder().random(random).width(mapWidth).height(mapHeight).player(player).build());
             }
-            else if(!maps.get(currentMap).getPlayer().isAlive()) {
+            if(!maps.get(currentMap).getPlayer().isAlive()) {
                 System.out.println("You died! :(");
                 break;
-            }
-            else if(currentMap < 0) {
-                Logging.logger.log(Level.WARNING, "The map can't be lower than 0!");
-                currentMap = 0;
             }
             System.out.println(maps);
             playLoop(maps.get(currentMap));
