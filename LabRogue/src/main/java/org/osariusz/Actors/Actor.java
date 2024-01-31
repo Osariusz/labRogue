@@ -292,6 +292,28 @@ public abstract class Actor extends GameElement {
         return getPosition().bfsTo(actor.getPosition(),weapon.getRange(), map::canShootThrough) != null;
     }
 
+    public List<Weapon> getActorsWeapons() {
+        List<Equipment> actorWeapons = new ArrayList<>(getEquipment().get(EquipmentSlots.WEAPON));
+        if(actorWeapons.isEmpty()) {
+            actorWeapons.add(new Weapon().toBuilder().range(1).shootChance(50).damage(1).id("hand").name("Hand").build());
+        }
+        List<Weapon> result = new ArrayList<>();
+        for(Equipment equipmentWeapon : actorWeapons) {
+            result.add((Weapon) equipmentWeapon);
+        }
+        return result;
+    }
+
+    public boolean canShootAnyWeapon(org.osariusz.Map.Map map, Actor actor) {
+        List<Weapon> weapons = getActorsWeapons();
+        for(Weapon weapon : weapons) {
+            if(canShoot(map, actor, weapon)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<FightReport> attackActor(org.osariusz.Map.Map map, Actor attacked) {
         List<FightReport> result = new ArrayList<>();
 
@@ -300,12 +322,8 @@ public abstract class Actor extends GameElement {
         int randomNumber = random.nextInt(1, 101);
         fightReportBuilder.rolledShot(randomNumber);
 
-        List<Equipment> actorWeapons = new ArrayList<>(getEquipment().get(EquipmentSlots.WEAPON));
-        if(actorWeapons.isEmpty()) {
-            actorWeapons.add(new Weapon().toBuilder().range(1).shootChance(50).damage(1).id("hand").name("Hand").build());
-        }
-        for(Equipment weaponEquipment : actorWeapons) {
-            Weapon weapon = (Weapon) weaponEquipment;
+        List<Weapon> actorWeapons = getActorsWeapons();
+        for(Weapon weapon : actorWeapons) {
             if(!canShoot(map, attacked, weapon)) {
                 continue;
             }
@@ -316,6 +334,7 @@ public abstract class Actor extends GameElement {
             }
             result.add(fightReportBuilder.build());
         }
+        map.actorAttacked(attacked);
         return result;
     }
 

@@ -291,6 +291,13 @@ public class Map {
         return this;
     }
 
+    public Actor getActorAtPosition(Point position) {
+        if(getFeature(position) instanceof Tile tile) {
+            return tile.getActor();
+        }
+        return null;
+    }
+
     public List<Actor> getAllActors() {
         //TODO: list of actors
         List<Actor> actors = new ArrayList<>();
@@ -402,7 +409,13 @@ public class Map {
     }
 
     public boolean canShootThrough(Point point) {
-        return canPlaceActor(player, point);
+        return canPlaceActor(player, point) || actorsPresent(point);
+    }
+
+    public void actorAttacked(Actor actor) {
+        if(!actor.isAlive()) {
+            removeActor(actor.getPosition());
+        }
     }
 
     public List<Item> getAllItems() {

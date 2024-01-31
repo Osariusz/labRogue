@@ -196,6 +196,13 @@ public class IO {
                     case "t":
                         map.getPlayer().throwItem(map, map.getPlayer().getItemInBackpack(Integer.parseInt(arguments[1])-1));
                         continue;
+                    case "f":
+                        boolean result = map.getPlayer().shootMonster(map, arguments[1]);
+                        if(result) {
+                            break;
+                        }
+                        System.out.println("Can't hit the target");
+                        continue;
                     default:
                         System.out.println("Wrong input!");
                         continue;

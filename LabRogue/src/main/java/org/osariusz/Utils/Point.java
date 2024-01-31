@@ -20,14 +20,16 @@ public class Point {
         return Math.abs(x-point.x)+Math.abs(y-point.y);
     }
 
-    public List<Point> bfsTo(Point destination, int limit, Function<Point, Boolean> checkPoint) {
+    public List<Point> bfsTo(Point destination, int pathLength, Function<Point, Boolean> checkPoint) {
+        int limit = pathLength+1;
+
         Queue<List<Point>> nextPoints = new LinkedList<>();
         List<Point> visited = new ArrayList<>();
         nextPoints.add(List.of(this));
         while(!nextPoints.isEmpty()) {
             List<Point> nextPointList = nextPoints.remove();
             Point nextPoint = nextPointList.get(nextPointList.size()-1);
-            if(nextPoint.pointInList(visited) || nextPointList.size() >= limit) {
+            if(nextPoint.pointInList(visited) || nextPointList.size() > limit) {
                 continue;
             }
             visited.add(nextPoint);
