@@ -7,6 +7,7 @@ import org.osariusz.Actors.Actor;
 import org.osariusz.Actors.ActorList;
 import org.osariusz.Actors.Monster;
 import org.osariusz.Actors.Player;
+import org.osariusz.Graphics.IO;
 import org.osariusz.Items.ItemList;
 import org.osariusz.Map.Rooms.Room;
 import org.osariusz.Map.Rooms.RoomsList;
@@ -289,8 +290,34 @@ public class Map {
     }
 
     public void placePlayer() {
-        Point emptySlot = getAnyFieldForActor(player);
-        placeActor(getPlayer(), emptySlot);
+        Point omegaPoint = null;
+        for(int y = 0; y<height;++y) {
+            for(int x = 0;x<width;++x) {
+                Point newPoint = new Point(x,y);
+                if(getFeature(newPoint) instanceof MapLeave mapLeave) {
+                    if(mapLeave.getDirection() == 1) {
+                        omegaPoint = newPoint;
+                    }
+                }
+            }
+        }
+        if(omegaPoint == null) {
+            IO io = new IO();
+            io.displayMap(this);
+            System.out.println("No omega point found");
+            //placeActor(getPlayer(), getAnyFieldForActor(getPlayer()));
+            return;
+        }
+        for(int y = 0; y<height;++y) {
+            for(int x = 0;x<width;++x) {
+                Point newPoint = new Point(x,y);
+                if(canPlaceActor(getPlayer(), newPoint) && newPoint.distanceTo(omegaPoint) < 3) {
+                    System.out.println(newPoint+" is player point");
+                    placeActor(getPlayer(), newPoint);
+                    return;
+                }
+            }
+        }
     }
 
     public void generateMonsters() {

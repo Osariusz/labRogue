@@ -81,17 +81,18 @@ public class Game {
         maps.add(Map.builder().random(random).width(mapWidth).height(mapHeight).player(player).build());
         int currentMap = 0;
         while(true) {
+            if(maps.get(currentMap).getMoveBetweenMaps() != 0) {
+                int move = maps.get(currentMap).getMoveBetweenMaps();
+                maps.get(currentMap).setMoveBetweenMaps(0);
+                currentMap += move;
+            }
             if(currentMap >= numberOfMaps) {
                 System.out.println("You won! :D");
                 break;
             }
             if(currentMap >= maps.size()) {
+                System.out.println("generating new map");
                 maps.add(Map.builder().random(random).width(mapWidth).height(mapHeight).player(player).build());
-            }
-            if(maps.get(currentMap).getMoveBetweenMaps() != 0) {
-                int move = maps.get(currentMap).getMoveBetweenMaps();
-                maps.get(currentMap).setMoveBetweenMaps(0);
-                currentMap += move;
             }
             else if(!maps.get(currentMap).getPlayer().isAlive()) {
                 System.out.println("You died! :(");
@@ -101,6 +102,7 @@ public class Game {
                 Logging.logger.log(Level.WARNING, "The map can't be lower than 0!");
                 currentMap = 0;
             }
+            System.out.println(maps);
             playLoop(maps.get(currentMap));
         }
         lastState = "menu";
