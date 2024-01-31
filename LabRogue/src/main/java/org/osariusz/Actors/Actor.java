@@ -228,6 +228,10 @@ public abstract class Actor extends GameElement {
         hp += heal;
     }
 
+    public void increaseAgility(int amount) {
+        agility += amount;
+    }
+
     public List<Equipment> getAllEquipment() {
         List<Equipment> result = new ArrayList<>();
         for (List<Equipment> layer : equipment.values()) {
@@ -240,16 +244,6 @@ public abstract class Actor extends GameElement {
         List<Item> result = new ArrayList<>(getAllEquipment().stream().map(e -> (Item) e).toList());
         result.addAll(backpack);
         return result;
-    }
-
-    public void removeItemFromAnywhere(Item item) {
-        removeFromBackpack(item);
-        for(EquipmentSlots equipmentSlots : getEquipment().keySet()) {
-            List<Equipment> equipment = getEquipment().get(equipmentSlots);
-            if(!equipment.isEmpty()) {
-                equipment.remove((Equipment) item);
-            }
-        }
     }
 
     public int getRealHP() {
@@ -338,7 +332,7 @@ public abstract class Actor extends GameElement {
     public void useItem(Item item) {
         if(getAllItems().contains(item)) {
             item.useItem(this);
-            removeItemFromAnywhere(item);
+            removeFromBackpack(item); //can only use items from backpack
         }
     }
 

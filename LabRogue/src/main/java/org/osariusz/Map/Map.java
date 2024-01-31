@@ -290,26 +290,26 @@ public class Map {
         return new Point(0,0);
     }
 
-    public void placePlayer() {
-        Point alphaPoint = null;
+    public void placePlayer(int direction) { //0 to find alpha, 1 to find omega
+        Point leavePoint = null;
         for(int y = 0; y<height;++y) {
             for(int x = 0;x<width;++x) {
                 Point newPoint = new Point(x,y);
                 if(getFeature(newPoint) instanceof MapLeave mapLeave) {
-                    if(mapLeave.getDirection() == -1) { //find position of alpha
-                        alphaPoint = newPoint;
+                    if(mapLeave.getDirection() == direction) {
+                        leavePoint = newPoint;
                     }
                 }
             }
         }
-        if(alphaPoint == null) {
-            Logging.logger.log(Level.SEVERE, "Map without alpha!");
+        if(leavePoint == null) {
+            Logging.logger.log(Level.SEVERE, "Map without such point!");
             return;
         }
         for(int y = 0; y<height;++y) {
             for(int x = 0;x<width;++x) {
                 Point newPoint = new Point(x,y);
-                if(canPlaceActor(getPlayer(), newPoint) && newPoint.distanceTo(alphaPoint) < 3) {
+                if(canPlaceActor(getPlayer(), newPoint) && newPoint.distanceTo(leavePoint) < 3) {
                     System.out.println(newPoint+" is player point");
                     placeActor(getPlayer(), newPoint);
                     return;
@@ -344,7 +344,7 @@ public class Map {
         Point startDoor = RandomChoice.chooseEvenly(random, randomStartRoom.getUnconnectedDoors());
         Point endDoor = RandomChoice.chooseEvenly(random, randomEndRoom.getUnconnectedDoors());
 
-        placeMapElement(new MapLeave().toBuilder().direction(-1).symbol('ɑ').build(), startDoor);
+        placeMapElement(new MapLeave().toBuilder().direction(0).symbol('ɑ').build(), startDoor);
         placeMapElement(new MapLeave().toBuilder().build(), endDoor);
     }
 
@@ -362,7 +362,7 @@ public class Map {
                 placeGenerateItem(new Point(x,y));
             }
         }
-        placePlayer();
+        placePlayer(0);
         generateMonsters();
         return this;
     }

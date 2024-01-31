@@ -71,19 +71,56 @@ public class Game {
 
     public void play() {
         int numberOfMaps = 6;
-        int mapWidth = 200;
-        int mapHeight = 30;
         Random random = new Random();
         if(!seed.isEmpty()) {
             random.setSeed(seed.hashCode());
         }
         Player player = new Player().toBuilder().build();
+
+
+        List<Map.MapBuilder> builders = new ArrayList<>(List.of(
+                Map.builder().random(random).width(50).height(20).player(player),
+                Map.builder().random(random).width(200).height(30).player(player),
+                Map.builder().random(random).width(150).height(40).player(player).randomOverride(new ArrayList<>(List.of(
+                        new AbstractMap.SimpleEntry<>("15x15_bunker_room", 2),
+                        new AbstractMap.SimpleEntry<>("statue", 1),
+                        new AbstractMap.SimpleEntry<>("lighsaber",3),
+                        new AbstractMap.SimpleEntry<>("rifle",2)
+                ))),
+                Map.builder().random(random).width(100).height(30).player(player).randomOverride(new ArrayList<>(List.of(
+                        new AbstractMap.SimpleEntry<>("15x15_bunker_room", 1),
+                        new AbstractMap.SimpleEntry<>("statue", 2),
+                        new AbstractMap.SimpleEntry<>("dinosaur", 1),
+                        new AbstractMap.SimpleEntry<>("rat", -5),
+                        new AbstractMap.SimpleEntry<>("lighsaber",1),
+                        new AbstractMap.SimpleEntry<>("hp_syringe",5),
+                        new AbstractMap.SimpleEntry<>("sniper_rifle",2)
+                ))),
+                Map.builder().random(random).width(150).height(40).player(player).randomOverride(new ArrayList<>(List.of(
+                        new AbstractMap.SimpleEntry<>("15x15_bunker_room", 2),
+                        new AbstractMap.SimpleEntry<>("statue", 5),
+                        new AbstractMap.SimpleEntry<>("rat", -10),
+                        new AbstractMap.SimpleEntry<>("dinosaur", 3),
+                        new AbstractMap.SimpleEntry<>("lighsaber",3),
+                        new AbstractMap.SimpleEntry<>("rifle",2)
+                ))),
+                Map.builder().random(random).width(150).height(30).player(player).randomOverride(new ArrayList<>(List.of(
+                        new AbstractMap.SimpleEntry<>("15x15_bunker_room", 2000),
+                        new AbstractMap.SimpleEntry<>("statue", 10),
+                        new AbstractMap.SimpleEntry<>("dinosaur", 10),
+                        new AbstractMap.SimpleEntry<>("rat", -20),
+                        new AbstractMap.SimpleEntry<>("rifle",10),
+                        new AbstractMap.SimpleEntry<>("sniper_rifle",10)
+                )))
+        ));
+
         List<Map> maps = new ArrayList<>();
-        maps.add(Map.builder().random(random).width(mapWidth).height(mapHeight).player(player).build());
+        maps.add(builders.get(0).build());
         int currentMap = 0;
+        int move = -1;
         while(true) {
             if(maps.get(currentMap).getMoveBetweenMaps() != 0) {
-                int move = maps.get(currentMap).getMoveBetweenMaps();
+                move = maps.get(currentMap).getMoveBetweenMaps();
                 maps.get(currentMap).setMoveBetweenMaps(0);
                 currentMap += move;
             }
@@ -97,13 +134,17 @@ public class Game {
             }
             if(currentMap >= maps.size()) {
                 System.out.println("generating new map");
-                maps.add(Map.builder().random(random).width(mapWidth).height(mapHeight).player(player).build());
+                int builderIndex = currentMap;
+                if(builderIndex >= builders.size()) {
+                    builderIndex = builders.size()-1;
+                }
+                maps.add(builders.get(builderIndex).build());
             }
             if(!maps.get(currentMap).getPlayer().isAlive()) {
                 System.out.println("You died! :(");
                 break;
             }
-            System.out.println(maps);
+
             playLoop(maps.get(currentMap));
         }
         lastState = "menu";

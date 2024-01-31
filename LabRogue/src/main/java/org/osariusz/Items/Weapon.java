@@ -32,4 +32,8 @@ public class Weapon extends Equipment {
 
     int range;
 
+    @Override
+    public String toString() {
+        return super.toString()+"(damage: "+damage+", shoot chance: "+shootChance+", range: "+range+")";
+    }
 }

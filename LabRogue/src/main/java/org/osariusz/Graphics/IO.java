@@ -160,10 +160,10 @@ public class IO {
         return false;
     }
 
-    public void displayActors(List<Actor> actors) {
+    public void displayActors(List<Actor> actors, Player player) {
         int i = 1;
         for(Actor actor : actors) {
-            System.out.println(i+". "+actor.toString());
+            System.out.println(i+". "+actor.toString()+"(shoot chance: "+player.getRealShootChance(actor, player.getActorsWeapons().get(0))+")");
             i++;
         }
     }
@@ -224,7 +224,7 @@ public class IO {
                             System.out.println("Can't hit the target");
                             continue;
                         case "targets":
-                            displayActors(map.getPlayer().actorsInSightRange(map));
+                            displayActors(map.getPlayer().actorsInSightRange(map), map.getPlayer());
                             continue;
                         case "skip":
                             break;

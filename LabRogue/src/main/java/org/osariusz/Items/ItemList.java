@@ -13,9 +13,10 @@ public class ItemList {
             add(new Item().toBuilder().spawnChance(0).id("ash").name("Ash"));
 
             add(new Item().toBuilder().transmutationChances(new ArrayList<>(List.of(
-                    new AbstractMap.SimpleEntry<>(20, "rat_tail"),
-                    new AbstractMap.SimpleEntry<>(1, "spacesuit"),
-                    new AbstractMap.SimpleEntry<>(1, "a_500")
+                    new AbstractMap.SimpleEntry<>(2000, "rat_tail"),
+                    new AbstractMap.SimpleEntry<>(100, "spacesuit"),
+                    new AbstractMap.SimpleEntry<>(100, "a_500"),
+                    new AbstractMap.SimpleEntry<>(1, "sniper_rifle")
             ))).id("rat_tail").name("Rat tail"));
 
             add(new PassiveEquipment().toBuilder().spawnChance(5).allowedSlots(new ArrayList<>(List.of(
@@ -28,6 +29,8 @@ public class ItemList {
             add(new PassiveEquipment().toBuilder().spawnChance(1).allowedSlots(new ArrayList<>(List.of(
                     Actor.EquipmentSlots.PASSIVE))
             ).transmutationChances(new ArrayList<>(List.of(
+                    new AbstractMap.SimpleEntry<>(4, "a_1000"),
+                    new AbstractMap.SimpleEntry<>(1, "hp_syringe"),
                     new AbstractMap.SimpleEntry<>(1, "ash")
             ))).hpBonus(4).id("a_1000").name("A-1000"));
 
@@ -72,10 +75,27 @@ public class ItemList {
                     new AbstractMap.SimpleEntry<>(1, "upgraders_eye")
             ))).name("Lightsaber").id("lightsaber"));
 
-            add(new Item().toBuilder().spawnChance(4000).useFunction(a -> a.healHp(3)).transmutationChances(new ArrayList<>(List.of(
+            add(new Item().toBuilder().spawnChance(4).useFunction(a -> a.healHp(3)).transmutationChances(new ArrayList<>(List.of(
                 new AbstractMap.SimpleEntry<>(5, "hp_syringe"),
                 new AbstractMap.SimpleEntry<>(3, "a_500")
             ))).name("Syringe with HP").id("hp_syringe"));
+
+            add(new Item().toBuilder().spawnChance(4).useFunction(a -> a.increaseAgility(1)).transmutationChances(new ArrayList<>(List.of(
+                    new AbstractMap.SimpleEntry<>(5, "agility_syringe"),
+                    new AbstractMap.SimpleEntry<>(2, "hp_syringe")
+            ))).name("Syringe with Adrenaline").id("agility_syringe"));
+
+            add(new Weapon().toBuilder().spawnChance(1).shootChance(75).damage(2).range(3).transmutationChances(new ArrayList<>(List.of(
+                    new AbstractMap.SimpleEntry<>(10, "stick"),
+                    new AbstractMap.SimpleEntry<>(1, "ash"),
+                    new AbstractMap.SimpleEntry<>(3, "lightsaber"),
+                    new AbstractMap.SimpleEntry<>(1, "hp_syringe")
+            ))).name("Rifle").id("rifle"));
+            add(new Weapon().toBuilder().spawnChance(0).shootChance(90).damage(10).range(10).transmutationChances(new ArrayList<>(List.of(
+                    new AbstractMap.SimpleEntry<>(10, "sniper_rifle"),
+                    new AbstractMap.SimpleEntry<>(3, "rat_tail"),
+                    new AbstractMap.SimpleEntry<>(5, "rifle")
+            ))).name("Sniper rifle").id("sniper_rifle"));
         }
 
     };
