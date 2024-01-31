@@ -67,6 +67,10 @@ public class ItemList {
         return SpawnHelper.getSpawnList(items);
     }
 
+    public static List<Map.Entry<Integer, Item.ItemBuilder<?, ?>>> getCorrectedItemSpawnList(List<Map.Entry<String, Integer>> correction) {
+        return SpawnHelper.getCorrectedSpawnList(items, correction);
+    }
+
     public static Item.ItemBuilder<?, ?> getItem(String id) {
         return SpawnHelper.getGameElement(items, id);
     }

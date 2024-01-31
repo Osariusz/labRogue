@@ -39,6 +39,9 @@ public class Map {
     @Builder.Default
     int monsterSpawnChance = 3; //10 is 10%
 
+    @Builder.Default
+    List<java.util.Map.Entry<String, Integer>> randomOverride = new ArrayList<>();
+
     @Getter
     @Builder.Default
     private Player player = new Player().toBuilder().build();
@@ -118,7 +121,7 @@ public class Map {
         for (int y = 0; y < getHeight(); ++y) {
             for (int x = 0; x < getWidth(); ++x) {
 
-                Room.RoomBuilder<?, ?> chosenRoom = RandomChoice.choose(random, RoomsList.getRoomSpawnList());
+                Room.RoomBuilder<?, ?> chosenRoom = RandomChoice.choose(random, RoomsList.getCorrectedRoomSpawnList(randomOverride));
                 Room room = chosenRoom.startPoint(new Point(x,y)).build();
                 if(room.canPlace(rooms, this)) {
                     placeRoom(room);
@@ -244,7 +247,7 @@ public class Map {
 
     public void placeGenerateItem(Point point) {
         if (random.nextInt(1, 101) <= itemGenerationChance) {
-            Item item = RandomChoice.choose(random, ItemList.getItemSpawnList()).build();
+            Item item = RandomChoice.choose(random, ItemList.getCorrectedItemSpawnList(randomOverride)).build();
             if (getFeature(point) instanceof Tile tile) {
                 placeItem(item, point);
             }
@@ -285,7 +288,7 @@ public class Map {
 
                 if(r<=monsterSpawnChance) {
                     Point place = new Point(x,y);
-                    Monster monster = RandomChoice.choose(random,ActorList.getMonsterSpawnList()).build();
+                    Monster monster = RandomChoice.choose(random,ActorList.getCorrectedMonsterSpawnList(randomOverride)).build();
                     if(canPlaceActor(monster, place) && place.distanceTo(player.getPosition()) > monsterSpawnPlayerDistance) {
                         placeActor(monster, place);
                     }

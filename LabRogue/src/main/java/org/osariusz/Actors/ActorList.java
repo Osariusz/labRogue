@@ -42,6 +42,10 @@ public class ActorList {
         return SpawnHelper.getSpawnList(monsters);
     }
 
+    public static List<Map.Entry<Integer, Monster.MonsterBuilder<?, ?>>> getCorrectedMonsterSpawnList(List<Map.Entry<String, Integer>> correction) {
+        return SpawnHelper.getCorrectedSpawnList(monsters, correction);
+    }
+
     public static Monster.MonsterBuilder<?, ?> getMonster(String id) {
         return SpawnHelper.getGameElement(monsters, id);
     }

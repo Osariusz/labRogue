@@ -24,6 +24,10 @@ public class RoomsList {
         return SpawnHelper.getSpawnList(rooms);
     }
 
+    public static List<Map.Entry<Integer, Room.RoomBuilder<?, ?>>> getCorrectedRoomSpawnList(List<Map.Entry<String, Integer>> correction) {
+        return SpawnHelper.getCorrectedSpawnList(rooms, correction);
+    }
+
     public static Room.RoomBuilder<?, ?> getRoom(String id) {
         return SpawnHelper.getGameElement(rooms, id);
     }
