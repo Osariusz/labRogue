@@ -15,7 +15,7 @@ public class ActorList {
     public static final List<Monster.MonsterBuilder<?, ?>> monsters = new ArrayList<>() {
         {
             add(new Monster().toBuilder().equipment(new HashMap<>(Map.ofEntries(
-                    new AbstractMap.SimpleEntry<>(Actor.EquipmentSlots.WEAPON, new ArrayList<>(List.of(new Weapon().toBuilder().dropsFromDead(false).damage(1).shootChance(10).build())))
+                    new AbstractMap.SimpleEntry<>(Actor.EquipmentSlots.WEAPON, new ArrayList<>(List.of(new Weapon().toBuilder().preventUpgrader(true).dropsFromDead(false).damage(1).shootChance(10).build())))
             ))).startingItems(List.of("rat_tail")).hp(2).agility(20).movementSpeed(2).name("Szczur").id("rat").spawnChance(80).symbol(','));
 
             add(new Monster().toBuilder().equipment(new HashMap<>(Map.ofEntries(
