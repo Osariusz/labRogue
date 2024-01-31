@@ -20,7 +20,7 @@ public class ActorList {
 
             add(new Monster().toBuilder().equipment(new HashMap<>(Map.ofEntries(
                     new AbstractMap.SimpleEntry<>(Actor.EquipmentSlots.WEAPON, new ArrayList<>(List.of(new Weapon().toBuilder().dropsFromDead(false).damage(1).shootChance(40).range(2).build())))
-            ))).hp(10).name("Zarażony doktor").id("plague_doctor").spawnChance(40).symbol('Z'));
+            ))).startingItems(new ArrayList<>(List.of("hp_syringe"))).hp(10).name("Zarażony doktor").id("plague_doctor").spawnChance(40).symbol('Z'));
 
             add(new Monster().toBuilder().spawnChance(40).id("escaped").name("Uciekinier").symbol('H'));
 

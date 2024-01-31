@@ -71,6 +71,11 @@ public class ItemList {
                     new AbstractMap.SimpleEntry<>(2, "lightsaber"),
                     new AbstractMap.SimpleEntry<>(1, "upgraders_eye")
             ))).name("Lightsaber").id("lightsaber"));
+
+            add(new Item().toBuilder().spawnChance(4000).useFunction(a -> a.healHp(3)).transmutationChances(new ArrayList<>(List.of(
+                new AbstractMap.SimpleEntry<>(5, "hp_syringe"),
+                new AbstractMap.SimpleEntry<>(3, "a_500")
+            ))).name("Syringe with HP").id("hp_syringe"));
         }
 
     };

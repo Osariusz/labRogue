@@ -228,6 +228,16 @@ public class IO {
                             continue;
                         case "skip":
                             break;
+                        case "u":
+                            Item item = map.getPlayer().getItemInBackpack(Integer.parseInt(arguments[1])-1);
+                            if(item.canUseItem()) {
+                                map.getPlayer().useItem(item);
+                                break;
+                            }
+                            else {
+                                System.out.println("Can't use that item");
+                                continue;
+                            }
                         default:
                             System.out.println("Wrong input!");
                             continue;

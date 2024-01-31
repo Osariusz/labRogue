@@ -242,6 +242,16 @@ public abstract class Actor extends GameElement {
         return result;
     }
 
+    public void removeItemFromAnywhere(Item item) {
+        removeFromBackpack(item);
+        for(EquipmentSlots equipmentSlots : getEquipment().keySet()) {
+            List<Equipment> equipment = getEquipment().get(equipmentSlots);
+            if(!equipment.isEmpty()) {
+                equipment.remove((Equipment) item);
+            }
+        }
+    }
+
     public int getRealHP() {
         int realHp = hp;
         List<Equipment> equippedItems = getAllEquipment();
@@ -323,6 +333,13 @@ public abstract class Actor extends GameElement {
             }
         }
         return false;
+    }
+
+    public void useItem(Item item) {
+        if(getAllItems().contains(item)) {
+            item.useItem(this);
+            removeItemFromAnywhere(item);
+        }
     }
 
     public List<FightReport> attackActor(org.osariusz.Map.Map map, Actor attacked) {

@@ -1,7 +1,9 @@
 import org.junit.Test;
 import org.osariusz.Actors.Monster;
+import org.osariusz.Actors.Player;
 import org.osariusz.Items.Equipment;
 import org.osariusz.Items.Item;
+import org.osariusz.Items.ItemList;
 import org.osariusz.Items.Weapon;
 import org.osariusz.Map.Map;
 
@@ -34,5 +36,21 @@ public class ItemTests {
         assert item.getName().equals("Equipment");
         assert item.getId().equals("equipment");
         assert item.getSymbol() == 'e';
+    }
+
+    @Test
+    public void useSyringe() {
+        Player player = new Player().toBuilder().build();
+        ItemList.getItem("hp_syringe").build().useItem(player);
+
+        Player secondPlayer = new Player().toBuilder().build();
+
+        System.out.println(player);
+        System.out.println(secondPlayer);
+
+        System.out.println(player.getHp());
+        System.out.println(secondPlayer.getHp());
+
+        assert player.getHp()-secondPlayer.getHp() == 3;
     }
 }

@@ -11,6 +11,9 @@ import org.osariusz.Map.Rooms.Room;
 import org.osariusz.Utils.RandomChoice;
 
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @SuperBuilder(toBuilder = true)
 @Getter
@@ -27,6 +30,7 @@ public class Item extends GameElement {
         this.transmutationChances = null;
         this.preventUpgrader = false;
         this.dropsFromDead = true;
+        this.useFunction = null;
     }
 
     protected List<Map.Entry<Integer, String>> transmutationChances;
@@ -34,6 +38,18 @@ public class Item extends GameElement {
     protected boolean preventUpgrader;
 
     protected boolean dropsFromDead;
+
+    protected Consumer<Actor> useFunction;
+
+    public boolean canUseItem() {
+        return useFunction != null;
+    }
+
+    public void useItem(Actor actor) {
+        if(canUseItem()) {
+            useFunction.accept(actor);
+        }
+    }
 
     public void initializeTransmutation() {
         if(this.transmutationChances == null) {
