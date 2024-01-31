@@ -219,7 +219,7 @@ public class Map {
         List<Point> digPoints = getAllCorridorPoints(diggers);
         for(Point dig : digPoints) {
             if(getFeature(dig) instanceof Wall) {
-                placeMapElement(new Tile().toBuilder().symbol('/').build(), dig);
+                placeMapElement(new Tile().toBuilder().build(), dig);
             }
         }
     }
