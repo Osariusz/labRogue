@@ -13,11 +13,12 @@ import java.util.Map;
 public class RoomsList {
     public static final List<Room.RoomBuilder<?, ?>> rooms = new ArrayList<>() {
         {
-            add(new Room().toBuilder().width(10).height(10).upgraderChance(10));
-            add(new Room().toBuilder().width(15).height(7));
-            add(new Room().toBuilder().width(10).height(15));
-            add(new Room().toBuilder().width(20).height(10));
-            add(new Room().toBuilder().width(10).height(7));
+            add(new Room().toBuilder().id("10x10").width(10).height(10).upgraderChance(10));
+            add(new Room().toBuilder().id("15x7").width(15).height(7));
+            add(new Room().toBuilder().id("10x15").width(10).height(15));
+            add(new Room().toBuilder().id("20x10").width(20).height(10));
+            add(new Room().toBuilder().id("10x7").width(10).height(7));
+            add(new Room().toBuilder().spawnChance(0).id("15x15_bunker_room").width(15).height(15).roomBordersSize(4));
         }
     };
     public static List<Map.Entry<Integer, Room.RoomBuilder<?, ?>>> getRoomSpawnList() {

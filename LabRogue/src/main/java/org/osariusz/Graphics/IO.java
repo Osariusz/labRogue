@@ -230,6 +230,31 @@ public class IO {
         }
     }
 
+    public String displayMenuAndGetCommand() {
+        System.out.println("Welcome to LabRogue. Type in menu name or number to enter");
+        System.out.println("1. Play");
+        System.out.println("2. Set seed");
+        System.out.println("3. Exit");
+        Scanner input = new Scanner(System.in);
+        String command = input.nextLine();
+        String[] arguments = command.split(" ");
+        return arguments[0];
+    }
+
+    public String showSeedAndGetSeed(String seed) {
+        if(seed.isEmpty()) {
+            System.out.println("There is currently no seed! (so it will generate randomly)");
+        }
+        System.out.println("Seed: "+seed);
+
+        System.out.println("Type in the new seed or nothing if you want to leave current seed. You can also type in reset to reset the seed");
+
+        Scanner input = new Scanner(System.in);
+        String newSeed = input.nextLine();
+        newSeed = newSeed.trim();
+        return newSeed;
+    }
+
     public void IOLoop(Map map) {
         while (true) {
             if(!map.getPlayer().isAlive()) {
