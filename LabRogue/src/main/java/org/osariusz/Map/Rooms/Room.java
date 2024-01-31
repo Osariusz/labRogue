@@ -77,10 +77,6 @@ public class Room extends Spawnable {
         return pp.pointInList(doors);
     }
 
-    public double centerDistanceTo(Point point) {
-        return point.distanceTo(nearestCentrePoint());
-    }
-
     public boolean integralWallPart(Point point) {
         point = point.offset(startPoint.multiplyPoints(new Point(-1, -1)));
         if (point.pointInList(getDoors())) {
@@ -112,83 +108,8 @@ public class Room extends Spawnable {
         return true;
     }
 
-    public boolean pointBetweenCenters(Room room, int x, int y) {
-        Point first = nearestCentrePoint();
-        Point second = room.nearestCentrePoint();
-
-        int firstX = Math.min(first.getX(), second.getX());
-        int firstY = Math.min(first.getY(), second.getY());
-
-        int secondX = Math.max(first.getX(), second.getX());
-        int secondY = Math.max(first.getY(), second.getY());
-
-        return x >= firstX && x <= secondX && y >= firstY && y <= secondY;
-    }
-
     public Point nearestCentrePoint() {
         return startPoint.offset(new Point(width / 2, height / 2));
-    }
-
-    public Room getClosestRoom(List<Room> rooms) {
-        if (rooms.isEmpty() || (rooms.size() == 1 && rooms.get(0).equals(this))) {
-            Logging.logger.log(Level.WARNING, "Room " + getStartX() + ", " + getStartY() + " was passed an array with no other rooms to check distance");
-            return this;
-        }
-        double minimumDistance = -1;
-        Room result = null;
-        for (Room room : rooms) {
-            if (room.equals(this)) {
-                continue;
-            }
-            double distance = centerDistanceTo(room.nearestCentrePoint());
-            if (minimumDistance < 0 || minimumDistance > distance) {
-                minimumDistance = distance;
-                result = room;
-            }
-
-        }
-        return result;
-    }
-
-    public boolean isRoomPathTo(Room room, int x, int y) {
-        if (room.pointInside(x, y)) {
-            return false;
-        }
-        if (!pointBetweenCenters(room, x, y)) {
-            return false;
-        }
-
-        int workingCoordinate1, passiveCoordinate1;
-        int workingCoordinate2, passiveCoordinate2;
-
-        int workingCoordinate, passiveCoordinate;
-
-        if ((room.nearestCentrePoint().getX() - nearestCentrePoint().getX() == 0) ||
-                (room.nearestCentrePoint().getY() - nearestCentrePoint().getY()) / (room.nearestCentrePoint().getX() - nearestCentrePoint().getX()) > 1) {
-            workingCoordinate1 = nearestCentrePoint().getY();
-            passiveCoordinate1 = nearestCentrePoint().getX();
-
-            workingCoordinate2 = room.nearestCentrePoint().getY();
-            passiveCoordinate2 = room.nearestCentrePoint().getX();
-
-            workingCoordinate = y;
-            passiveCoordinate = x;
-        } else {
-            workingCoordinate1 = nearestCentrePoint().getX();
-            passiveCoordinate1 = nearestCentrePoint().getY();
-
-            workingCoordinate2 = room.nearestCentrePoint().getX();
-            passiveCoordinate2 = room.nearestCentrePoint().getY();
-
-            workingCoordinate = x;
-            passiveCoordinate = y;
-        }
-
-        return
-                (passiveCoordinate == passiveCoordinate1 && workingCoordinate == (workingCoordinate1 + workingCoordinate2) / 2) ||
-                        (workingCoordinate == (workingCoordinate1 + workingCoordinate2) / 2) ||
-                        (passiveCoordinate == passiveCoordinate2 && workingCoordinate > (workingCoordinate1 + workingCoordinate2) / 2);
-
     }
 
     public boolean doorPosition(Point point) {
