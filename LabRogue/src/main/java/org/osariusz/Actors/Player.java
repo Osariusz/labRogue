@@ -25,7 +25,7 @@ public class Player extends Actor {
         super.symbol = '@';
         super.canPickItems = true;
         super.sightRange = 21;
-        super.hp = -1;
+        super.hp = 10;
         this.maxDeadTurns = 3;
         this.deadTurns = 0;
     }
