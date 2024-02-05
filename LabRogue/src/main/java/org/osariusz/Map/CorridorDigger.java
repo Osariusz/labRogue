@@ -101,8 +101,8 @@ public class CorridorDigger {
         Point newPoint = validNewPoint(new ArrayList<>(List.of(
                 getNewPointByAxis(movingDirection, moveY),
                 getNewPointByAxis(movingDirection, !moveY),
-                getNewPointByAxis(movingDirection.multiplyPoints(new Point(-1, -1)), moveY),
-                getNewPointByAxis(movingDirection.multiplyPoints(new Point(-1, -1)), !moveY),
+                getNewPointByAxis(movingDirection.reverse(), moveY),
+                getNewPointByAxis(movingDirection.reverse(), !moveY),
                 getNewPointByAxis(new Point(1, 1), moveY),
                 getNewPointByAxis(new Point(1, 1), !moveY),
                 getNewPointByAxis(new Point(-1, -1), moveY),

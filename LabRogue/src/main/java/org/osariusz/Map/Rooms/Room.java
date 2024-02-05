@@ -72,13 +72,11 @@ public class Room extends Spawnable {
     }
 
     public boolean pointIsDoor(Point point) {
-        Point p = startPoint.multiplyPoints(new Point(-1, -1));
-        Point pp = point.offset(p);
-        return pp.pointInList(doors);
+        return point.offsetReversed(startPoint).pointInList(doors);
     }
 
     public boolean integralWallPart(Point point) {
-        point = point.offset(startPoint.multiplyPoints(new Point(-1, -1)));
+        point = point.offsetReversed(startPoint);
         if (point.pointInList(getDoors())) {
             return false;
         }
@@ -131,7 +129,7 @@ public class Room extends Spawnable {
     }
 
     public void useDoor(Point point) {
-        Point doorPoint = point.offset(startPoint.multiplyPoints(new Point(-1, -1)));
+        Point doorPoint = point.offsetReversed(startPoint);
         if (!doorPoint.pointInList(usedDoors)) {
             usedDoors.add(doorPoint);
         }
@@ -139,7 +137,7 @@ public class Room extends Spawnable {
     }
 
     public void connectDoor(Point point) {
-        Point doorPoint = point.offset(startPoint.multiplyPoints(new Point(-1, -1)));
+        Point doorPoint = point.offsetReversed(startPoint);
         if (!doorPoint.pointInList(connectedDoors)) {
             connectedDoors.add(doorPoint);
         }

@@ -72,6 +72,14 @@ public class Point {
         return new Point(x+pointOffset.getX(), y+pointOffset.getY());
     }
 
+    public Point offsetReversed(Point pointOffset) {
+        return offset(pointOffset.reverse());
+    }
+
+    public Point reverse() {
+        return multiplyPoints(new Point(-1, -1));
+    }
+
     public Point multiplyPoints(Point multiply) {
         return new Point(x*multiply.getX(), y*multiply.getY());
     }
