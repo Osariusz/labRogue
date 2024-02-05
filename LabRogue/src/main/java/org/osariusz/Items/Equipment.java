@@ -7,6 +7,7 @@ import org.osariusz.Actors.Actor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Getter
 @SuperBuilder(toBuilder = true)
@@ -30,49 +31,40 @@ public class Equipment extends Item{
 
     protected List<Actor.EquipmentSlots> allowedSlots;
 
+    public String getModifierString(AtomicBoolean isNextModifier, String label, int value) {
+        String modifiersString = "";
+        if(value != 0) {
+            if(isNextModifier.get()) {
+                modifiersString += ", ";
+            }
+            isNextModifier.set(true);
+            modifiersString += label+hpBonus;
+        }
+        return modifiersString;
+    }
+
     @Override
     public String toString() {
         String base = super.toString();
 
-
-
-        boolean modifiers = false;
-        String modifiersString = "(";
-        if(hpBonus != 0) {
-            if(modifiers) {
-                modifiersString += ", ";
-            }
-            modifiers = true;
-            modifiersString += "hp: "+hpBonus;
-        }
-        if(agilityBonus != 0) {
-            if(modifiers) {
-                modifiersString += ", ";
-            }
-            modifiers = true;
-            modifiersString += "agility: "+agilityBonus;
-        }
-        if(movementSpeedBonus != 0) {
-            if(modifiers) {
-                modifiersString += ", ";
-            }
-            modifiers = true;
-            modifiersString += "movement speed: "+movementSpeedBonus;
-        }
-        modifiersString += ") ";
+        AtomicBoolean modifiers = new AtomicBoolean(false);
+        String modifiersString = "(" + getModifierString(modifiers, "hp: ", hpBonus) +
+                getModifierString(modifiers, "agility: ", agilityBonus) +
+                getModifierString(modifiers, "movement speed: ", movementSpeedBonus) +
+                ") ";
 
         boolean slots = false;
-        String allowedSlotsString = "allowed slots: ";
+        StringBuilder allowedSlotsString = new StringBuilder("allowed slots: ");
         for(Actor.EquipmentSlots equipmentSlot : allowedSlots) {
             if(slots) {
-                allowedSlotsString += ", ";
+                allowedSlotsString.append(", ");
             }
-            allowedSlotsString += equipmentSlot;
+            allowedSlotsString.append(equipmentSlot);
             slots = true;
         }
 
         if(allowedSlots.isEmpty()) {
-            allowedSlotsString = "";
+            allowedSlotsString = new StringBuilder();
         }
 
         return base + modifiersString + allowedSlotsString;
