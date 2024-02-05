@@ -1,6 +1,7 @@
 package org.osariusz.Utils;
 
 import lombok.Getter;
+import org.osariusz.MapElements.Upgrader;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -20,7 +21,26 @@ public class Point {
         return Math.abs(x-point.x)+Math.abs(y-point.y);
     }
 
-    public List<Point> bfsTo(Point destination, int pathLength, Function<Point, Boolean> checkPoint) {
+    public List<Point> getAdjacentTiles() {
+        List<Point> result = new ArrayList<>();
+        for(int x = -1;x<=1;++x) {
+            for(int y = -1;y<=1;++y) {
+                result.add(this.offset(new Point(x,y)));
+            }
+        }
+        return result;
+    }
+
+    public List<Point> getNeighbors() {
+        return new ArrayList<>(List.of(
+                this.offset(new Point(0,-1)),
+                this.offset(new Point(0,1)),
+                this.offset(new Point(1,0)),
+                this.offset(new Point(-1,0))
+        ));
+    }
+
+    public List<Point> bfsTo(Point destination, int pathLength, Function<Point, Boolean> validPointCheck) {
         int limit = pathLength+1;
 
         Queue<List<Point>> nextPoints = new LinkedList<>();
@@ -36,16 +56,11 @@ public class Point {
             if(nextPoint.equals(destination)) {
                 return nextPointList;
             }
-            List<Point> neighbors = new ArrayList<>(List.of(
-                    nextPoint.offset(new Point(0,-1)),
-                    nextPoint.offset(new Point(0,1)),
-                    nextPoint.offset(new Point(1,0)),
-                    nextPoint.offset(new Point(-1,0))
-            ));
-            for(Point neighbor : neighbors) {
-                if(!neighbor.pointInList(visited) && checkPoint.apply(neighbor)) {
+            for(Point neighbor : nextPoint.getNeighbors()) {
+                if(!neighbor.pointInList(visited) && validPointCheck.apply(neighbor)) {
                     List<Point> newList = new ArrayList<>(nextPointList);
                     newList.add(neighbor);
+
                     nextPoints.add(newList);
                 }
             }

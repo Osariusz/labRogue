@@ -425,11 +425,9 @@ public class Map {
         if(actor.getBackpack().isEmpty()) {
             return;
         }
-        for(int x = -1;x<=1;++x) {
-            for(int y = -1;y<=1;++y) {
-                if(getFeature(position.offset(new Point(x,y))) instanceof Upgrader upgrader) {
-                    upgrader.upgradeBackpackItem(actor, actor.getRandomItemInBackpack());
-                }
+        for(Point point : position.getAdjacentTiles()) {
+            if(getFeature(point) instanceof Upgrader upgrader) {
+                upgrader.upgradeBackpackItem(actor, actor.getRandomItemInBackpack());
             }
         }
     }
