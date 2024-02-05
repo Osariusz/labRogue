@@ -290,7 +290,7 @@ public class Map {
         return new Point(0,0);
     }
 
-    public void placePlayer(int direction) { //0 to find alpha, 1 to find omega
+    public Point getMapLeaveWithDirection(int direction) {
         Point leavePoint = null;
         for(int y = 0; y<height;++y) {
             for(int x = 0;x<width;++x) {
@@ -302,18 +302,36 @@ public class Map {
                 }
             }
         }
-        if(leavePoint == null) {
-            Logging.logger.log(Level.SEVERE, "Map without such point!");
-            return;
-        }
+        return leavePoint;
+    }
+
+    public void placeActorNearPoint(Point point, int radius) {
         for(int y = 0; y<height;++y) {
             for(int x = 0;x<width;++x) {
                 Point newPoint = new Point(x,y);
-                if(canPlaceActor(getPlayer(), newPoint) && newPoint.distanceTo(leavePoint) < 3) {
+                if(canPlaceActor(getPlayer(), newPoint) && newPoint.distanceTo(point) < radius) {
                     placeActor(getPlayer(), newPoint);
                     return;
                 }
             }
+        }
+    }
+
+    public void placePlayer(int direction) { //0 to find alpha, 1 to find omega
+        Point leavePoint = getMapLeaveWithDirection(direction);
+
+        if(leavePoint == null) {
+            Logging.logger.log(Level.SEVERE, "Map without such point!");
+            return;
+        }
+
+        placeActorNearPoint(leavePoint, 3);
+    }
+
+    public void trySpawnRandomMonster(Point place) {
+        Monster monster = RandomChoice.choose(random,ActorList.getCorrectedMonsterSpawnList(randomOverride)).build();
+        if(canPlaceActor(monster, place) && place.distanceTo(player.getPosition()) > monsterSpawnPlayerDistance) {
+            placeActor(monster, place);
         }
     }
 
@@ -324,10 +342,7 @@ public class Map {
 
                 if(r<=monsterSpawnChance) {
                     Point place = new Point(x,y);
-                    Monster monster = RandomChoice.choose(random,ActorList.getCorrectedMonsterSpawnList(randomOverride)).build();
-                    if(canPlaceActor(monster, place) && place.distanceTo(player.getPosition()) > monsterSpawnPlayerDistance) {
-                        placeActor(monster, place);
-                    }
+                    trySpawnRandomMonster(place);
                 }
             }
         }
@@ -335,9 +350,12 @@ public class Map {
 
     public void generateStartAndFinish(List<Room> roomsOriginal) {
         List<Room> rooms = roomsOriginal.stream().filter(r -> !r.getUnconnectedDoors().isEmpty()).toList();
+
         Room randomStartRoom = RandomChoice.chooseEvenly(random, rooms);
+
         List<Room> otherRooms = new ArrayList<>(rooms);
         otherRooms.remove(randomStartRoom);
+
         Room randomEndRoom = RandomChoice.chooseEvenly(random, otherRooms);
 
         Point startDoor = RandomChoice.chooseEvenly(random, randomStartRoom.getUnconnectedDoors());
@@ -347,7 +365,7 @@ public class Map {
         placeMapElement(new MapLeave().toBuilder().build(), endDoor);
     }
 
-    public Map generateMap() {
+    public void generateFeatures() {
         map = new ArrayList<>();
         for (int y = 0; y < getHeight(); ++y) {
             map.add(new ArrayList<>());
@@ -355,15 +373,22 @@ public class Map {
                 map.get(y).add(generateFeature(x, y));
             }
         }
-        generateRooms();
+    }
+
+    public void generateItems() {
         for (int y = 0; y < getHeight(); ++y) {
             for (int x = 0; x < getWidth(); ++x) {
                 placeGenerateItem(new Point(x,y));
             }
         }
-        placePlayer(0);
+    }
+
+    public void generateMap() {
+        generateFeatures();
+        generateRooms();
+        generateItems();
+        placePlayer(0); //place player near alpha point
         generateMonsters();
-        return this;
     }
 
     public Actor getActorAtPosition(Point position) {
