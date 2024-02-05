@@ -276,22 +276,4 @@ public class IO {
         newSeed = newSeed.trim();
         return newSeed;
     }
-
-    public void IOLoop(Map map) {
-        while (true) {
-            if(!map.getPlayer().isAlive()) {
-                System.out.println("You died!");
-                return;
-            }
-            displayMap(map);
-            //displayMapActor(map, map.getPlayer());
-            displayNewFightReports(map);
-            displayPlayerStats(map.getPlayer());
-            displayPlayerEquipment(map.getPlayer());
-            userInput(map);
-            map.actorsTurn();
-            clearDisplay();
-        }
-
-    }
 }
