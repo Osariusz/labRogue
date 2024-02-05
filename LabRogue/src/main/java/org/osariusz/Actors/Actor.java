@@ -154,6 +154,15 @@ public abstract class Actor extends GameElement {
         return true;
     }
 
+    public void swapItems(Equipment alreadyThere, EquipmentSlots equipmentSlot, Equipment backpackEquipment) {
+        if(alreadyThere != null) {
+            addToBackpack(new ArrayList<>(List.of(alreadyThere)));
+            getEquipment().get(equipmentSlot).remove(alreadyThere);
+        }
+        getEquipment().get(equipmentSlot).add(backpackEquipment);
+        getBackpack().remove(backpackEquipment);
+    }
+
     public void equip(int backpackSlot, EquipmentSlots equipmentSlot, int slotNumber) {
         //TODO: fix equiping last item from backpack
         Item backpackItem = getItemInBackpack(backpackSlot);
@@ -163,12 +172,7 @@ public abstract class Actor extends GameElement {
         }
         Equipment alreadyThere = getEquipmentIfPresent(equipmentSlot, slotNumber);
         if(canEquip(equipmentSlot, slotNumber, backpackEquipment) && canDeequip(equipmentSlot, slotNumber, alreadyThere)) {
-            if(alreadyThere != null) {
-                addToBackpack(new ArrayList<>(List.of(alreadyThere)));
-                getEquipment().get(equipmentSlot).remove(alreadyThere);
-            }
-            getEquipment().get(equipmentSlot).add(backpackEquipment);
-            getBackpack().remove(backpackItem);
+            swapItems(alreadyThere, equipmentSlot, backpackEquipment);
         }
         else {
             Logging.logger.log(Level.INFO, "Can't equip "+backpackEquipment);

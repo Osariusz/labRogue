@@ -35,7 +35,7 @@ public class ActorList {
             ))).name("Dinosaur").id("dinosaur").symbol('D'));
         }
 
-        private void add(Spawnable.SpawnableBuilder spawnableBuilder) {
+        private void add(Spawnable.SpawnableBuilder<?, ?> spawnableBuilder) {
             add((Monster.MonsterBuilder<?, ?>) spawnableBuilder);
         }
 
