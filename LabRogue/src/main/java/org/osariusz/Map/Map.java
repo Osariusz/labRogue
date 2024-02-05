@@ -90,15 +90,6 @@ public class Map {
     }
 
     public void placeRoom(Room room) {
-//        if(room.getWidth()+room.getStartX() > getWidth()) {
-//            Logging.logger.log(Level.WARNING,"Can't generate room at "+room.getStartX()+", "+room.getStartY()+" because of width");
-//            return;
-//        }
-//        if(room.getHeight()+room.getStartY() > getHeight()) {
-//            Logging.logger.log(Level.WARNING,"Can't generate room at "+room.getStartX()+", "+room.getStartY()+" because of height");
-//            return;
-//        }
-
         for(int roomX = 0;roomX< room.getWidth();++roomX) {
             for(int roomY = 0;roomY< room.getHeight();++roomY) {
                 int mapX = roomX+room.getStartX();
