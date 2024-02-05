@@ -16,6 +16,7 @@ import org.osariusz.MapElements.*;
 import org.osariusz.Items.Item;
 import org.osariusz.Utils.*;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -60,9 +61,6 @@ public class Map {
 
     @Builder.Default
     Random random = new Random();
-
-    @Builder.Default
-    List<CorridorDigger> failedDiggers = new ArrayList<>();
 
     @Builder.Default
     List<FightReport> fightReports = new ArrayList<>();
@@ -113,21 +111,25 @@ public class Map {
         return point.pointInList(getCorridorPoints());
     }
 
+    public void tryGenerateRoom(Point point, List<CorridorDigger> failedDiggers) {
+        Room.RoomBuilder<?, ?> chosenRoom = RandomChoice.choose(random, RoomsList.getCorrectedRoomSpawnList(randomOverride));
+        Room room = chosenRoom.startPoint(point).build();
+        if(room.canPlace(rooms, this)) {
+            placeRoom(room);
+            rooms.add(room);
+            generatePaths(failedDiggers);
+        }
+    }
+
     public void generateRooms() {
         rooms.clear();
+        List<CorridorDigger> failedDiggers = new ArrayList<>();
         for (int y = 0; y < getHeight(); ++y) {
             for (int x = 0; x < getWidth(); ++x) {
-
-                Room.RoomBuilder<?, ?> chosenRoom = RandomChoice.choose(random, RoomsList.getCorrectedRoomSpawnList(randomOverride));
-                Room room = chosenRoom.startPoint(new Point(x,y)).build();
-                if(room.canPlace(rooms, this)) {
-                    placeRoom(room);
-                    rooms.add(room);
-                    generatePaths();
-                }
+                tryGenerateRoom(new Point(x,y), failedDiggers);
             }
         }
-        retryGeneratePaths(rooms);
+        retryGeneratePaths(rooms, failedDiggers);
         generateStartAndFinish(rooms);
     }
 
@@ -170,7 +172,7 @@ public class Map {
         return Math.min(getWidth(), getHeight());
     }
 
-    public void retryGeneratePaths(List<Room> rooms) {
+    public void retryGeneratePaths(List<Room> rooms, List<CorridorDigger> failedDiggers) {
         failedDiggers.forEach(d -> Logging.logger.log(Level.INFO, "failed digger "+d));
         List<CorridorDigger> newDiggers = new ArrayList<>();
         for(CorridorDigger failedDigger : failedDiggers) {
@@ -216,27 +218,30 @@ public class Map {
         }
     }
 
+    public java.util.Map.Entry<Point, Point> minimalDoors(Room room) {
+        double minimalDoorDistance = Double.MAX_VALUE;
+        java.util.Map.Entry<Point, Point> minimalDoors = null;
+        for(Room anotherRoom : rooms) {
+            if(room.equals(anotherRoom)) {
+                continue;
+            }
+            java.util.Map.Entry<Point, Point> doors = room.closestUnusedDoorsInCorrectDirectionForRooms(anotherRoom);
+            if(doors == null) {
+                continue;
+            }
+            int doorDistance = doors.getKey().distanceTo(doors.getValue());
+            if(doorDistance < minimalDoorDistance) {
+                minimalDoorDistance = doorDistance;
+                minimalDoors = doors;
+            }
+        }
+        return minimalDoors;
+    }
+
     public List<CorridorDigger> generateDiggers() {
         List<CorridorDigger> diggers = new ArrayList<>();
         for(Room room : rooms) {
-            double minimalDoorDistance = Double.MAX_VALUE;
-            java.util.Map.Entry<Point, Point> minimalDoors = null;
-            Room chosenAnotherRoom = null;
-            for(Room anotherRoom : rooms) {
-                if(room.equals(anotherRoom)) {
-                    continue;
-                }
-                java.util.Map.Entry<Point, Point> doors = room.closestUnusedDoorsInCorrectDirectionForRooms(anotherRoom);
-                if(doors == null) {
-                    continue;
-                }
-                int doorDistance = doors.getKey().distanceTo(doors.getValue());
-                if(doorDistance < minimalDoorDistance) {
-                    minimalDoorDistance = doorDistance;
-                    minimalDoors = doors;
-                    chosenAnotherRoom = anotherRoom;
-                }
-            }
+            java.util.Map.Entry<Point, Point> minimalDoors = minimalDoors(room);
             if(minimalDoors != null) {
                 Logging.logger.log(Level.INFO, "door1: "+ minimalDoors.getKey()+" door2: "+minimalDoors.getValue());
                 diggers.add(new CorridorDigger(minimalDoors.getKey(), minimalDoors.getValue(), this, rooms, random));
@@ -246,7 +251,7 @@ public class Map {
         return diggers;
     }
 
-    public void generatePaths() {
+    public void generatePaths(List<CorridorDigger> failedDiggers) {
         List<CorridorDigger> diggers = generateDiggers();
         runAllDiggers(diggers, getAllowedDiggersOperations());
         failedDiggers.addAll(diggers.stream().filter(d -> !d.diggerFinished()).toList());
