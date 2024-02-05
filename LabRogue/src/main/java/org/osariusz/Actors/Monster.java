@@ -44,18 +44,34 @@ public class Monster extends Actor {
         }
     }
 
+    public void tryEquip(Equipment equipment, int backpackSlot) {
+        for(EquipmentSlots equipmentSlots : equipment.getAllowedSlots()) {
+            if(canEquip(equipmentSlots, 1, equipment) && equipmentSlotReady(equipmentSlots)) {
+                equip(backpackSlot, equipmentSlots, 1);
+                return;
+            }
+        }
+    }
+
+    public void moveInRandomDirection(Map map) {
+        Random random = new Random();
+        int moveX = random.nextInt(0,2);
+        int moveNegative = random.nextInt(0,2);
+        if(moveX == 1) {
+            map.moveActor(this, moveNegative,0);
+        }
+        else {
+            map.moveActor(this, 0, moveNegative);
+        }
+    }
+
     public void moveMonsterOnce(Map map) {
         int sightRange = 10;
 
-        for(int i = 0;i<getBackpack().size();++i) {
-            Item item = getItemInBackpack(i);
+        for(int backpackSlot = 0;backpackSlot<getBackpack().size();++backpackSlot) {
+            Item item = getItemInBackpack(backpackSlot);
             if(item instanceof Equipment equipmentItem) {
-                for(EquipmentSlots equipmentSlots : equipmentItem.getAllowedSlots()) {
-                    if(canEquip(equipmentSlots, 1, equipmentItem) && equipmentSlotReady(equipmentSlots)) {
-                        equip(i, equipmentSlots, 1);
-                        return;
-                    }
-                }
+                tryEquip(equipmentItem, backpackSlot);
             }
         }
 
@@ -68,23 +84,14 @@ public class Monster extends Actor {
             }
         }
 
-        List<Point> path = position.bfsTo(map.getPlayer().getPosition(),sightRange,(Point p) -> {
-            return map.canMoveThrough(this, p) || getPosition().equals(p) || map.getPlayer().position.equals(p);
-        });
-        if(position.distanceTo(map.getPlayer().getPosition()) <= sightRange && path != null && path.size() > 1) {
-            map.moveActor(this, path.get(1));
+        List<Point> pathToPlayer = position.bfsTo(map.getPlayer().getPosition(),sightRange,
+                (Point p) -> map.canMoveThrough(this, p) || getPosition().equals(p) || map.getPlayer().position.equals(p)
+        );
+        if(position.distanceTo(map.getPlayer().getPosition()) <= sightRange && pathToPlayer != null && pathToPlayer.size() > 1) {
+            map.moveActor(this, pathToPlayer.get(1));
         }
         else {
-            //random movement if no player found
-            Random random = new Random();
-            int moveX = random.nextInt(0,2);
-            int moveNegative = random.nextInt(0,2);
-            if(moveX == 1) {
-                map.moveActor(this, moveNegative,0);
-            }
-            else {
-                map.moveActor(this, 0, moveNegative);
-            }
+            moveInRandomDirection(map);
         }
     }
 
