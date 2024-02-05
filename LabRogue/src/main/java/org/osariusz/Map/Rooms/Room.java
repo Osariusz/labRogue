@@ -45,19 +45,9 @@ public class Room extends Spawnable {
 
 
     public MapElement getRoomSpecificFeature(Point point, Random random) {
-        boolean notNearSpecial = true;
-        for (int xOffset = -1; xOffset <= 1; ++xOffset) {
-            for (int yOffset = -1; yOffset <= 1; ++yOffset) {
-                Point newPoint = point.offset(new Point(xOffset, yOffset));
-                if (doorPosition(newPoint) || wallPosition(newPoint)) {
-                    notNearSpecial = false;
-                    break;
-                }
-            }
-            if (!notNearSpecial) {
-                break;
-            }
-        }
+        boolean notNearSpecial = point.getAdjacentTiles().stream().noneMatch(
+                (Point adjacentPoint) -> doorPosition(adjacentPoint) || wallPosition(adjacentPoint)
+        );
         if (notNearSpecial) {
             int randomNumber = random.nextInt(1, 101);
             if (randomNumber <= upgraderChance) {

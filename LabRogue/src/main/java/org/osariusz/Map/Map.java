@@ -132,7 +132,7 @@ public class Map {
                 if(room.canPlace(rooms, this)) {
                     placeRoom(room);
                     rooms.add(room);
-                    generatePaths(rooms);
+                    generatePaths();
                 }
             }
         }
@@ -225,7 +225,7 @@ public class Map {
         }
     }
 
-    public void generatePaths(List<Room> rooms) {
+    public List<CorridorDigger> generateDiggers() {
         List<CorridorDigger> diggers = new ArrayList<>();
         for(Room room : rooms) {
             double minimalDoorDistance = Double.MAX_VALUE;
@@ -252,6 +252,11 @@ public class Map {
                 room.useDoor(minimalDoors.getKey());
             }
         }
+        return diggers;
+    }
+
+    public void generatePaths() {
+        List<CorridorDigger> diggers = generateDiggers();
         runAllDiggers(diggers, getAllowedDiggersOperations());
         failedDiggers.addAll(diggers.stream().filter(d -> !d.diggerFinished()).toList());
         diggers = diggers.stream().filter(CorridorDigger::diggerFinished).toList();
@@ -274,20 +279,6 @@ public class Map {
             return;
         }
         getMap().get(point.getY()).set(point.getX(), mapElement);
-    }
-
-    public Point getAnyFieldForActor(Actor actor) {
-        for(int y = 0;y<height;++y) {
-            for(int x = 0;x<width;++x) {
-                Point point = new Point(x,y);
-                if(getFeature(point) instanceof Tile tile) {
-                    if(canPlaceActor(actor,point)) {
-                        return point;
-                    }
-                }
-            }
-        }
-        return new Point(0,0);
     }
 
     public Point getMapLeaveWithDirection(int direction) {
