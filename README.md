@@ -21,7 +21,7 @@ The project is developed in Java with the use of Lombok for reducing boilerplate
 ## Run
 To run the application you will first have to create artifact and then, use the following command:
 ```
-java out/artifacts/LabRogue_jar/LabRogue.jar
+java -jar out/artifacts/LabRogue_jar/LabRogue.jar
 ```
 
 ![Game presentation](https://raw.githubusercontent.com/Osariusz/labRogue/main/image.png)
